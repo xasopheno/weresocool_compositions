@@ -20,12 +20,12 @@ thing1 = {
       Seq [Fm 1, Fa -2 | Pa -1/2, Fm 0 | Lm 1/3]
   ]
   | Seq [
-    Fm 1/2, Fm 1, Fm 1/2, Fm 3/2,
-    Fm 1/2 | Lm 2/5, Fm 4/3 | Lm 3/5, Fm 4/3, Fm 7/6 | Lm 2, 
+    Fm 1/2, Fm 1, Fm 1/2, Fm 3/2 | Lm 3/5, Fm 7/8 | Lm 2/5, 
+    Fm 4/3, Fm 4/3, Fm 7/6 | Lm 2, 
     Fm 4/3, Fm 3/2, Fm 3/2, Fm 1/2, 
     Fm 7/12, Fm 9/8, Fm 7/8, Fm 7/16 
   ]
-  | Lm 1/11
+  | Lm 1/13
 }
 
 thing2 = {
