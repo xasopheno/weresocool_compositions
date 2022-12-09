@@ -220,13 +220,14 @@ main = {
         Overlay [
             thing3,
             thing4,
-        ] | Repeat 1,
+        ],
         Fm 0,
         Overlay [
             bass,
             thing2,
         ] | Repeat 3,
+        Fm 0,
+        thing2, 
     ]
     | Lm 1/8
-    -- | Repeat 2
 }
