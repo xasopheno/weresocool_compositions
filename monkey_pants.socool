@@ -29,8 +29,8 @@ thing1 = {
         Fm 0
     ]
     | Seq [
-        Lm 2 | Fm 1/2,
-        Fm 1/2, Fm 1, 
+        Lm 2 | Fm 1/4 | Overlay [Fm 1 | Gm 1/2, Fm 2],
+        Fm 3/4, Fm 1, 
         Seq [Fm 2, Fm 1/2] | Lm 1/2, 
         Seq [Fm 1, Fm 0, Fm 2 | Pa -1/6, Fm 0] | Lm 1/4,
         Seq [Fm 1/2, Fm 0, Fm 3 | Pa 1/6, Fm 0] | Lm 1/4,
@@ -102,11 +102,13 @@ thing3 = {
 main = {
     Overlay [
         thing1
-        | Overlay [Sine, Square | Gm 1/40 | Fm 1/4],
+        | Overlay [Sine, Square | Gm 1/30 | Fm 1/4],
         thing2,
         thing3 | Gm 1/3
     ]
-    | Repeat 3
+    | Repeat 2
+    | Seq [Fm 1, Fm 7/8 | Lm 8/7]
+    | Repeat 4
     | Lm 11/10
     | Fm 4/3
 }
