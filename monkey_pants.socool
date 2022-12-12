@@ -33,8 +33,8 @@ drums = {
         Fm 0
     ]
     | Seq [
-        Lm 2 | Fm 1/2,
-        Fm 1/2, Fm 1, 
+        Lm 2 | Fm 1/4 | Overlay [Fm 1 | Gm 1/2, Fm 2],
+        Fm 3/4, Fm 1, 
         Seq [Fm 2, Fm 1/2] | Lm 1/2, 
         -- Fm 1/4, Fm 1, 
         -- Fm 1/4, Fm 1/4, 
@@ -110,11 +110,21 @@ thing3 = {
 main = {
     Overlay [
         thing1
+<<<<<<< HEAD
         | Overlay [Sine, Square | Gm 1/20 | Fm 1/4],
         thing2,
         thing3 | Gm 1/3
     ]
     | Repeat 5
+=======
+        | Overlay [Sine, Square | Gm 1/30 | Fm 1/4],
+        thing2,
+        thing3 | Gm 1/3
+    ]
+    | Repeat 2
+    | Seq [Fm 1, Fm 7/8 | Lm 8/7]
+    | Repeat 4
+>>>>>>> defba3065a559a77dbb81050d5beee70886ac66a
     | Lm 11/10
     | Fm 4/3
 }
