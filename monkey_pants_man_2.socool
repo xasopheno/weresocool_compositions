@@ -1,0 +1,71 @@
+{ f: 311.127, l: 1, g: 1/5, p: 0 }
+
+base_sound = {
+    O[
+        (3/2, 1, 1/2, -1/3),
+        (3/2, 0, 1/2, 1/3),
+        (1, 1, 1, -1/2),
+        (1, 0, 1, 1/2),
+        (1/2, 2, 1/3, 1/4),
+        (1/2, 0, 1/3, -1/4),
+        (1/4, 1, 1/3, 1),
+        (1/4, 0, 1/3, -1),
+    ]
+    | Overlay [
+        Seq [
+            Fm 1/2, Fm 0, Fm 0
+        ] | Lm 1/3 | Gm 1/5,
+        Seq [
+           O[
+                (3/2, 0, 1, -1/2),
+                (11/8, 0, 1, 1/2),
+                (25/24, 0, 1, 0),
+            ] | Lm 1/5,
+            O[
+                (1/2, 0, 1, -1/2),
+                (1/2, 0, 1, 1/2),
+                (1/2, 0, 1, 0),
+            ], 
+            Fm 0, Fm 0, 
+        ] | Lm 1/8, 
+        Fm 0
+    ]
+}
+
+b = {
+    base_sound | 
+    Fm 1/2
+
+}
+
+s = {
+    base_sound | 
+    Overlay [
+        Fm 3/2, 
+        Seq [
+            Fm 11/8, Fm 5/3, Fm 7/6 | Fm 2, Fm 4/3 | Lm 3 | Fm 2
+        ] | Lm 1/100
+    ]
+}
+
+
+
+main = {
+    Seq [
+        b, s, b, b, s, b, b, s,
+        b, b, s, b, b, b, s | Lm 2 | Fm 2/3,
+        b, s, b, s, b, b, s, s | Fm 7/8,
+        b, b, s, b, b, b, s, b,
+    ]
+    -- | Repeat 2
+    -- | Overlay [Sine, Square | Gm 1/20 | Fm 1/4]
+    -- | Repeat 8
+    | Overlay [
+        Lm 1/20 | Repeat 4 | Gm 1/16 | Pm 1/10 | Fm 5/4,
+        Lm 1/10 | Repeat 2 | Fa 3 | Pm -1/10,
+        Lm 2/10
+    ]
+    | Fm 4/3
+    | Seq [Lm 3/2 | Repeat 2, Lm 1 | Fm 8/7 | Repeat 3]
+    | Repeat 2
+}
