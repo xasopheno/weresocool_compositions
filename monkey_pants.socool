@@ -15,12 +15,12 @@ drums = {
     ]
     | Overlay [
         Seq [
-            Fm 1/2, Fsdm 0, Fm 0
+            Fm 1/2, Fm 0, Fm 0
         ] | Lm 1/3 | Gm 1/5,
         Seq [
            O[
                 (3/2, 0, 1, -1/2),
-                (11/8, 0, 1,zxc 1/2),
+                (11/8, 0, 1, 1/2),
                 (25/24, 0, 1, 0),
             ] | Lm 1/5,
             O[
@@ -110,21 +110,13 @@ thing3 = {
 main = {
     Overlay [
         thing1
-<<<<<<< HEAD
         | Overlay [Sine, Square | Gm 1/20 | Fm 1/4],
         thing2,
         thing3 | Gm 1/3
     ]
-    | Repeat 5
-=======
-        | Overlay [Sine, Square | Gm 1/30 | Fm 1/4],
-        thing2,
-        thing3 | Gm 1/3
-    ]
-    | Repeat 2
-    | Seq [Fm 1, Fm 7/8 | Lm 8/7]
+    -- | Repeat 5
+    -- | Seq [Fm 1, Fm 7/8 | Lm 8/7]
     | Repeat 4
->>>>>>> defba3065a559a77dbb81050d5beee70886ac66a
     | Lm 11/10
     | Fm 4/3
 }

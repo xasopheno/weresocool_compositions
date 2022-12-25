@@ -198,6 +198,6 @@ main = {
         melody2,
         melody3
     ]
-    | Repeat 4
+    | Repeat 8
     | Lm 13/100
 }
