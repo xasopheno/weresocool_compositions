@@ -150,6 +150,7 @@ main = {
         thing2,
         drums
     ]
-    | Lm 1/6 
+    | Fm 1
+    | Lm 1/6
     | Repeat 7
 }
