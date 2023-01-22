@@ -164,6 +164,7 @@ thing1 = {
             Fm 1, Fm 9/4, Fm 9/8, Fm 5/2,
             Fm 5/4, Fm 9/4, Fm 9/8, Fm 5/2,
         ] 
+        | Portamento 4/3
         | Seq [
             Repeat 2, 
             Fm 9/8 | Repeat 2
@@ -171,7 +172,7 @@ thing1 = {
         Fm 0
    ]
    | Overlay [
-    Sine, 
+    Sine,
     Sine 3/2 | Gm 1/4 | Fm 1/2,
     Square | Gm 1/7 | Fm 1/2
    ]
