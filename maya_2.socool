@@ -215,8 +215,12 @@ coda = {
 main = {
     Overlay [
         Overlay [
-            thing1,
-            thing2
+            bell
+            | Seq[ 
+                Fm 1, 
+            ]
+            -- thing1,
+            -- thing2
         ],
     ]
     | Lm 1/7
