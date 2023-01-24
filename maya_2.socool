@@ -55,53 +55,43 @@ intro = {
         Fm 3/2, Fm 5/3, Fm 15/8, Fm 2, 
         Seq [
             Fm 9/4, Fm 5/2 | Lm 2, Fm 9/4, Fm 2, Fm 15/8, Fm 5/3,
-            Fm 3/2, Fm 1/2 | Fm 3/4, Fm 5/8, Fm 15/16, Fm 9/8,
+            Fm 3/2, 
+            Fm 1/2 | Fm 3/4, Fm 5/8, Fm 15/16, Fm 9/8,
         ] 
         | Lm 7/8,
     ]
 }
 
-thing1 = {
+section1 = {
     Overlay [
-        {2/1, 2, 1, 1},
-        {2/1, 0, 1, -1},
-        {1/1, 2, 1, 1},
-        {1/1, 0, 1, -1},
-        {1/2, -2, 1, 1},
-        {1/2, 0, 1, 1},
-    ]
-    | Seq [
-        intro,
---here
+        Seq [
+            Fm 5/4, Fm 2, Fm 5/4, Fm 2,
+            Fm 1, Fm 2, Fm 9/8, Fm 2, 
+            Fm 4/3, Fm 2, Fm 3/2, Fm 2,
+            Fm 5/3, Fm 2, Fm 3/2, Fm 2,
+            Fm 15/8, Fm 2, Fm 3/2, Fm 2,
+           
 
-        Overlay [
             Seq [
-                Fm 5/4, Fm 2, Fm 5/4, Fm 2,
-                Fm 1, Fm 2, Fm 9/8, Fm 2, 
-                Fm 4/3, Fm 2, Fm 3/2, Fm 2,
-                Fm 5/3, Fm 2, Fm 3/2, Fm 2,
-                Fm 15/8, Fm 2, Fm 3/2, Fm 2,
-               
+                Fm 3/2, Fm 2, Fm 4/3, Fm 2, 
+                Fm 5/4, Fm 2, Fm 9/8, Fm 2, 
+            ] | Repeat 2,
 
-                Seq [
-                    Fm 3/2, Fm 2, Fm 4/3, Fm 2, 
-                    Fm 5/4, Fm 2, Fm 9/8, Fm 2, 
-                ] | Repeat 2,
+            Fm 15/16, Fm 2, Fm 9/8, Fm 2,
+            Fm 15/16, Fm 2, Fm 1, Fm 2, 
 
-                Fm 15/16, Fm 2, Fm 9/8, Fm 2,
-                Fm 15/16, Fm 2, Fm 1, Fm 2, 
-
-                Seq [
-                    Fm 3/2, Fm 15/8, Fm 9/8, Fm 15/8,
-                    Fm 4/3, Fm 15/8, Fm 3/2, Fm 15/8,
-                ] | Repeat 2,
-            ],
-
-            Seq [Fm 0 | Lm 20, coda],
+            Seq [
+                Fm 3/2, Fm 15/8, Fm 9/8, Fm 15/8,
+                Fm 4/3, Fm 15/8, Fm 3/2, Fm 15/8,
+            ] | Repeat 2,
         ],
 
-        intro,
+        Seq [Fm 0 | Lm 20, coda],
+    ]
+}
 
+section2 = {
+    Seq [
         Fm 5/4, Fm 2, Fm 5/4, Fm 2,
         Fm 1, Fm 2, Fm 9/8, Fm 2, 
         Fm 4/3, Fm 2, Fm 3/2, Fm 2,
@@ -139,37 +129,85 @@ thing1 = {
         Seq [
             Fm 3/2, Fm 4/3, Fm 5/4, Fm 9/8,
         ] 
-        | Seq [Fm 1, Fm 2/3], 
+        | Seq [Fm 1, Fm 2/3]
+    ]
+}
+
+section3 = {
+    Seq [
+        Fm 5/4, Fm 2, Fm 5/4, Fm 2,
+        Fm 1, Fm 2, Fm 9/8, Fm 2, 
+        Fm 4/3, Fm 2, Fm 3/2, Fm 2,
+        Fm 5/3, Fm 2, Fm 3/2, Fm 2,
+
+        Fm 5/4, Fm 9/4, Fm 4/3, Fm 9/4,
+        Fm 5/4, Fm 9/4, Fm 3/2, Fm 9/4,
+        Fm 4/3, Fm 9/4, Fm 5/3, Fm 9/4, 
+        Fm 5/4, Fm 9/4, Fm 4/3, Fm 9/4,
+
+        Fm 5/4, Fm 2, Fm 5/4, Fm 2,
+        Fm 1, Fm 2, Fm 9/8, Fm 2, 
+        Fm 4/3, Fm 2, Fm 3/2, Fm 2,
+        Fm 5/3, Fm 2, Fm 3/2, Fm 2,
+
+        Fm 5/4, Fm 9/4, Fm 9/8, Fm 9/4, 
+        Fm 1, Fm 9/4, Fm 15/16, Fm 9/4, 
+        Fm 1, Fm 9/4, Fm 9/8, Fm 5/2,
+        Fm 5/4, Fm 9/4, Fm 9/8, Fm 5/2,
+    ] 
+    | Portamento 5/3 
+    | Seq [
+        Repeat 2, 
+        Fm 9/8 | Repeat 2
+    ]
+}
+
+part1 = {
+    Overlay [
+        {2/1, 2, 1, 1},
+        {2/1, 0, 1, -1},
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+        {1/2, -2, 1, 1},
+        {1/2, 0, 1, 1},
+    ]
+    | Seq [
+        intro,
+        section1,
 
         intro,
+        section2,
 
-        Seq [
-            Fm 5/4, Fm 2, Fm 5/4, Fm 2,
-            Fm 1, Fm 2, Fm 9/8, Fm 2, 
-            Fm 4/3, Fm 2, Fm 3/2, Fm 2,
-            Fm 5/3, Fm 2, Fm 3/2, Fm 2,
+        Fm 0,
+   ]
+   | Overlay [
+    Sine,
+    Sine 3/2 | Gm 1/4 | Fm 1/2,
+    Square | Gm 1/7 | Fm 1/2
+   ]
+   | Fm 1/2
+}
 
-            Fm 5/4, Fm 9/4, Fm 4/3, Fm 9/4,
-            Fm 5/4, Fm 9/4, Fm 3/2, Fm 9/4,
-            Fm 4/3, Fm 9/4, Fm 5/3, Fm 9/4, 
-            Fm 5/4, Fm 9/4, Fm 4/3, Fm 9/4,
+part2 = {
+    Overlay [
+        {2/1, 2, 1, 1},
+        {2/1, 0, 1, -1},
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+        {1/2, -2, 1, 1},
+        {1/2, 0, 1, 1},
+    ]
+    | Seq [
+        intro,
+        section1,
 
-            Fm 5/4, Fm 2, Fm 5/4, Fm 2,
-            Fm 1, Fm 2, Fm 9/8, Fm 2, 
-            Fm 4/3, Fm 2, Fm 3/2, Fm 2,
-            Fm 5/3, Fm 2, Fm 3/2, Fm 2,
+        intro,
+        section2,
 
-            Fm 5/4, Fm 9/4, Fm 9/8, Fm 9/4, 
-            Fm 1, Fm 9/4, Fm 15/16, Fm 9/4, 
-            Fm 1, Fm 9/4, Fm 9/8, Fm 5/2,
-            Fm 5/4, Fm 9/4, Fm 9/8, Fm 5/2,
-        ] 
-        | Portamento 4/3
-        | Seq [
-            Repeat 2, 
-            Fm 9/8 | Repeat 2
-        ],
-        Fm 0
+        intro,
+        section3,
+
+        Fm 0,
    ]
    | Overlay [
     Sine,
@@ -183,6 +221,8 @@ thing2 = {
     Overlay [
         {15/4, 1, 1/4, -1/3},
         {15/4, 0, 1/4, 1/3},
+        {11/4, 1, 1/2, -1/3},
+        {11/4, 0, 1/2, 1/3},
         {10/3, 4, 1/2, -1/3},
         {10/3, 0, 1/2, 1/3},
         {9/4, 4, 1, -1/3},
@@ -202,8 +242,6 @@ thing2 = {
        Sine, 
        Sine 2 | Gm 1/16 | Fm 1/2 | Pm 1/2,
     ]
-    -- | Gm 2/3 
-    | FitLength thing1
 }
 
 coda = {
@@ -213,16 +251,26 @@ coda = {
 }
 
 main = {
-    Overlay [
+    Seq [
         Overlay [
-            bell
-            | Seq[ 
-                Fm 1, 
-            ]
-            -- thing1,
-            -- thing2
+            part1,
+            thing2 | FitLength part1,
         ],
+        Gm 0 | Lm 1/7,
+        overtones1 
+        | Overlay [Fm 1, Fm 3/2, Fm 9/4]
+        | Lm 5,
+        Gm 0 | Lm 1/7,
+        Overlay [
+            part2,
+            thing2 | FitLength part2,
+        ] | Lm 11/10,
+        thing2 
+        | Seq [Fm 1]
+        | FitLength Seq [Lm 7 | Lm 100],
+        
     ]
+    | Gm 1/2
     | Lm 1/7
     | Lm 11/10
 
