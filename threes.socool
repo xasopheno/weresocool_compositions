@@ -17,11 +17,12 @@ thing1 = {
         Fm 9/8, Fm 5/3, Fm 11/4, 
         Fm 9/8 | Lm 2, Fm 8/5,
         Fm 25/24, Fm 3/2, Fm 9/4,
-        Fm 4/5 | Lm 2, Lm 9/8, 
+        Fm 1, Fm 3/2, Fm 9/4, 
         Fm 7/8, Fm 7/4 | Lm 2, 
         Fm 15/16, Fm 7/4, Fm 7/3,
         Fm 7/6, Fm 5/2 | Lm 2,
         Fm 8/5, Fm 9/4, Fm 7/3,
+        Fm 5/3, Fm 9/8, Fm 7/8,
         Fm 3/4 | Lm 3,
         Fm 1/2 | Lm 3,
         Fm 2/3 | Lm 3,
@@ -32,10 +33,9 @@ thing1 = {
         Fm 5/2 | Lm 3,
         Fm 7/8 | Lm 3,
         Fm 3/4 | Lm 3,
-        Fm 7/6 | Lm 9,
+        Fm 7/6 | Lm 6,
+        Fm 6/5 | Lm 3,
         Fm 5/4 | Lm 9,
-
-
    ]
 }
 
@@ -139,6 +139,23 @@ new = {
     | Fm 9/8
 }
 
+fasts = {
+    Overlay [
+        {1/1, 1, 1, -1},
+        {1/1, 0, 1, 1},
+        {3/4, -2, 1/8, 0},
+        {3/4, 0, 1/8, 0},
+    ]
+    | Seq [
+        Fm 1, Fm 3/2, Fm 5/3, Fm 7/4, 
+        Fm 5/3, Fm 2, Fm 9/4, Fm 5/3,
+        Fm 2, Fm 9/4, Fm 5/2, Fm 2,
+        Fm 7/4, Fm 2, Fm 9/4 | Lm 1/4, Fm 0 | Lm 3/4, Fm 0,
+    ]
+    | Seq [Fm 1, Fm 0]
+    | FitLength new
+}
+
 main = {
     Seq [
         Overlay [
@@ -149,9 +166,11 @@ main = {
             thing2 | Overlay [Sine]
         ]
         | Lm 1/6,
-        -- | Seq [Pm 1, Pm -1],
         Fm 0 | Lm 1/100,
-        new,
+        Overlay [
+            new,
+            fasts
+        ]
     ]
     | Repeat 3
 }
