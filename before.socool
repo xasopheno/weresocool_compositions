@@ -65,8 +65,8 @@ thing2 = {
 main = {
     Overlay [
         thing1,
-        thing2
+        -- thing2
     ]
-    | Lm 1/7
+    | Lm 1/8
     | Repeat 10
 }
