@@ -1,0 +1,207 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+        {1/4, -4, 1/10, 0},
+        {1/4, 0, 1/10, 0},
+    ]
+    | Seq [
+        Fm 1, Fm 5/6, Fm 2/3, Fm 5/8, Fm 15/16
+   ]
+   | Overlay [
+        AsIs, 
+        Tri | Gm 1/16
+   ]
+}
+
+thing2 = {
+    Overlay [
+        {1/1, -3, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 3/4
+    ]
+    | FitLength thing1
+}
+
+
+thing3 = {
+    Overlay [
+        {1, -2, 1, 1/4},
+        {1, 0, 1, -1/4},
+    ]
+    | Seq [
+        Fm 3/4, Fm 5/6, Fm 3/4, 
+        Fm 15/16, Fm 5/6, Fm 15/16,
+        Fm 1, Fm 9/8, Fm 1,
+    ]
+    | Gm 1/2
+    | FitLength thing1
+}
+
+thing4 = {
+    Overlay [
+        {1, -1, 1, 1/4},
+        {1, 0, 1, -1/4},
+    ]
+    | Seq [
+        Fm 9/8, Fm 5/4, Fm 9/8, 
+        Fm 3/2,
+    ]
+    | Gm 1/2
+    | FitLength thing1
+}
+
+thing5 = {
+    Seq [
+        Overlay [
+            {2, -1, 1/2, 1/6},
+            {2, 0, 1/2, -1/2},
+        ] | Lm 3/4,
+        Overlay [
+            {9/4, -5, 1/2, 1/3},
+            {9/4, 0, 1/2, -1/8},
+        ] | Lm 1/2,
+        Overlay [
+            {5/2, -3, 1/4, 1/2},
+            {5/2, 0, 1/4, -1/3},
+        ] | Lm 1/4,
+        Overlay [
+            {3, -3, 1/2, 1/3},
+            {3, 0, 1/2, -1/4},
+        ] | Lm 2/3,
+    ]
+    | Gm 1/2
+    | FitLength Seq [thing1 | Repeat 2]
+}
+
+section1 = {
+    Overlay [
+        thing1 | Repeat 2,
+        thing2 | Repeat 2,
+        thing3 | Seq [Fm 1, Fm 0],
+        thing4 | Seq [Fm 0, Fm 1],
+        thing5
+    ]
+    | ModBy [
+        Overlay [
+            {1, -1/2, 1/2, 1},
+            {1, 0, 1/2, -1},
+        ] | Lm 3,
+        Overlay [
+            {1, -2, 1/2, 1},
+            {1, 0, 1/2, -1},
+        ] | Lm 2,
+        Overlay [
+            {1, -4, 1/2, 1},
+            {1, 0, 1/2, -1},
+        ] | Lm 1/4,
+    ]
+    | Repeat 3
+}
+
+bass = {
+    Overlay [
+        {3/2, 0, 1/2, 0},
+        {3/2, -3, 1/2, 0},
+        {1, 0, 1/3, 0},
+        {1, -1, 1/3, 0},
+        {1/2, 2, 1, 1},
+        {1/2, 0, 1, -1},
+    ]
+    | Seq [
+        Seq [
+            Fm 5/6 | Lm 3/2, Fm 15/16 | Lm 3/2, Fm 9/8, 
+            Fm 5/4 | Lm 4,
+            Fm 3/2, Fm 9/8, Fm 4/3, Fm 5/4 | Lm 4,
+            Fm 5/3, Fm 9/8, Fm 5/4, Fm 4/3 | Lm 4,
+            Fm 3/2, Fm 4/3, Fm 5/4, Fm 9/8 | Lm 2,
+        ]
+        | Seq [Repeat 2],
+        Fm 5/6 | Lm 5/4,
+        Fm 3/4 | Lm 13/6,
+        Fm 5/6 | Lm 1/2,
+        Fm 1/2 | Lm 1/3,
+        Fm 1/4 | Lm 1/5,
+        Fm 1/6 | Lm 1/10,
+   ]
+}
+
+bassChord = {
+    Seq [
+        Overlay [
+            {5/6, 0, 1, 0},
+            {5/6, 5, 1, 0},
+            {3/4, 0, 1, 0},
+            {3/4, 5, 1, 0},
+        ],
+    ] 
+    | FitLength bass
+}
+
+section2 = {
+    Overlay [
+        bass | Lm 1/14 | Repeat 1 | Fm 8/9,
+        bassChord | Lm 1/14,
+    ]
+}
+
+bass2 = {
+    Overlay [
+        {3/2, 0, 1/2, 0},
+        {3/2, -3, 1/2, 0},
+        {1, 0, 1/3, 0},
+        {1, -1, 1/3, 0},
+        {1/2, 2, 1, 1},
+        {1/2, 0, 1, -1},
+    ]
+    | Seq [
+        Seq [
+            Fm 5/6 | Lm 3/2, Fm 15/16 | Lm 3/2, Fm 9/8, 
+            Fm 5/4 | Lm 4,
+            Fm 3/2, Fm 9/8, Fm 4/3, Fm 5/4 | Lm 4,
+            Fm 5/3, Fm 9/8, Fm 5/4, Fm 4/3 | Lm 4,
+            Fm 3/2, Fm 4/3, Fm 5/4, Fm 9/8 | Lm 2,
+        ]
+        | Seq [Repeat 2],
+        Fm 5/6 | Lm 5/4,
+        Fm 3/4 | Lm 13/6,
+        Fm 5/6 | Lm 1/2,
+   ]
+   | Lm 1/12
+   | Repeat 5
+}
+
+bassChord2 = {
+    Seq [
+        Overlay [
+            {5/6, 0, 1, 0},
+            {5/6, 5, 1, 0},
+            {3/4, 0, 1, 0},
+            {3/4, 5, 1, 0},
+        ],
+    ] 
+    | FitLength bass2
+}
+
+section3 = {
+    Overlay [
+        bass2,
+        bassChord2 | Lm 11/10,
+    ] | Fm 8/9
+}
+
+
+main = {
+    Seq [
+        section2,
+        Fm 0 | Lm 1/100,
+        section1,
+        Fm 0 | Lm 1/100,
+        section3,
+    ]
+    | Lm 4
+}
