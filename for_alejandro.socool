@@ -35,9 +35,11 @@ bass = {
         Fm 1 | Lm 5/3, Fm 3/4 | Lm 5/4, Fm 1/2 | Lm 2,
         Fm 2/3, Fm 1 | Lm 10/3,
         Fm 3/4 | Lm 5/4, Fm 2/3 | Lm 5/3, Fm 5/8, Fm 4/5 | Lm 1/2, 
-        Fm 5/6 | Lm 6/5, Fm 9/8 | Lm 5/4, Fm 3/2 | Lm 3/2,
-        Fm 8/5, Fm 7/4 | Lm 5/4, Fm 8/5 | Lm 6/5,
-        Fm 3/2 | Lm 1/2, Fm 4/3 | Lm 1/2,
+        Fm 5/6 | Lm 7/5, Fm 9/8 | Lm 7/5, Fm 3/2 | Lm 3/2,
+        -- Fm 8/5, Fm 7/4 | Lm 5/4, Fm 8/5 | Lm 7/5, 
+        -- Fm 3/2 | Lm 1/2, 
+        Fm 8/5 | Lm 1/2, Fm 4/3 | Lm 1/2, Fm 25/24 | Lm 1/2
+        -- Fm 3/2 | Lm 1/2, Fm 4/3 | Lm 1/2,
    ]
 }
 
@@ -111,7 +113,7 @@ thing5 = {
 
 main = {
     Seq [
-        before | Repeat 3, 
+        -- before | Repeat 3, 
         Seq [
             Overlay [
                 bass,
@@ -122,7 +124,7 @@ main = {
                     -- thing5, 
                 -- ] | Gm 4/5
             ],
-            before
+            -- before
         ]
         | Repeat 6
     ]
