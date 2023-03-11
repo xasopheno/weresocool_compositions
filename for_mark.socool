@@ -1,5 +1,14 @@
 { f: 311.127, l: 5/4, g: 1/3, p: 0 }
 
+bass_overtones = {
+    Overlay [
+        {1/1, 0, 1, 0},
+        {1/2, 0, 1, 1/3},
+        {1/2, -10, 1/2, -1/100},
+        {1/2, 0, 1/2, 1/100},
+    ]
+}
+
 thing1 = {
     Overlay [
         {1/2, 2, 1, 1},
@@ -11,19 +20,19 @@ thing1 = {
     ]
     | Seq [
         Fm 9/8, Fm 5/4, Fm 4/3, Fm 5/4, 
-        Fm 1/2 | Lm 2, 
+        Fm 1/2 | Lm 2 | bass_overtones, 
         Fm 7/6, Fm 11/8, Fm 3/2,
         Fm 9/8, Fm 5/4,  
-        Fm 15/32 | Lm 3, 
+        Fm 15/32 | Lm 3 | bass_overtones, 
         Fm 3/4, Fm 7/6, Fm 9/8, 
-        Fm 1/2 | Lm 3, 
+        Fm 1/2 | Lm 3 | bass_overtones, 
         Fm 3/4, Fm 9/8, Fm 7/6, 
-        Fm 1/2 | Lm 3, 
+        Fm 1/2 | Lm 3 | bass_overtones, 
         Seq [
             Fm 3/4, Fm 7/6, Fm 9/8, 
-            Fm 1/2 | Lm 3, 
+            Fm 1/2 | Lm 3 | bass_overtones, 
             Fm 3/4, Fm 7/6, Fm 4/3, 
-            Fm 1/2 | Lm 3, 
+            Fm 1/2 | Lm 3 | bass_overtones, 
         ]
         | *(
            f: 0|120 [-45, 7, -26, -10],
@@ -35,8 +44,10 @@ thing1 = {
                f: 0|120 [30],
             ) Take 6 | Lm 1/9,
         ],
-        Fm 3/4, Fm 7/6, Fm 9/8, 
-        Fm 1/2 | Lm 3, 
+        Seq [
+            Fm 3/4, Fm 7/6, Fm 9/8, 
+            Fm 1/2 | Lm 3 | bass_overtones, 
+        ]
    ]
    | Overlay [
         Sine 1, Sine 3/2, Sine 1.1 | Gm 1/4 | Fa -3 
@@ -76,14 +87,171 @@ thing2 = {
     | FitLength thing1
 }
 
-main = {
+section1 = {
     Overlay [
         thing1,
         thing2
     ]
     | Lm 1/8
-    | Gm 1/6
+    | Gm 1/3
     | Fm 4/3
     | Seq [Fm 1, Fm 7/8 | Lm 7/8]
-    | Repeat 3
+}
+
+chords = {
+    Seq [ 
+        Fm 0, Fm 1 
+    ]
+    | Overlay [
+        {1, 0, 1/2, 1},
+        {1, -4, 1/2, -1},
+    ]
+    | Seq [
+        Overlay [
+            {3/2, 0, 1, 0},
+            {11/8, 0, 1, 1},
+            {4/3, 0, 1, -1},
+        ],
+        Overlay [
+            {5/4, 0, 1, 0},
+            {7/6, 0, 1, 1},
+            {9/8, 0, 1, -1},
+        ],
+        Overlay [
+            {7/4, 0, 1, 0},
+            {8/5, 0, 1, 1},
+            {11/8, 0, 1, -1},
+        ],
+        Overlay [
+            {5/3, 0, 1, 0},
+            {8/5, 0, 1, 1},
+            {5/4, 0, 1, -1},
+        ],
+        Overlay [
+            {15/8, 0, 1, 0},
+            {7/4, 0, 1, 1},
+            {8/5, 0, 1, -1},
+        ],
+        Overlay [
+            {2, 0, 1, 0},
+            {7/4, 0, 1, 1},
+            {8/5, 0, 1, -1},
+        ],
+    ]
+    | Overlay [Sine, Noise]
+    | Seq [Fm 0 | Lm 4, Seq [Fm 1 | Lm 1, Fm 1 | Lm 2/3, Fm 0 | Reverse | Lm 1/3 | ModBy [Fm 0, Fm 1, Fm 0]]]
+    | Fm 2 
+    | Gm 3/4 
+    | FitLength section1
+}
+
+held = {
+    Overlay [
+        {5/2, 0, 1/3, -1/2},
+        {5/2, 1, 1/3, -1/2},
+        {7/3, 0, 1/3, 1/2},
+        {7/3, 1, 1/3, 1/2},
+        {11/8, 0, 1, 1},
+        {3/2, 0, 1, 0},
+        {11/8, 0, 1, 1},
+        {4/3, 0, 1, -1},
+        {7/6, 0, 1, 1},
+    ]
+    | Overlay [
+        {1, -4, 1/2, 1/3},
+        {1, 0, 1/2, 1/3},
+    ]
+    | ModBy [
+        Fm 1 | Lm 10,
+        *(
+           g: 10|10 [-1],
+        ) Take 30
+    ]
+    | Gm 3/4
+    | FitLength section1
+}
+
+section2 = {
+    Overlay [
+        {11/4, 0, 1/3, -1/2},
+        {11/4, 1, 1/3, -1/2},
+        {5/2, 0, 1/3, -1/2},
+        {5/2, 1, 1/3, -1/2},
+        {3/2, 0, 1, 0},
+        {4/3, 0, 1, -1},
+        {1/3, 0, 1, -1},
+        {1/3, 0, 1, 1},
+    ]
+    | Overlay [
+        {1, -9, 1/2, -1/3},
+        {1, 0, 1/2, 1/3},
+    ]
+    | Lm 5
+    | Seq [
+        Fm 7/6 | Lm 4/3, Fm 1 | Lm 4/3, 
+        Fm 2/3 | Lm 1/3, 
+    ]
+    | Lm 1/2
+}
+
+section2_bass = {
+    Seq [
+        Fm 1, Fm 0, Fm 0, 
+        Fm 1, Fm 0, 
+    ]
+    | Overlay [
+        {2, 3, 1, -1},
+        {2, 0, 1, 1},
+        {1/3, 3, 1, -1},
+        {1/3, 0, 1, 1},
+    ]
+    | Seq [
+        Repeat 3, 
+        Fm 7/8 | Repeat 4,
+        Fm 2/3 | Repeat 1, 
+    ]
+    | Gm 1/2
+    | FitLength section2
+}
+
+main = {
+    Seq [
+        Overlay [
+            {2, 3, 1, -1},
+            {2, 0, 1, 1},
+            {1/3, 3, 1, -1},
+            {1/3, 0, 1, 1},
+        ],
+        Fm 0 | Lm 1/100,
+        Seq [
+            Overlay [
+                section1, 
+                chords,
+                held
+            ]
+            | Repeat 2,
+            Fm 0 | Lm 1/100,
+            Seq [
+                Overlay [
+                    section2, 
+                    section2_bass,
+                ],
+                Fm 0 | Lm 1/100
+            ]
+            | Seq [Fm 1, Fm 7/8]
+            | Lm 4/7
+            | Fm 3/2
+            | Gm 4/5,
+            Fm 0 | Lm 1/100
+        ]
+        | Repeat 2,
+        Fm 0 | Lm 1/100,
+        Overlay [
+            {2, 3, 1, -1},
+            {2, 0, 1, 1},
+            {1/3, 3, 1, -1},
+            {1/3, 0, 1, 1},
+        ],
+        Fm 0 | Lm 1/100,
+    ]
 }
