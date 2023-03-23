@@ -21,6 +21,41 @@ thing1 = {
          Fm 3/2, Fm 3/2, Fm 3/2, Fm 3/2,
          Fm 7/4, Fm 7/4, Fm 3/2, Fm 3/2,
     ]
+
+}
+
+melody_base = {
+    Seq [
+        Fm 9/8, Fm 5/4, Fm 3/2, Fm 5/4, Fm 3/2,
+        Fm 5/3, Fm 5/4, Fm 3/2, Fm 5/4, Fm 3/2,
+        Fm 7/6, Fm 3/2, Fm 4/3, Fm 7/6, Fm 5/4,
+        Fm 9/8, Fm 1,   Fm 15/16, Fm 4/3, Fm 3/2,
+        Fm 5/4, Fm 9/8, Fm 3/2, Fm 5/3, Fm 3/2,
+
+        Fm 4/5, Fm 9/8, Fm 7/8, Fm 25/24, Fm 5/4, 
+        Fm 4/3, Fm 8/5 | Lm 2,
+        Seq [
+            Fm 5/4, Fm 9/8, Fm 4/3, Fm 5/3, Fm 8/5,
+            Fm 11/8, 
+        ] | Gm 3/4,
+        Fm 7/6, Fm 9/8, Fm 5/4, Fm 3/2 | Lm 4,
+
+        Fm 0 | Lm 3,
+
+        Fm 5/3, Fm 15/8, Fm 2, Fm 7/4, Fm 8/5, 
+        Fm 3/2, Fm 11/8, Fm 3/2, Fm 11/8, Fm 3/2,
+        Fm 9/8, Fm 15/16, Fm 3/4, Fm 2/3, Fm 5/8,
+        Seq [
+            Fm 4/5, Fm 15/16, Fm 9/8, Fm 4/3, Fm 11/8,
+            Fm 3/2, Fm 7/4, Fm 3/2, Fm 5/4, Fm 9/8, 
+        ] | Gm 4/5,
+        Fm 1, Fm 7/6, Fm 4/3, Fm 5/3, Fm 4/3, 
+        Fm 5/4, Fm 9/8, Fm 15/16, Fm 5/6, Fm 3/4,
+        Fm 2/3, Fm 1/2, Fm 3/8, Fm 1/3, Fm 1/4,
+        Fm 1/5, Fm 1/6,
+
+        Fm 0 | Lm 1/100,
+    ]
 }
 
 melody = {
@@ -32,30 +67,7 @@ melody = {
         {1/1, 2, 1, 1},
         {1/1, 0, 1, -1},
     ]
-    | Seq [
-        Fm 9/8, Fm 5/4, Fm 3/2, Fm 5/4, Fm 3/2,
-        Fm 5/3, Fm 5/4, Fm 3/2, Fm 5/4, Fm 3/2,
-        Fm 7/6, Fm 3/2, Fm 4/3, Fm 7/6, Fm 5/4,
-        Fm 9/8, Fm 1,   Fm 15/16, Fm 4/3, Fm 3/2,
-        Fm 5/4, Fm 9/8, Fm 3/2, Fm 5/3, Fm 3/2,
-        Fm 9/8, Fm 1,   Fm 15/16, Fm 4/3, Fm 3/2,
-        Fm 5/4, Fm 9/8, Fm 3/2, Fm 5/3, Fm 3/2,
-        Fm 11/8, Fm 7/6, Fm 9/8, Fm 5/4, Fm 3/2 | Lm 3,
-
-        Fm 0 | Lm 3,
-
-        Fm 5/3, Fm 15/8, Fm 2, Fm 7/4, Fm 8/5, 
-        Fm 3/2, Fm 11/8, Fm 3/2, Fm 11/8, Fm 3/2,
-        Fm 9/8, Fm 15/16, Fm 3/4, Fm 2/3, Fm 5/8,
-        Fm 4/5, Fm 15/16, Fm 9/8, Fm 4/3, Fm 11/8,
-        Fm 3/2, Fm 7/4, Fm 3/2, Fm 5/4, Fm 9/8, 
-        Fm 1, Fm 7/6, Fm 4/3, Fm 5/3, Fm 4/3, 
-        Fm 5/4, Fm 9/8, Fm 15/16, Fm 5/6, Fm 3/4,
-        Fm 2/3, Fm 1/2, Fm 3/8, Fm 1/3, Fm 1/4,
-        Fm 1/5, Fm 1/6,
-
-        Fm 0 | Lm 1/100,
-    ]
+    | melody_base
     | Seq [Fm 0, Fm 0, Fm 1]
     | Fm 2
     | FitLength thing1
@@ -84,7 +96,89 @@ thing2 = {
     | FitLength thing1
 }
 
-main = {
+bassline = {
+    Overlay [
+        {2/1, 2, 1, 1},
+        {2/1, 0, 1, -1},
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+        {3/4, 3, 1, 1},
+        {3/4, 0, 1, -1},
+        {1/2, 3, 1, 1},
+        {1/2, 0, 1, -1},
+        {1/4, 3, 1, 1},
+        {1/4, 0, 1, -1},
+    ]
+    | Seq [
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Repeat 3,
+            Seq [
+                Fm 3/4, Fm 25/24, Fm 5/4, Fm 5/3, Fm 9/4, Fm 5/2,
+                Fm 3/2, Fm 7/4, Fm 2, Fm 7/3, Fm 8/3, Fm 3/2, 
+                Fm 5/3, Fm 15/8, Fm 25/12, Fm 4/5
+            ],
+        ] | Repeat 2,
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Reverse | Repeat 4,
+        ] 
+        | Fm 25/24,
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Repeat 3,
+            Seq [
+                Fm 3/4, Fm 25/24, Fm 5/4, Fm 5/3, Fm 9/4, Fm 5/2,
+                Fm 3/2, Fm 7/4, Fm 2, Fm 7/3, Fm 8/3, Fm 3/2, 
+                Fm 5/3, Fm 15/8, Fm 25/12, Fm 4/5
+            ],
+        ],
+        ----
+
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Repeat 3,
+            Seq [
+                Fm 3/4, Fm 25/24, Fm 5/4, Fm 5/3, Fm 9/4, Fm 5/2,
+                Fm 3/2, Fm 7/4, Fm 2, Fm 7/3, Fm 8/3, Fm 3/2, 
+                Fm 5/3, Fm 15/8, Fm 25/12, Fm 4/5
+            ],
+        ] | Seq [Fm 9/8, Fm 25/24],
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Reverse | Repeat 4,
+        ] 
+        | Fm 25/24,
+        Seq [
+            Seq [
+                Fm 3/4, Fm 1, Fm 4/3, Fm 9/8, Fm 7/8, Fm 9/8, Fm 3/4, Fm 1/2,
+                Fm 3/4, Fm 1, Fm 7/6, Fm 7/8, Fm 15/16, Fm 3/4, Fm 1/2 | Lm 2,
+            ] | Repeat 3,
+            Seq [
+                Fm 3/4, Fm 25/24, Fm 5/4, Fm 5/3, Fm 9/4, Fm 5/2,
+                Fm 3/2, Fm 7/4, Fm 2, Fm 7/3, Fm 8/3, Fm 3/2, 
+                Fm 5/3, Fm 15/8, Fm 25/12, Fm 4/5
+            ],
+        ],
+    ]
+    | Overlay [
+        Sine, Sine 3/4 | Gm 1/8, Sine 1.1 | Gm 1/4 | Fm 1/2
+    ]
+    | Gm 1/3
+    | Lm 1/8
+}
+
+section1 = {
     Overlay [
         {1/1, 0.3, 1, 1},
         {1/1, 0, 1, 0},
@@ -99,6 +193,48 @@ main = {
     | Overlay [
         Sine, Sine 3/4 | Gm 1/8, Sine 1.1 | Gm 1/4 | Fm 1/2
     ]
-    | Repeat 6
-    | Gm 1/3
+    | Repeat 2
+}
+
+main = {
+    Seq [
+        section1,
+        Fm 0 | Lm 1/100,
+        Overlay [
+            Overlay [
+                {7/4, 0, 1/2, 1/16},
+                {7/4, -3, 1/2, -1/16},
+                {1, 0, 1/2, 1/16},
+                {1, -3, 1/2, -1/16},
+            ]
+            | FitLength bassline
+            | ModBy [
+                *(
+                    f: 0|48 Expr `sin(10 * x)`,
+                    g: 100|100 Expr `sin(5 * x)`,
+                    p: 0|100 Expr `sin(8 * x)`,
+                 ) Take 700 
+            ]
+            | ModBy [
+                Overlay [
+                    *(
+                        f: 0|24 Expr `sin(20 * x)`,
+                     ) Take 700,
+                     Fm 3/2 | *(
+                        f: 0|48 Expr `sin(100 * x)`,
+                        g: 50|50 Expr `sin(100 * x)`,
+                        p: 0|100 Expr `sin(3 * x)`,
+                     ) Take 200 
+                ]
+                | Fm 25/24
+            ] 
+            | ModBy [Gm 0, Lm 5]
+            | Gm 2/3
+            | Overlay [Sine, Reverb 1 | Gm 3, Noise | Gm 1/5 | Pm -1/4],
+            bassline, 
+        ],
+        Fm 0 | Lm 1/100,
+        section1,
+    ]
+    | Gm 1/8
 }
