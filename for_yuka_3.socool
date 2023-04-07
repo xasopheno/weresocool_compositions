@@ -220,8 +220,9 @@ chord2 = {
         Fm 1 | Lm 4, Fm 3/4, Fm 1/2, Fm 1/3, Fm 1/4, Fm 1/5, Fm 1/6, Fm 1/7, Fm 1/8,
       ] | Lm 1/16,
     ]
-    | Gm 2
+    | Gm 7/4
     | Overlay [Sine, Sine 3/2 | Gm 1/8, Sine 2 | Gm 1/8]
+    | Overlay [AsIs, Reverb 1]
     | FitLength thing2
 }
 
@@ -270,10 +271,10 @@ new_thing_bass = {
         {4, 0, 1/4, -1},
         {2, -2, 1, 1/7},
         {2, 0, 1, -1/7},
-        {1/2, -2, 1, 1/7},
+        {3/2, -3, 1, 1/7},
+        {3/2, 0, 1, -1/7},
+        {1/2, -3, 1, 1/7},
         {1/2, 0, 1, -1/7},
-        {1/4, -2, 1, 1/7},
-        {1/4, 0, 1, -1/7},
     ]
     | Seq [
       Fm 0, Fm 5/6 | Lm 4/5, Fm 3/4 | Lm 6/5, Fm 5/8,
@@ -281,28 +282,65 @@ new_thing_bass = {
       Seq [
         Fm 3/4, Fm 5/6, 
         Overlay [
+          Fm 9/8 | Gm 1/2,
           Fm 9/16,
-        ]
-        , Fm 0
-      ] | Lm 2/3,
+          Fm 5/3 | Pa 1 | Gm 1/8,
+          Fm 5/3 | Fa 3 | Pa -1 | Gm 1/8,
+        ], Fm 0
+      ] 
+      | Lm 2/3
     ]
+}
+
+new_chord = {
+  Overlay [
+    {11/4, -7, 1/2, 1},
+    {11/4, 0, 1/2, -1},
+    {5/2, -7, 1/2, 1/3},
+    {5/2, 0, 1/2, -1/3},
+    {9/4, -3, 1/2, 1/4},
+    {9/4, 0, 1/2, -1/4},
+    {15/8, 8, 1/2, 1/4},
+    {15/8, 0, 1/2, -1/4},
+    {3/2, -3, 1/2, 1},
+    {3/2, -7, 1/2, -1},
+    {1/5, -3, 1/2, 1},
+    {1/5, -7, 1/2, -1},
+  ]
+  | Gm 1/2
+  | FitLength new_thing_bass
 }
 
 section2 = {
   Overlay [
+    {1, 1/7, 1/2, 1},
+    {1, 0, 1, 0},
+    {1, 1/10, 1/2, -1},
+  ]
+  | Overlay [
     new_thing,
     new_thing_bass,
+    new_chord
   ] 
-  | Gm 1/2
-  | Repeat 4
+  | Gm 1/3
+  | Seq [
+    Seq [
+        Lm 5/4, 
+        Lm 5/4 | ModBy [Fm 1 | Lm 25/2, Fm 1 | ModBy [Fm 2/3, Fm 1/2, Fm 1/3, Fm 0 | Lm 1/3]],
+        Lm 1,
+        Lm 1 | ModBy [Fm 1 | Lm 19/2, Fm 1 | ModBy [Fm 2/3, Fm 1/2, Fm 1/3]],
+    ]
+  ]
 }
 
 main = {
   Seq [
-    section1 | Repeat 3,
+    section1 | Repeat 2,
     Fm 0 | Lm 1/100,
     section2 | Lm 3/4,
     Fm 0 | Lm 1/100,
   ]
-  | Gm 1/7
+  | Gm 1
+  | Repeat 2
+
 }
