@@ -1,0 +1,64 @@
+Sure! I'll add a function to save the results of each step in separate folders and files. We'll use the fs module to manage files and folders. Make sure you have Node.js installed, as we'll be using its built-in modules.
+
+First, import the fs module:
+
+typescript
+Copy code
+import * as fs from 'fs/promises';
+Next, create a function to save the content to a file:
+
+typescript
+Copy code
+async function saveToFile(chapterNumber: number, stepNumber: number, content: string): Promise<void> {
+  const folder = `./chapter_${chapterNumber}`;
+  const filename = `step_${stepNumber}.txt`;
+
+  try {
+    await fs.mkdir(folder, { recursive: true });
+    await fs.writeFile(`${folder}/${filename}`, content, 'utf-8');
+    console.log(`Saved content to ${folder}/${filename}`);
+  } catch (error) {
+    console.error('Error saving file:', error);
+  }
+}
+Now, we need to modify the sendPrompt function to include the chapter number, step number, and saving functionality:
+
+typescript
+Copy code
+async function sendPrompt(prompt: string, chapterNumber: number, stepNumber: number): Promise<string> {
+  const request: CreateCompletionRequest = {
+    engine: 'text-davinci-003',
+    prompt: prompt,
+    max_tokens: 150,
+    n: 1,
+    stop: null,
+    temperature: 0.8,
+  };
+
+  try {
+    const response = await openai.createCompletion(request);
+    const text = response.choices[0].text.trim();
+
+    // Save the content to a file
+    await saveToFile(chapterNumber, stepNumber, text);
+
+    return text;
+  } catch (error) {
+    console.error('Error:', error);
+    return '';
+  }
+}
+Finally, you'll need to update the functions for each step to include the chapter number and step number when calling sendPrompt. For example, the summarizeContent function would now look like this:
+
+typescript
+Copy code
+async function summarizeContent(text: string, chapterNumber: number): Promise<string> {
+  const prompt = `Summarize the key events, characters, and themes of the following text as bullet points. Keep the summary concise and informative.
+
+Text: """
+${text}
+"""`;
+
+  const summary = await sendPrompt(prompt, chapterNumber, 0);
+  return summary;
+}

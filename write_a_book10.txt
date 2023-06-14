@@ -1,0 +1,197 @@
+export interface StepSettings {
+  step: number;
+  description: string;
+  promptTemplate: (args: any) => string;
+}
+
+export const bookWritingSettings: StepSettings[] = [
+  {
+    step: 0,
+    description: "Summarizing the written content",
+    promptTemplate: (args: any) => `Summarize the story so far in the book:\n${args.storySoFar}`,
+  },
+  {
+    step: 1,
+    description: "Updating previous chapter summaries",
+    promptTemplate: (args: any) => `Update the summaries of previous chapters based on the latest information in the story:\n${args.summaries}`,
+  },
+  {
+    step: 2,
+    description: "Writing a new chapter",
+    promptTemplate: (args: any) => `Write a new chapter for the book in the style of Kurt Vonnegut, Stephen King, and Stanislaw Lem, based on the following summaries:\n${args.summaries}\n\nLast Chapter:\n${args.lastChapterContent}`,
+  },
+  {
+    step: 3,
+    description: "Editing the new chapter",
+    promptTemplate: (args: any) => `Edit the following new chapter of the book to improve its clarity, coherence, and style:\n${args.newChapterContent}\n\nPrevious Chapter:\n${args.lastChapterContent}\n\nSummaries:\n${args.summaries}`,
+  },
+  {
+    step: 4,
+    description: "Improving the chapter",
+    promptTemplate: (args: any) => `Improve the following chapter of the book based on the suggestions provided:\n${args.newChapterContent}\n\nSuggestions:\n${args.suggestions}\n\nPrevious Chapter:\n${args.lastChapterContent}\n\nSummaries:\n${args.summaries}`,
+  },
+];
+Update the buildPrompt function in the main file to include the required data for the prompts:
+typescript
+Copy code
+import { StepSettings, bookWritingSettings } from "./settings";
+
+function buildPrompt(lastChapter: number, lastStep: number, settings: StepSettings[]): string {
+  const stepSettings = settings.find((s) => s.step === lastStep);
+
+  if (!stepSettings) {
+    throw new Error(`Invalid step: ${lastStep}`);
+  }
+
+  const promptArgs = {
+    storySoFar: getStorySoFar(lastChapter),
+    summaries: getSummaries(lastChapter),
+    lastChapterContent: getLastChapterContent(lastChapter),
+    newChapterContent: getNewChapterContent(lastChapter, lastStep),
+    suggestions: getSuggestions(lastChapter, lastStep),
+  };
+
+  return stepSettings.promptTemplate(promptArgs);
+}
+
+You're right, we can improve the type of args to provide better type safety. First, let's create an interface in the settings.ts file for the args parameter:
+
+typescript
+Copy code
+export interface PromptArgs {
+  storySoFar: string;
+  summaries: string;
+  lastChapterContent: string;
+  newChapterContent: string;
+  suggestions: string;
+}
+Next, update the StepSettings interface to use this new type:
+
+typescript
+Copy code
+export interface StepSettings {
+  step: number;
+  description: string;
+  promptTemplate: (args: PromptArgs) => string;
+}
+
+
+import fs from "fs";
+import path from "path";
+
+function getStorySoFar(lastChapter: number): string {
+  let story = "";
+  for (let i = 1; i <= lastChapter; i++) {
+    const chapterPath = path.join("chapters", `chapter-${i}`, "final.txt");
+    if (fs.existsSync(chapterPath)) {
+      const chapterContent = fs.readFileSync(chapterPath, "utf-8");
+      story += chapterContent + "\n\n";
+    }
+  }
+  return story;
+}
+
+function getSummaries(lastChapter: number): string {
+  let summaries = "";
+  for (let i = 1; i < lastChapter; i++) {
+    const summaryPath = path.join("chapters", `chapter-${i}`, "summary.txt");
+    if (fs.existsSync(summaryPath)) {
+      const summaryContent = fs.readFileSync(summaryPath, "utf-8");
+      summaries += summaryContent + "\n";
+    }
+  }
+  return summaries;
+}
+
+function getLastChapterContent(lastChapter: number): string {
+  const chapterPath = path.join("chapters", `chapter-${lastChapter}`, "final.txt");
+  if (fs.existsSync(chapterPath)) {
+    return fs.readFileSync(chapterPath, "utf-8");
+  }
+  return "";
+}
+
+function getNewChapterContent(lastChapter: number, lastStep: number): string {
+  const chapterPath = path.join("chapters", `chapter-${lastChapter}`, `step-${lastStep}.txt`);
+  if (fs.existsSync(chapterPath)) {
+    return fs.readFileSync(chapterPath, "utf-8");
+  }
+  return "";
+}
+
+function getSuggestions(lastChapter: number, lastStep: number): string {
+  const suggestionsPath = path.join("chapters", `chapter-${lastChapter}`, `suggestions-step-${lastStep}.txt`);
+  if (fs.existsSync(suggestionsPath)) {
+    return fs.readFileSync(suggestionsPath, "utf-8");
+  }
+  return "";
+}
+
+async function main(chapterToStartAt: number, stepToStartAt: number, stepsBeforeIntervention: number = 1) {
+  const promptData = loadPromptData();
+  let [currentChapter, currentStep] = [chapterToStartAt, stepToStartAt];
+
+  while (true) {
+    for (let i = 0; i < stepsBeforeIntervention; i++) {
+      // Execute the current step
+      const prompt = buildPrompt(promptData, currentChapter, currentStep);
+      const response = await sendPrompt(prompt);
+
+      // Save the output
+      saveOutput(response, currentChapter, currentStep);
+
+      // Increment step
+      currentStep++;
+      if (currentStep > 5) {
+        currentStep = 1;
+        currentChapter++;
+      }
+    }
+
+    // Intervention: wait for user input to continue or exit
+    const userInput = await getUserInput();
+    if (userInput === "exit") {
+      break;
+    }
+  }
+}
+You can use an argument parsing library like yargs to handle named arguments. First, you'll need to install it by running:
+
+Copy code
+npm install yargs
+Now, let's update the run function to handle named arguments:
+
+typescript
+Copy code
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+async function run() {
+  const argv = yargs(hideBin(process.argv))
+    .options({
+      "start": { type: "string", demandOption: false, default: null },
+      "steps": { type: "number", demandOption: false, default: 1 }
+    })
+    .argv;
+
+  const [chapterToStartAt, stepToStartAt] = argv.start
+    ? argv.start.split(",").map((x: string) => parseInt(x, 10))
+    : [null, null];
+  const stepsBeforeIntervention = argv.steps;
+
+  await main(chapterToStartAt, stepToStartAt, stepsBeforeIntervention);
+}
+
+run();
+Now, the arguments should be passed as named parameters:
+
+--start: The chapter and step to start at, separated by a comma (e.g., --start 1,1).
+--steps: The number of steps to generate before your intervention.
+If start is not given, the script will start at the next step without archiving. If steps is not given, it will default to 1.
+
+Here's an example of how to call the script with named arguments:
+
+css
+Copy code
+node script.js --start 1,1 --steps 10
+This will start the script at chapter 1, step 1, and generate 10 steps before waiting for your intervention.

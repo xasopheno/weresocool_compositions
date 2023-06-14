@@ -1,0 +1,90 @@
+sync function main(chapterToStartAt: number | null, stepToStartAt: number | null, stepsBeforeIntervention: number) {
+  if (chapterToStartAt !== null && stepToStartAt !== null) {
+    await archiveAndReset(chapterToStartAt, stepToStartAt);
+  }
+
+  const currentStep = await getCurrentStep();
+
+  for (let i = 0; i < stepsBeforeIntervention; i++) {
+    console.log(`Starting step ${currentStep.chapter}.${currentStep.step + i}`);
+    const result = await sendPrompt(currentStep.chapter, currentStep.step + i);
+
+    if (result === "DONE") {
+      console.log("Book completed!");
+      break;
+    } else {
+      console.log(`Step ${currentStep.chapter}.${currentStep.step + i} completed.`);
+    }
+  }
+}
+
+To achieve this, you can modify the high-level planning prompt to instruct the AI to follow the hero's journey structure in a non-obvious way and aim for a book length of around 318 pages. Here's an updated version of the high-level planning prompt:
+
+typescript
+Copy code
+const highLevelPlanningPrompt = `Plan a novel in the style of Isaac Asimov and Arthur C. Clarke that follows the hero's journey structure in a non-obvious way. The story should be engaging and have a strong focus on character development, world-building, and scientific concepts. Aim for a total length of around 318 pages. Please provide a high-level outline of the story, including major plot points and character arcs.`;
+With this prompt, the AI will create a high-level outline of the story that incorporates the hero's journey structure while maintaining the unique styles of Isaac Asimov and Arthur C. Clarke. By specifying the desired page length, the AI will also keep in mind the scope of the story while generating the outline.
+
+You can use this outline to guide the development of the book, adjusting the prompts for writing and editing chapters accordingly to ensure that the story follows the intended structure and length.
+
+Including a word count in the chapter summaries can be helpful for keeping track of the overall length of the book. This information can be useful for both you and the AI to ensure that the book stays within the desired length.
+
+To include the word count in the summaries, you can modify the summarization prompt like this:
+
+typescript
+Copy code
+const summarizationPrompt = `Summarize the content of the chapter below in a few sentences, including the main events and any important details. Please also include the word count of the chapter.
+
+Chapter content: {chapterContent}`;
+
+
+I apologize for not using TypeScript in my previous response. Here's the code snippet to count words in TypeScript:
+
+typescript
+Copy code
+function wordCount(text: string): number {
+  return text.trim().split(/\s+/).length;
+}
+
+const sampleText: string = `Your sample text goes here.`;
+const numberOfWords: number = wordCount(sampleText);
+console.log(`The number of words is: ${numberOfWords}`);
+
+async function main() {
+  // ... (other code)
+
+  let totalWords = 0;
+
+  for (let chapter = 1; chapter <= currentChapter; chapter++) {
+    const chapterContent = await getLastChapterContent(chapter);
+    totalWords += wordCount(chapterContent);
+  }
+
+  console.log(`Total words written so far: ${totalWords}`);
+
+  // ... (other code)
+}
+
+async function main() {
+  // ... (other code)
+
+  const targetWordCount = 95000;
+  let totalWords = 0;
+
+  for (let chapter = 1; chapter <= currentChapter; chapter++) {
+    const chapterContent = await getLastChapterContent(chapter);
+    totalWords += wordCount(chapterContent);
+  }
+
+  const percentComplete = (totalWords / targetWordCount) * 100;
+  console.log(`Total words written so far: ${totalWords} (${percentComplete.toFixed(2)}% complete)`);
+
+  // ... (other code)
+
+  const prompt = await createPrompt({
+    // ... (other args)
+    percentComplete,
+  });
+
+  // ... (other code)
+}

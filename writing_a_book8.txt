@@ -1,0 +1,59 @@
+I apologize for the confusion. Let's reconsider the estimation for a 300-page book. Assuming each page contains 250 words (in a standard book format), we have:
+
+Total words for a 300-page book: 300 pages * 250 words = 75,000 words
+Total number of tokens (assuming 1 token per word): 75,000 tokens
+Now, let's assume you have 30 chapters in your 300-page book:
+
+The average number of tokens per chapter summary: 100 tokens
+The average number of tokens per chapter: 2,500 tokens (75,000 tokens / 30 chapters)
+For each iteration (per chapter), the following token usage occurs:
+
+Step 0: Summarizing (100 tokens * 30 previous chapters) = 3,000 tokens
+Step 1: Writing a new chapter = 2,500 tokens
+Step 2: Editing the new chapter = 2,500 tokens
+Step 3: Improving the chapter = 2,500 tokens
+Total tokens per iteration = 10,500 tokens
+
+With 30 chapters, we have 30 iterations:
+
+Total tokens for the entire process = 10,500 tokens * 30 iterations = 315,000 tokens
+
+At a rate of $0.03 per 1,000 tokens, the total cost would be:
+
+Total cost = (315,000 tokens / 1,000) * $0.03 = $9.45
+
+Again, this is a rough estimation based on the assumptions mentioned above. The actual cost may vary depending on factors such as the length of summaries, chapters, and the total number of chapters.
+
+Here's the updated summarization prompt incorporating the suggestions:
+
+Step 0: Summarizing the written content
+
+python
+Copy code
+"Create a detailed summary of the written content that includes key events, characters, themes, and interesting connections between chapters. Organize the summaries using bullet points or numbered lists to emphasize memorable moments, character development, and any callbacks or foreshadowing that can be used later in the story. Provide the necessary context for creating an incredible reading experience.
+
+Chapter summaries:
+[Chapter summaries]"
+
+
+You're right, it's important to maintain the relevancy of the previous summaries as the story progresses. To achieve this, you can add a step in the process that updates the previous summaries. Here's the updated step list:
+
+Summarizing the written content (as before)
+Updating previous chapter summaries
+Writing a new chapter
+Editing the new chapter
+Improving the chapter
+For step 2, you can use the following prompt:
+
+Step 2: Updating previous chapter summaries
+
+python
+Copy code
+"Review the existing chapter summaries and update them to reflect any new developments, connections, or insights from the latest chapters. Ensure that the summaries remain relevant and provide the necessary context for a cohesive and engaging narrative. Retain any important callbacks, foreshadowing, and character development information.
+
+Existing chapter summaries:
+[Chapter summaries]
+
+Latest chapters:
+[Latest chapters]"
+By incorporating this step, you ensure that the previous summaries remain up-to-date and provide a comprehensive understanding of the story for the language model. This will help maintain long-term context and improve the overall quality of the book.

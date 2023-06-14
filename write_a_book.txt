@@ -1,0 +1,52 @@
+I want to use chatgpt to write a book. i would like the book to be in the style of a specific author, but not too similar. kurt vonegutt would be a good example of an author. it should use his flowing and flowery language, but not use references like Kilgore Trout for example. Someone that love the author would love the book without necessarily knowing why. 
+
+I would like to accomplish this through the openai api. The idea is that I would use two or three separate prompts to allow chatgpt to guide itself to writing and interesting and loveable book. For example:
+0) there would be a prompt to summarize anything that has already been written so any future prompts know the major plot points.  
+1) followed by a prompt that asks chatgpt to write a chapter of the book given the previous chapter, summaries of each chapter before, and any other useful information, etc
+2) then a prompt would act as an editor and take the new chapter, previous, and summaries and make suggestions. 
+3) a third prompt would then take the chapter, previous, summaries, and the edits and then try to improve the chapter. 
+4) after these three steps, I will read what has been written, make an edits, and submit the chapter as finalized. 
+5) this process should then be repeated until a book of 200-300 pages has been written. 
+
+Please instruct me how to do this, giving code examples when possible written in typescript. Explain how each step should be build asking if i understand and agree with the solution before going on. It is most important that this book is written in a style that people would love to read taking influences from popular writers such as steven king, stanislaw lem, kurt vonnegut, issac asimov. the story should be a love story set in the future. a real page turner. it should be a book that no one can put down. super entertaining and fun to read while making the reader then about the future. they should be inspired by new possibilites. things they've never thought of. the book should be deep and profound, but also fun and exciting. 
+
+I apologize for the confusion earlier. Based on your request, I have updated the prompts for each step of the process:
+
+Step 0: Summarizing the written content
+
+python
+Copy code
+Summarize the key events, characters, and themes of the following text as bullet points. Keep the summary concise and informative.
+
+Text: """
+{text input here}
+"""
+Step 1: Writing a new chapter
+
+css
+Copy code
+Using the context provided below, write a new chapter for a captivating love story set in the future. The writing style should resemble Kurt Vonnegut but also draw inspiration from Steven King, Stanislaw Lem, and Isaac Asimov. Make it a page-turner that is both entertaining and thought-provoking.
+
+Context:
+- Summaries: {Chapter summaries}
+- Previous chapters: {Previous chapters}
+Step 2: Editing the new chapter
+
+css
+Copy code
+Review the following chapter and provide suggestions for improvement in terms of flow, style, and coherence. Ensure that the writing style remains consistent and engaging.
+
+Chapter:
+{New chapter}
+Step 3: Improving the chapter
+
+css
+Copy code
+Incorporate the suggestions provided below to rewrite and enhance the chapter. Maintain the engaging and thought-provoking style throughout the revised chapter.
+
+Edit suggestions:
+{Edit suggestions}
+
+Original chapter:
+{New chapter}
+These updated prompts apply the tips from the article, such as providing clear instructions and context. If you have any further concerns or requests, please let me know.

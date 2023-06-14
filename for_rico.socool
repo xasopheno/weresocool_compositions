@@ -236,5 +236,5 @@ main = {
         Fm 0 | Lm 1/100,
         section1,
     ]
-    | Gm 1/8
+    | Gm 1/2
 }

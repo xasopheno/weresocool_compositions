@@ -1,0 +1,240 @@
+To fully integrate the main function with the sendPrompt function, you'll need to import the OpenAI API, install the required packages, and add the necessary API key. Here's an updated version of the main function:
+
+typescript
+Copy code
+import * as fs from 'fs';
+import * as path from 'path';
+import { openai } from 'openai'; // You'll need to install the 'openai' package
+
+// Add your OpenAI API key here
+openai.apiKey = 'your_openai_api_key_here';
+
+// The sendPrompt function we discussed earlier
+async function sendPrompt(prompt: string): Promise<string> {
+  // ...
+}
+
+async function main() {
+  const [nextChapter, nextStep] = getNextChapterAndStep();
+  console.log(`Next chapter: ${nextChapter}, Next step: ${nextStep}`);
+
+  const chapterFolder = path.join(bookDir, `chapter-${nextChapter}`);
+  if (!fs.existsSync(chapterFolder)) {
+    fs.mkdirSync(chapterFolder);
+  }
+
+  let prompt: string;
+
+  switch (nextStep) {
+    case 0:
+      prompt = ''; // Add the prompt for summarizing the written content
+      break;
+    case 1:
+      prompt = ''; // Add the prompt for updating previous chapter summaries
+      break;
+    case 2:
+      prompt = ''; // Add the prompt for writing a new chapter
+      break;
+    case 3:
+      prompt = ''; // Add the prompt for editing the new chapter
+      break;
+    case 4:
+      prompt = ''; // Add the prompt for improving the chapter
+      break;
+  }
+
+  const response = await sendPrompt(prompt);
+  const outputFile = path.join(chapterFolder, `step-${nextStep}.txt`);
+  fs.writeFileSync(outputFile, response);
+
+  console.log(`Output saved to ${outputFile}`);
+}
+
+main();
+Replace the empty strings '' for each case in the switch statement with the actual prompts you want to use. You should also add any necessary information to the prompts, such as file content, chapter summaries, or previous chapters as needed.
+
+Remember to install the 'openai' package, add your OpenAI API key, and have the '@types/node' package installed to use the fs and path modules in TypeScript.
+
+
+______
+
+You're right. To handle multiple archives per step, you can modify the archiveFiles function to include a timestamp in the file names when archiving. This way, each archived file will have a unique name based on the time it was archived.
+
+Here's the updated archiveFiles function:
+
+typescript
+Copy code
+import * as fs from 'fs';
+import * as path from 'path';
+import * as util from 'util';
+
+const copyFile = util.promisify(fs.copyFile);
+const mkdir = util.promisify(fs.mkdir);
+
+async function archiveFiles(chapter: number, step: number): Promise<void> {
+  try {
+    const chapterFolder = `chapter-${chapter}`;
+    const stepFolder = `step-${step}`;
+    const archiveFolder = path.join(chapterFolder, stepFolder, 'archive');
+    
+    // Create the archive folder if it doesn't exist
+    if (!fs.existsSync(archiveFolder)) {
+      await mkdir(archiveFolder);
+    }
+
+    // List all files in the current step folder
+    const files = fs.readdirSync(path.join(chapterFolder, stepFolder));
+
+    // Get a timestamp for archiving
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+    // Copy each file to the archive folder with a timestamp
+    for (const file of files) {
+      const src = path.join(chapterFolder, stepFolder, file);
+      const dest = path.join(archiveFolder, `${timestamp}-${file}`);
+      await copyFile(src, dest);
+    }
+
+    console.log(`Files from chapter ${chapter}, step ${step} have been archived with timestamp ${timestamp}.`);
+  } catch (error) {
+    console.error('Error archiving files:', error);
+  }
+}
+Now, when you archive the files, they will be saved with a unique timestamp, allowing you to have multiple archives per step without overwriting previous archives.
+
+You can modify the main function to accept command-line arguments for the chapter and step you want to start from, archive everything from that point onwards, and then start the process from there. Here's an example of how you can update the main function to do this:
+
+typescript
+Copy code
+import { sendPrompt } from './sendPrompt';
+import * as process from 'process';
+import { archiveFrom } from './archive';
+
+async function main() {
+  const args = process.argv.slice(2);
+  if (args.length === 2) {
+    const [chapter, step] = args.map(arg => parseInt(arg, 10));
+    await archiveFrom(chapter, step);
+  }
+
+  while (true) {
+    await sendPrompt();
+  }
+}
+
+main();
+
+import * as fs from 'fs';
+import * as path from 'path';
+
+export async function archiveFrom(chapter: number, step: number) {
+  const basePath = 'path/to/your/book/directory';
+  const archivePath = path.join(basePath, 'archive');
+
+  for (let c = chapter; c <= getLastChapter(basePath); c++) {
+    for (let s = step; s <= 5; s++) {
+      const filePath = path.join(basePath, `chapter_${c}`, `step_${s}.txt`);
+      if (fs.existsSync(filePath)) {
+        const archiveChapterPath = path.join(archivePath, `chapter_${c}`);
+        if (!fs.existsSync(archiveChapterPath)) {
+          fs.mkdirSync(archiveChapterPath);
+        }
+
+        const newFilePath = path.join(archiveChapterPath, `step_${s}_${Date.now()}.txt`);
+        fs.renameSync(filePath, newFilePath);
+      }
+    }
+    step = 1;
+  
+Certainly! Here's the updated TypeScript code with added logging messages:
+
+typescript
+Copy code
+import * as fs from 'fs';
+import * as path from 'path';
+import { sendPrompt } from './sendPrompt';
+import * as process from 'process';
+
+async function main() {
+  const args = process.argv.slice(2);
+  if (args.length === 2) {
+    const [chapter, step] = args.map(arg => parseInt(arg, 10));
+    console.log(`Archiving from Chapter ${chapter}, Step ${step}...`);
+    await archiveFrom(chapter, step);
+    console.log(`Finished archiving. Starting from Chapter ${chapter}, Step ${step}...`);
+  }
+
+  while (true) {
+    await sendPrompt();
+  }
+}
+
+async function archiveFrom(chapter: number, step: number) {
+  const basePath = 'path/to/your/book/directory';
+  const archivePath = path.join(basePath, 'archive');
+
+  for (let c = chapter; c <= getLastChapter(basePath); c++) {
+    for (let s = step; s <= 5; s++) {
+      const filePath = path.join(basePath, `chapter_${c}`, `step_${s}.txt`);
+      if (fs.existsSync(filePath)) {
+        const archiveChapterPath = path.join(archivePath, `chapter_${c}`);
+        if (!fs.existsSync(archiveChapterPath)) {
+          fs.mkdirSync(archiveChapterPath);
+        }
+
+        const newFilePath = path.join(archiveChapterPath, `step_${s}_${Date.now()}.txt`);
+        fs.renameSync(filePath, newFilePath);
+        console.log(`Archived: Chapter ${c}, Step ${s} -> ${newFilePath}`);
+      }
+    }
+    step = 1;
+  }
+}
+
+function getLastChapter(basePath: string): number {
+  let lastChapter = 0;
+  fs.readdirSync(basePath).forEach((dir) => {
+    const match = dir.match(/^chapter_(\d+)$/);
+    if (match) {
+      const chapterNumber = parseInt(match[1], 10);
+      if (chapterNumber > lastChapter) {
+        lastChapter = chapterNumber;
+      }
+    }
+  });
+
+  return lastChapter;
+}
+
+main();
+import * as fs from 'fs';
+import * as path from 'path';
+import { OpenAIApi } from './openai-api'; // Import OpenAIApi from your API client module
+
+type PromptResponse = {
+  choices: {
+    text: string;
+  }[];
+};
+
+const openai = new OpenAIApi('your-api-key');
+
+async function sendPrompt(): Promise<void> {
+  const basePath = 'path/to/your/book/directory';
+  const lastChapter = getLastChapter(basePath);
+  const lastStep = getLastStep(basePath, lastChapter);
+
+  const prompt = buildPrompt(lastChapter, lastStep); // Use the function you created to build the prompt
+  console.log(`Sending prompt for Chapter ${lastChapter}, Step ${lastStep + 1}...`);
+
+  const response: PromptResponse = await openai.createCompletion(prompt);
+
+  const newStepPath = path.join(basePath, `chapter_${lastChapter}`, `step_${lastStep + 1}.txt`);
+  fs.writeFileSync(newStepPath, response.choices[0].text);
+
+  console.log(`Received response for Chapter ${lastChapter}, Step ${lastStep + 1}. Saved to ${newStepPath}.`);
+}
+
+// ... (Include the other functions from the previous code block here) ...
+
+main();

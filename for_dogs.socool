@@ -1,0 +1,143 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        {2/1, 5, 1, -1},
+        {2/1, 0, 1, 1},
+        {1/1, -2, 1, -1},
+        {1/1, 0, 1, 1},
+    ]
+    | Seq [
+        Seq [
+            Fm 4/3, Fm 9/8, Fm 5/4, Fm 1, Fm 9/8,
+        ] | Repeat 3,
+        Fm 3/4 | Lm 5,
+
+        Fm 5/6, Fm 15/16, Fm 1, Fm 9/8, Fm 5/4,
+        Fm 4/3 | Lm 5,
+        Fm 3/2, Fm 11/8, Fm 3/2, Fm 5/4, Fm 9/8,
+        Fm 5/4 | Lm 5,
+
+        Fm 1 | Lm 5,
+        Fm 1 | Lm 5,
+        Fm 9/8 | Lm 5,
+        Fm 4/3, Fm 3/2, Fm 5/3, Fm 3/2, Fm 4/3,
+        Fm 5/4 | Lm 5,
+        Fm 9/8 | Lm 5,
+        Fm 1 | Lm 5,
+        Fm 1 | Lm 5,
+        Fm 0
+   ]
+}
+
+thing2 = {
+    Overlay [
+        {1/1, 3, 1, 1},
+        {1/1, 0, 1, -1},
+        {1/2, 2, 1, 1},
+        {1/2, 0, 1, -1},
+        {1/4, 2, 1/8, 1},
+        {1/4, 0, 1/8, -1},
+    ]
+    | Seq [
+        Fm 3/4 | Lm 3,
+        Fm 5/8 | Lm 1,
+
+        Fm 2/3 | Lm 1,
+        Fm 9/16 | Lm 1,
+        Fm 3/8 | Lm 1,
+        Fm 1/2 | Lm 1,
+
+        Seq [Fm 5/8, Fm 3/4, Fm 5/8, Fm 3/4, Fm 5/8] | Lm 1/5,
+        Fm 3/8 | Lm 1,
+        Seq [Fm 9/16, Fm 2/3, Fm 9/16, Fm 2/3, Fm 9/16] | Lm 1/5,
+
+        Fm 3/8 | Lm 1,
+        Fm 9/16 | Lm 1,
+        Fm 5/8 | Lm 1,
+        Seq [
+            Fm 2/3, Fm 3/4
+        ] | Lm 1/2,
+        Fm 1/2 | Lm 1,
+        Fm 0 | Lm 1/5
+    ]
+    | FitLength thing1
+}
+
+thing3 = {
+    Overlay [
+        {1/1, -2, 1, -1},
+        {1/1, 0, 1, 1},
+    ]
+    | Seq [
+        Seq [
+            Fm 9/8, Fm 15/16, Fm 1, Fm 5/6, Fm 15/16,
+        ] | Repeat 3,
+        Fm 5/8 | Lm 5,
+
+        Fm 2/3, Fm 3/4, Fm 5/6, Fm 15/16, Fm 1,
+        Fm 9/8 | Lm 5,
+        Fm 5/4, Fm 9/8, Fm 5/4, Fm 1, Fm 15/16,
+        Fm 1 | Lm 5,
+
+        Fm 3/4 | Lm 5,
+        Fm 2/3 | Lm 5,
+        Fm 2/3 | Lm 5,
+        Fm 5/6, Fm 15/16, Fm 1, Fm 15/16, Fm 5/6,
+        Fm 2/3 | Lm 5,
+        Fm 15/16 | Lm 5,
+        Fm 3/4 | Lm 5,
+        Fm 1 | Lm 5,
+        Fm 0
+   ]
+}
+
+thing4 = {
+    Overlay [
+        {1/1, 3, 1, -1},
+        {1/1, 0, 1, 1},
+    ]
+    | Seq [
+        Seq [
+            Fm 15/16, Fm 3/4, Fm 5/6, Fm 2/3, Fm 3/4,
+        ] | Repeat 3,
+        Fm 1/2 | Lm 5,
+
+        Fm 9/16, Fm 15/16, Fm 2/3, Fm 9/8, Fm 1,
+        Fm 9/8 | Lm 5,
+        Fm 5/4, Fm 9/8, Fm 5/4, Fm 1, Fm 15/16,
+        Fm 1 | Lm 5,
+
+        Fm 3/4 | Lm 5,
+        Fm 5/6 | Lm 5,
+        Fm 2/3 | Lm 5,
+        Fm 9/16 | Lm 5,
+        Fm 2/3 | Lm 5,
+        Fm 3/4 | Lm 5,
+        Fm 1 | Lm 5,
+        Fm 1/2 | Lm 5,
+        Fm 0
+   ]
+}
+
+main = {
+    Seq [
+        Overlay [
+            Seq [
+                Fm 2, Fm 2 | Gm 1/8, Fm 0,
+            ] | Lm 1/3 | Gm 1/8,
+            Fm 1
+        ]
+        |
+        Overlay [
+            thing1,
+            thing2,
+            thing3,
+            thing4,
+        ]
+        | Overlay [Sine, Sine 3/2 | Gm 1/4 | Fm 1/1 | Fm 1/2]
+        | Lm 1/5,
+    ]
+    | Repeat 3
+    | Fm 5/3
+}
