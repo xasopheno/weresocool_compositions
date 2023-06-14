@@ -135,7 +135,7 @@ thing3 = {
         Seq [
             Fm 1/2, Fm 5/4, Fm 7/8, Fm 11/8, Fm 13/8,
             Fm 4/3, Fm 9/8, Fm 3/4, Fm 1/2, 
-            Fm 1/4 | Lm 5 | Lm 4,
+            Fm 1/4 | Fm 7/8 | Lm 5 | Lm 4,
         ] 
    ]
    | Repeat 4
@@ -187,6 +187,10 @@ section2 = {
 
 thing5 = {
     Overlay [
+        {7/1, 1, 1/2, 1},
+        {7/1, 0, 1/2, -1},
+        {6/1, 1, 1, 1},
+        {6/1, 0, 1, -1},
         {5/1, 1, 1, 1},
         {5/1, 0, 1, -1},
         {4/1, 1, 1/4, 1},
@@ -262,18 +266,20 @@ section3 = {
         thing5,
         thing6
     ] 
-    | Lm 3/2
+    | Lm 5/4
 }
 
 main = {
     Seq [
-        section1,
-        Out,
-        section2,
-        Out,
-        section3 | Fm 7/8,
-        section3 | Fm 1,
+        -- section1,
+        -- Out,
+        -- section2,
+        -- Out,
+        section3 | Fm 7/8 | Lm 4/5,
+        section3 | Fm 1 | Lm 2/5,
+        section3 | Fm 9/8 | Lm 2/5 | Reverse,
     ]
+    | Gm 1/16
     | Lm 1/9
     | Fm 8/9
 }
