@@ -1,7 +1,8 @@
 { f: 311.127, l: 1, g: 1/3, p: 0 }
 
 a_osc = {
-    Overlay [
+    Portamento 5
+    | Overlay [
         {3/2, 1, 1, 1},
         {3/2, 0, 1, -1},
         {1/1, 1, 1, 1},
@@ -26,7 +27,8 @@ a_osc = {
 }
 
 b_osc = {
-    Overlay [
+    Portamento 3/2
+    | Overlay [
         Lm 6,
         Seq [
             Fm 0 | Lm 3, Fa 9, Fm 0, Fm 3/2 | Pa -1/3,
@@ -44,7 +46,7 @@ b_osc = {
         {1/2, 0, 1, -1},
     ]
     | Overlay [
-        Sine, 
+        Sine | Overlay [AsIs, Fm 2 | Pm -1/8 | Gm 1/4],
         FmOsc [
             (5/4, 3),
             (2, 10),
@@ -123,7 +125,7 @@ thing3 = {
               f: 90|100 [1*15, 0*10, -1*10],
               g: 90|100 [1*15, 0*10, -1*10]
           ) Take 35
-        ] | Gm 3/4 
+        ] | Gm 5/8
     ]
     | FitLength thing1
 }
