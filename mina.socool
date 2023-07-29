@@ -1,0 +1,97 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        {3/2, 3, 1, 1},
+        {3/2, 0, 1, -1},
+        {1/2, 3, 1, 4/5},
+        {1/2, 0, 1, -4/5},
+    ]
+    | Overlay [
+        Seq [
+            Seq [
+                Fm 3/2, Fm 15/8, Fm 9/8, Fm 5/4, Fm 3/4, Fm 1/2, Fm 1/4, Fm 1/8
+            ] 
+            | Seq [AsIs, Reverse]
+            | Repeat 7 | Lm 1/10,
+            Seq [
+                Fm 3/2, Fm 15/8, Fm 2 | Gm 1/8, Fm 1/3, Fm 1/4, Fm 1/2, Fm 1/4, Fm 1/3
+            ] 
+            | Seq [AsIs, Reverse]
+            | Repeat 7 | Lm 1/10
+        ]
+        | Gm 1/2,
+        Seq [
+            Overlay [
+                Seq [Fm 5/4, Fm 4/3, Fm 3/2],
+                Seq [
+                    Seq [
+                        Fm 2, Fm 9/4, Fm 5/2, Fm 8/3, Fm 5/2,
+                    ] | Lm 4/3,
+                    Fm 0, Fm 0, Fm 15/8, Fm 2, Fm 5/2,
+                    Seq [
+                        Fm 9/4, Fm 5/2, Fm 8/3, Fm 3, Fm 5/2,
+                    ] | Lm 5/3,
+                    Seq [
+                        Fm 7/4, Fm 7/3, Fm 11/4, Overlay [Fm 3 | Lm 2, Fm 5/2 | Lm 2], 
+                    ] | Lm 7/4 
+                ] | Lm 1/13 | Gm 3/5
+            ], 
+            Overlay [
+                {5/2, 3, 1/4, 4/5},
+                {5/2, -2, 1/4, 2/5},
+                {2, 0, 1/2, -1/5},
+                {2, 2, 1/2, 1/5},
+            ] | Lm 3, 
+            Seq [
+                Fm 9/4, Fm 5/3 
+            | Overlay [Fm 1, Fm 3/2 | Gm 1/4], Fm 9/4, Fm 5/2 | Gm 1/4] 
+            | Lm 1/13 | Repeat 5, 
+            Fm 5/3, Fm 3/2, Fm 4/3, Fm 5/4, Fm 4/3 | Lm 3, 
+            Gm 0 | Lm 3,
+            Fm 5/3, Fm 3/2, 
+            Overlay [
+                Seq [
+                    Fm 8/3, Fm 5/2 | Lm 2, Fm 9/4 | Pa 1/2
+                ],
+                Seq [
+                    Fm 2, Fm 15/8 | Lm 2, Fm 5/3
+                ],
+                Seq [
+                    Fm 5/3, Fm 3/2 | Lm 2, Fm 4/3 | Pa -1/2
+                ],
+            ]
+        ]
+        | Overlay [
+          Saw | Fm 1/4 | Gm 1/2,
+          Saw | Fm 1/2 | Gm 1/2,
+          Sine 1
+        ]
+        | LowPass 2 1/1 
+   ]
+}
+
+thing2 = {
+    Overlay [
+        {1/1, 5, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Overlay [Fm 1/2, Fm 3/4, Fm 5/4 | Gm 1/2],
+        Overlay [Fm 5/6, Fm 2/3, Fm 9/8 | Gm 1/2],
+    ]
+    | Overlay [
+      Tri | Fm 1/2 | Gm 1/2,
+      Sine 1
+    ]
+    -- | LowPass 1 1/1 
+    | FitLength thing1
+}
+
+main = {
+    Overlay [
+        thing1,
+        thing2
+    ]
+    | Repeat 5
+}
