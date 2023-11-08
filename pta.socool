@@ -1,0 +1,139 @@
+{ f: 311.127, l: 1, g: 1/7, p: 0 }
+
+thing1 = {
+    Overlay [
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 9/8, Fm 5/4, Fm 1,
+        Fm 3/2 | Lm 2, Fm 9/8,
+   ]
+}
+
+thing2 = {
+    Overlay [
+        {1/1, 2, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 15/8, Fm 2 | Lm 2,
+        Fm 15/8 | Lm 4, 
+    ]
+    | Gm 1/3
+    | Repeat 6
+    | FitLength thing1
+}
+
+thing3 = {
+    Overlay [
+        {2/1, 1, 1, 1},
+        {2/1, 0, 1, -1},
+        {1/1, 1, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Fm 1/2
+    | Seq [
+        Fm 3/4, Fm 5/6, Fm 15/16, Fm 2/3,
+        Fm 5/8, Fm 2/3, Fm 3/4 | Lm 2
+    ]
+    | FitLength thing1
+}
+
+thing4 = {
+    Overlay [
+        {1/1, 1, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 15/16, Fm 1, Fm 9/8, Fm 5/6,
+        Fm 1, Fm 9/8, Fm 15/16 | Lm 2
+    ]
+    | FitLength thing1
+}
+
+chords = {
+    Overlay [
+        thing1,
+        thing2,
+        thing3,
+        thing4,
+    ]
+    | Lm 1/2
+    | Overlay [
+      Sine, 
+      Sine 3/2 | Gm 1/8
+    ]
+}
+
+hh = {
+  Overlay [
+    Noise,
+    Sine 1/10 | Gm 1/3
+  ]
+  | Seq [
+    Fm 1, Fm 0, Fm 1/8, Fm 3, 
+    Fm 0 | Lm 8
+  ]
+  | Seq [
+    Fm 0, Fm 0, Fm 1, Fm 1,
+    Fm 0, Fm 1, Fm 1, Fm 0,
+    Fm 1, Fm 0, Fm 1, Fm 0,
+    Fm 2, Fm 0, Fm 1/2, Fm 1/2,
+    Fm 4, Fm 3, Fm 4, Fm 3,
+    Fm 0, Fm 1/2, Fm 8, Fm 1/2,
+    Fm 0, Fm 1, Fm 1, Fm 1,
+    Fm 1, Fm 0, Fm 1, Fm 0
+  ]
+  | FitLength chords
+  | Gm 1/2
+}
+
+hights = {
+  Overlay [
+      {1/1, 2, 1, 1/3},
+      {1/1, 0, 1, -1/3},
+      {3/4, 2, 1, 1/3},
+      {3/4, 0, 1, -1/3},
+      {1/2, 2, 1, 1/3},
+      {1/2, 0, 1, -1/3},
+      {3/8, 2, 1, 1/3},
+      {3/8, 0, 1, -1/3},
+      {1/4, 2, 1, 1/2},
+      {1/4, 0, 1, -1/2},
+  ]
+  | Seq [
+    Fm 0 | Lm 4, Fm 3, Fm 4, Fm 4 | Fm 9/8, Fm 3, Fm 4 | Fm 5/4, Fm 8, Fm 3, Fm 0,
+  ]
+  | ModBy [
+    Seq [
+      Pm 1, Pa -1/32, Pa 1/32, Pm -1
+    ] | Repeat 32
+  ]
+  | Tri 1/2
+  | Gm 1/8
+  | FitLength chords
+}
+
+main = {
+    Seq [
+      Overlay [
+       chords, 
+       hh | Fm 0,
+       hights,
+      ],
+      Overlay [
+        chords,
+        hh,
+      ] | Repeat 2,
+      Overlay [
+        chords | Fm 0,
+        hh,
+        hights
+      ]
+    ] 
+    | Seq [
+      Lm 1, Lm 7/8 | Fm 5/6, Lm 6/7 | Fm 1 | Fm 15/16
+    ]
+    | Repeat 2
+}
