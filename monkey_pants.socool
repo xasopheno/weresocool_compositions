@@ -119,4 +119,5 @@ main = {
     | Repeat 4
     | Lm 11/10
     | Fm 4/3
+    | Repeat 8
 }
