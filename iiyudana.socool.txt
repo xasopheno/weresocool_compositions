@@ -163,5 +163,5 @@ main = {
     ]
     | Lm 1/4
     | Lm 11/10
-    | Repeat 4
+    | Repeat 2
 }
