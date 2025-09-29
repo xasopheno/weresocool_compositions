@@ -44,7 +44,7 @@ thing1 = {
     ]
     | Repeat 4
     | ModBy [
-        Overlay [Fa 0, Fa 0, Fm 3/4 | Gm 1/4] | Gm 1/2,
+        Overlay [Fa 0.001, Fa 0 | Gm 1/2, Fm 3/4 | Gm 1/4] | Gm 1/2,
         Overlay [Fa 2, Fa 0] | Gm 1/2,
         Overlay [Fa 3, Fa 0] | Gm 1/2,
         Overlay [Fa 5, Fa 0, Fa -5 | Fm 2 | Gm 1/8] | Gm 1/2,
@@ -85,8 +85,8 @@ main = {
     | Reverb 5.0
     | Repeat 8
     | Lm 5/4
-    | Lm 11/10
+    | Lm 23/20
     | Overlay [
-        Fa 0, Fa 0.0001 | Pm -1/8
+        Fa 0, Fa 0.0003 | Pm -1/8
     ] | Gm 1/2
 }
