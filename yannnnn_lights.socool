@@ -238,10 +238,10 @@ melody_b = {
 main = {
     Fm 3/2
     | Seq [
-        -- melody_a | Seq [Fm 1, Fm 9/8, Fm 9/8 | Fm 9/8],
-        -- melody_b,
-        -- melody_a | Seq [Fm 4/3] | Overlay [AsIs, Fm 1/2 | Gm 1/4],
-        melody_b | Repeat 2,
+        melody_a | Seq [Fm 1, Fm 9/8, Fm 9/8 | Fm 9/8],
+        melody_b,
+        melody_a | Seq [Fm 4/3] | Overlay [AsIs, Fm 1/2 | Gm 1/4],
+        melody_b,
         melody_b | Overlay [Fm 1, Fm 2 | Gm 1/3] 
         | Fm 15/16,
         melody_b | Overlay [Fm 1, Fm 2 | Gm 1/3 | Fa 1] 
@@ -267,5 +267,7 @@ main = {
         x = x + sin(time + 4.0) * 0.8;
         y = y + sin(time * 2.0) * 0.8;
         velocity = velocity + (1.0 + sin(time)) * 10.0;
+        r = r * sin(time) * 30.0;
+        scale = scale * 1.5;
     }
 }

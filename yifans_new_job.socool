@@ -1,0 +1,12 @@
+import ./yokai.socool
+import ./parade.socool
+
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+main = {
+    Seq [
+        -- yokai.main,
+        -- Fm 0 | Lm 1/100,
+        parade.main,
+    ]
+}
