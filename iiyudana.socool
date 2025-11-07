@@ -720,7 +720,7 @@ solo = {
 main = {
     Seq [
         p_melody,
-        Fm 0 | Lm 1/100,
+        Fm 0 | Lm 1/10,
         blip,
         intro | Repeat 2,
         blips,

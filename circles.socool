@@ -1,0 +1,163 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        {1/1, 4, 1, 1},
+        {1/1, 0, 1, -1},
+        {1/2, 0, 1/2, 0},
+    ]
+    | Color [purple, red, firebrick]
+    | Seq [
+        Fm 1, Fm 9/8, Fm 5/4, Fm 11/8, Fm 5/4, 
+        Fm 2 | Color [gold], 
+        Fm 7/16 | Lm 2 | Overlay [Fm 1, Fm 4] | Color [red], 
+        Fm 1/2, Fm 7/6 | Color [gold]
+    ] | Lm 1/8
+    | Overlay [
+        Square | Gm 1/3,
+        Sine
+    ]
+    | Overlay [
+        {1/1, 0, 1, 1/1},
+        {1/2, 0, 1, 1/16},
+    ]
+    | Repeat 8
+    | wgsl {
+        scale = scale * 1.4;
+        y = x * y / 30.0; 
+        let width  : f32 = 0.5;
+        let height : f32 = 1000.0;
+        let power  : f32 = 500.5;
+        let y_n     : f32 = clamp(abs(y) / height, 0.0, 1.0);
+        let profile : f32 = pow(1.0 - y_n, power);        // 1 at center, 0 at top/bottom
+
+        let sx : f32 = select(-1.0, 1.0, x >= 0.0);
+
+        x = sx * width * profile;
+
+        x = x * 4.0;  
+        x = x * 4.0;
+        y = y * 5.0;
+        direction = vec3<f32>(0.3, -0.1, -1.0);
+        alpha = 1.0 - (time * 0.15);
+        x = x - log(time) * 2.0;
+        scale = scale + 1.0 / log(time + 0.999) / 10;
+        x = x - 5;
+    }
+}
+
+thing2 = {
+    Overlay [
+        {1/1, 3, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 3/4
+    ]
+    | FitLength thing1
+
+    | wgsl {
+        let PI: f32 = 3.14159265359;
+
+        // authoring params (tweak as you like)
+        let axis   = vec3<f32>(0.0, 0.0, 1.0);   // ellipse plane normal (+Z ⇒ ellipse lies in XY)
+        let a      = 17.0;                        // major radius
+        let b      = 17.0;                        // minor radius
+        let center = vec3<f32>(0.0, 0.0, 0.0);   // ellipse center
+        let deg_per_sec = 90.0;                  // angular speed (deg/s)
+        let angle_deg   = time * deg_per_sec;    // drive with time
+
+        // build an orthonormal frame (u, v, k) from the axis, inline
+        let k = normalize(axis);
+        var  up = vec3<f32>(0.0, 1.0, 0.0);
+        if (abs(k.y) > 0.99) {
+            up = vec3<f32>(1.0, 0.0, 0.0);
+        }
+    let u = normalize(cross(k, up));
+    let v = normalize(cross(k, u));
+
+    let ang = angle_deg * PI / 180.0;
+    let p   = center + u * (a * cos(ang)) + v * (b * sin(ang));
+
+    x = p.x;
+    y = p.y + sin(time * 30);
+    z = p.z;
+    velocity = 3.0;
+    scale = scale * 2.0;
+    alpha = 1.0 - (time * 0.25);
+    }
+    | Color [turquoise]
+}
+
+thing3 = {
+    Overlay [
+        {1/1, 3, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        Fm 3/4
+    ]
+    | FitLength thing1
+
+    | wgsl {
+        let PI: f32 = 3.14159265359;
+
+        // authoring params (tweak as you like)
+        let axis   = vec3<f32>(0.0, 0.0, 1.0);   // ellipse plane normal (+Z ⇒ ellipse lies in XY)
+        let a      = 20.0;                        // major radius
+        let b      = 20.0;                        // minor radius
+        let center = vec3<f32>(0.0, 0.0, 0.0);   // ellipse center
+        let deg_per_sec = 90.0;                  // angular speed (deg/s)
+        let angle_deg   = time * deg_per_sec;    // drive with time
+
+        // build an orthonormal frame (u, v, k) from the axis, inline
+        let k = normalize(axis);
+        var  up = vec3<f32>(0.0, 1.0, 0.0);
+        if (abs(k.y) > 0.99) {
+            up = vec3<f32>(1.0, 0.0, 0.0);
+        }
+    let u = normalize(cross(k, up));
+    let v = normalize(cross(k, u));
+
+    let ang = angle_deg * PI / 180.0;
+    let p   = center + u * (a * cos(ang)) + v * (b * sin(ang));
+
+    x = p.x;
+    y = p.y + cos(time * 20); 
+    z = p.z;
+    velocity = 3.0;
+    scale = scale * 2.0;
+    alpha = 1.0 - (time * 0.25);
+    }
+    | Color [blue]
+}
+
+main = {
+    Overlay [
+        thing1,
+        Overlay [
+            thing2,
+            thing3,
+
+        ]
+        | ModBy [
+            Seq [
+                Seq [Fm 1, Fm 0, Fm 1/2 | Color [gold] | wgsl {scale = scale * 2.0;}, Fm 0, Fm 0, Fm 1, Fm 1, Fm 1] | Repeat 8,
+                Seq [Fm 1, Fm 0, Fm 7/8 | Color [purple] | wgsl {scale = scale * 2.0;}, Fm 1, Fm 0, Fm 1, Fm 7/8 | Color [purple] | wgsl {scale = scale * 2.0;}, Fm 1] | Repeat 8,
+            ]
+        ]
+        | Overlay [Fm 1, Fm 1/2, Fm 3/4 | Gm 1/2]
+    ]
+    | Seq [
+        AsIs, 
+    ]
+    | Seq [
+        Lm 1/16 | Fm 4 | Color [black, grey]  | wgsl {scale = scale * 1.5;}
+        | Seq [Fm 1, Fm 9/8, Fm 5/4 | Lm 1/2, Fm 0 | Lm 1/2], 
+        Repeat 2,
+        Fm 0 | Lm 1/100
+    ]
+    | wgsl {
+        r = r * 10.0;
+    } | Repeat 3
+}
