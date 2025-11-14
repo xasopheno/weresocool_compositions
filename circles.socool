@@ -21,9 +21,10 @@ thing1 = {
         {1/1, 0, 1, 1/1},
         {1/2, 0, 1, 1/16},
     ]
+    | Hue -0.1      
     | Repeat 8
     | wgsl {
-        scale = scale * 1.4;
+        scale = scale * 2.1;
         y = x * y / 30.0; 
         let width  : f32 = 0.5;
         let height : f32 = 1000.0;
@@ -41,7 +42,7 @@ thing1 = {
         direction = vec3<f32>(0.3, -0.1, -1.0);
         alpha = 1.0 - (time * 0.15);
         x = x - log(time) * 2.0;
-        scale = scale + 1.0 / log(time + 0.999) / 10;
+        scale = scale + 1.0 / log(time + 0.9999) / 10;
         x = x - 5;
     }
 }
@@ -140,6 +141,7 @@ main = {
             thing3,
 
         ]
+        | Brightness 0.05
         | ModBy [
             Seq [
                 Seq [Fm 1, Fm 0, Fm 1/2 | Color [gold] | wgsl {scale = scale * 2.0;}, Fm 0, Fm 0, Fm 1, Fm 1, Fm 1] | Repeat 8,
@@ -152,12 +154,17 @@ main = {
         AsIs, 
     ]
     | Seq [
-        Lm 1/16 | Fm 4 | Color [black, grey]  | wgsl {scale = scale * 1.5;}
+        Lm 1/16 | Fm 4 | Color [black, darkgrey, grey] | Hue 0.1  | wgsl {scale = scale * 1.5;}
         | Seq [Fm 1, Fm 9/8, Fm 5/4 | Lm 1/2, Fm 0 | Lm 1/2], 
-        Repeat 2,
-        Fm 0 | Lm 1/100
+        Repeat 1,
+        Fm 0 | Lm 1/100,
     ]
     | wgsl {
         r = r * 10.0;
-    } | Repeat 3
+    } 
+    | Repeat 2
+    -- | Hue -0.3      
+    -- | Saturation 1.8 
+    -- | Vibrance 0.3 
+    -- | Gamma 0.9   
 }

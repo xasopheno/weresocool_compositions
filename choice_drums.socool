@@ -1,0 +1,134 @@
+{ f: 311.127, l: 1, g: 1/5, p: 0 }
+
+base_sound = {
+    O[
+        (3/2, 1, 1/2, -1/3),
+        (3/2, 0, 1/2, 1/3),
+        (1, 1, 1, -1/2),
+        (1, 0, 1, 1/2),
+        (1/2, 2, 1/3, 1/4),
+        (1/2, 0, 1/3, -1/4),
+        (1/4, 1, 1/3, 1),
+        (1/4, 0, 1/3, -1),
+    ]
+    | Overlay [
+        Seq [
+            Fm 1/2, Fm 0, Fm 0
+        ] | Lm 1/3 | Gm 1/5,
+        Seq [
+            O[
+                (3/2, 0, 1, -1/2),
+                (11/8, 0, 1, 1/2),
+                (25/24, 0, 1, 0),
+            ] | Lm 1/5,
+            O[
+                (1/2, 0, 1, -1/2),
+                (1/2, 0, 1, 1/2),
+                (1/2, 0, 1, 0),
+            ], 
+            Fm 0, Fm 0, 
+        ] | Lm 1/8, 
+        Fm 0
+    ]
+}
+
+b = {
+    base_sound | 
+    Fm 1/2
+
+}
+
+s = {
+    base_sound | 
+    Overlay [
+        Fm 3/2, 
+        Seq [
+            Fm 11/8, Fm 5/3, Fm 7/6 | Fm 2, Fm 4/3 | Lm 3 | Fm 2
+        ] | Lm 1/100
+    ]
+}
+
+fn(x) = {
+    Choose [
+        Seq [b | Fm 1/2, s | Fm 3, Fm 0, b, s, Fm 0, b, s],
+        Seq [Overlay [Fm 3/2, Fm 1], b, b, s],
+        Fm 3/2 | Seq [Fm 0, Fm 0, b | Fm 1/2, s, b, Overlay [Fm 1, Fm 5/3], b, s, s | Fm 7/8],
+        Seq [s, s, b, s, b, Fm 0],
+    ]
+    | FitLength Lm 2
+    | x
+}
+
+melody = {
+    Color [yellow, orange, red] 
+    | Overlay[
+        {4, 6, 1/8, -1/2} | Color [purple, orange, red],
+        {4, 0, 1/8, 1/2} | Color [purple, orange, red],
+        {3, 6, 1/8, -1/2} | Color [darkolivegreen, orange, red],
+        {3, 0, 1/8, 1/2} | Color [darkolivegreen, orange, red],
+        {3/2, 6, 1/2, -1/3},
+        {3/2, 0, 1/2, 1/3},
+        {1, 3, 1, -1/1},
+        {1, 0, 1, 1/1},
+        {1/2, 2, 1/3, 1/4},
+        {1/2, 0, 1/3, -1/4},
+        {3/4, 3, 1/3, 1/8},
+        {3/4, 0, 1/3, -1/8},
+        {1/4, 2, 1/3, 7/8},
+        {1/4, 0, 1/3, -7/8},
+        {1/8, 3, 1/3, 5/8},
+        {1/8, 0, 1/3, -5/8},
+    ]
+    | Seq [
+        Fm 5/4, Fm 4/3, Fm 5/4, Fm 1, Fm 9/8, Fm 7/8, Fm 7/6, Fm 5/4,
+        Fm 8/5, Fm 3/2, Fm 4/3, Fm 5/4, Fm 3/2, Fm 7/6, Fm 9/8, Fm 25/24,
+    ]
+}
+
+base = {
+    Overlay [
+        Overlay [
+            Fm 1,
+            Seq [Fm 1/2, Fm 0, Fm 0] | Lm 1/8,
+            Fm 0,
+        ]
+        | Seq [b | Fm 1/2 | Gm 4, s | Fm 3, Fm 0, b, s, Fm 0, b, s | Fm 3/2] | FitLength Lm 2 | Color [black, black, #002202, #002202, white],
+        fn(Fm 2 | Seq [AsIs, Reverse] | Lm 1/2) | Color [blue, darkblue, darkblue, black] | Gm 1/2, 
+    ]
+    | Gm 2
+    | Repeat 4
+    | wgsl {
+        -- scale = scale * 4.0;
+        x = sin(time * 0.5) * x + sin(time * y) * 0.1;
+        x = x + time * x * 0.3;
+    }
+}
+
+main = {
+    Overlay [
+        base,
+        melody 
+        | FitLength base
+        | wgsl {
+            y = y * 1.8;
+            y = y - 2;
+            scale = scale * 5.0;
+            velocity = velocity * 1.5;
+            x = x * 5.0;
+            y = y + sin(time * 0.5) * 2.0;
+            x = x + cos(time * 10) * 0.3;
+        },
+    ]
+    | Gm 4/3
+    | Seq [
+        Repeat 2, 
+        Lm 2/3 
+        | wgsl {
+            velocity = velocity * 3/2;
+            red = red * 50.0;
+            blue = blue * 0.5;
+            x = x * 3/2;
+        }
+    ]
+    | Repeat 3
+}
