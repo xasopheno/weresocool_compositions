@@ -1,0 +1,214 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+base = {
+    Overlay [
+        {1/1, 3, 1/2, -1},
+        {1/1, 0, 1/2, 1},
+    ]
+    | Overlay [
+        Seq [
+            Overlay [
+                {25/24, 0, 1, 0},
+                {1/1, 13, 1, 0},
+                {1/1, 0, 1, 0},
+            ] | Lm 1/64,
+            Overlay [
+                {3/4, 3, 1, 0},
+                {1/2, 0, 1/2, 0},
+                {1/4, 0, 1, 0},
+                {1/8, 0, 1, 0},
+            ] | Lm 1/16,
+            Fm 0 | Lm 1/3
+        ],
+        Fm 0,
+    ]
+    | Lm 1/1
+    | Overlay [
+        Sine,
+        Sine 3/2  | Wavefolder(0.1, 8, 4, 0.08),
+        Square 0.1  | Wavefolder(0.1, 8, 4, 0.03),
+    ]
+}
+
+thing1 = {
+    base
+    | Seq [
+        Fm 1/4, Fm 1, Fm 0, Fm 1 | Repeat 2 | Lm 1/2, Fm 0, 
+        Fm 1 | Repeat 4 | Lm 1/4, Fm 3/4, Fm 1/2,
+        Fm 1, Fm 1, Fm 0, Fm 1/4,
+        Fm 1/4, Fm 1/2 | Fm 1 | Repeat 3 | Lm 1/3, Fm 3/4, Fm 0,
+    ]
+    | Repeat 4
+    | Lm 1/4
+    | Color [red, orange, yellow, green, blue, indigo, violet]
+    | wgsl {
+        Lm 1/5;
+        Sm 2;
+        Vm 1;
+        Xm 1/3;
+        Seq [ 
+            Direction(1, 0, 0) 
+            | Lm 1 
+            | Bend (0, 1, 0, 1);
+            Direction(1, 0, 0) 
+            | Lm 1 
+            | Bend (0, -1, 0, 1);
+            Direction(0, 1, 0)
+            | Lm 2; 
+            Direction(1, 0, 0)
+            | Lm 2; 
+            -- | Bend (1, 0, 0, 1);
+            Am 0.0;
+        ]
+        | Bend (1, -0.3, 0, 0.4);
+        Ya -1;
+    }
+    | Color [red, white, black, yellow]
+}
+
+thing2 = {
+    Overlay [
+        {1/1, 3, 1, 1},
+        {1/1, 0, 1, -1},
+    ]
+    | Seq [
+        base | 
+        Seq [Fm 1, Fm 0] | Lm 1/8
+        | Seq [
+            Fm 1/2, Fm 1, Fm 0, Fm 1,
+            Fm 0, Fm 1, Fm 0, Fm 1,
+            Fm 0, Fm 1, Fm 1, Fm 0,
+        ] | Repeat 8
+        | Color [cyan, blue, purple, magenta, pink]
+    ]
+    | FitLength thing1
+    | wgsl {
+        Ym 3/2
+        | Sa 2
+        | Seq [ 
+            Direction(-0.3, 0.2, -1) | Lm 1/2 | Vm 1/2
+            | ArcTo(0, 1, 0, 1.0),
+            Direction(0.7, -0.5, 0), 
+            Direction(0, 1, -1) | Vm 2, 
+            Direction(1, 1, -0.4) | Vm 3,
+            Am 0.0;
+        ]
+        | Bend (1, -0.3, 0, 0.4);
+    }
+}
+
+thing3 = {
+    Seq [Fm 1, Fm 1/2, Fm 1/4]
+    | Seq [AsIs, Reverse]
+    | Seq [
+        Overlay [
+            {5/2, 3, 1, 1/4},
+            {5/2, 0, 1, -1/4},
+            {3/4, 3, 1, 1/4},
+            {3/4, 0, 1, -1/4},
+            {1/2, 3, 1, 1/2},
+            {1/2, 0, 1, -1/2},
+        ],
+        Overlay [
+            {2, 2, 1, 1/4},
+            {2, 0, 1, -1/4},
+            {3/2, 2, 1, 1/4},
+            {3/2, 0, 1, -1/4},
+            {5/8, 2, 1, 1/2},
+            {5/8, 0, 1, -1/2},
+        ],
+        Overlay [
+            {15/8, 1, 1, 1/4},
+            {15/8, 0, 1, -1/4},
+            {3/2, 1, 1, 1/4},
+            {3/2, 0, 1, -1/4},
+            {9/8, 1, 1, 1/2},
+            {9/8, 0, 1, -1/2},
+        ],
+        Overlay [
+            {5/3, 1, 1, 1/4},
+            {5/3, 0, 1, -1/4},
+            {1/1, 1, 1, 1/4},
+            {1/1, 0, 1, -1/4},
+            {5/8, 1, 1, 1/2},
+            {5/8, 0, 1, -1/2},
+        ],
+    ]
+    | Repeat 2
+    | wgsl {
+        Lm 1/5
+        | Sm 9
+        | Vm 1
+        | Za 1
+        | Seq [ 
+            Direction(1, 0, 0) 
+            | Lm 1 
+            | Bend (0, 1, 0, 1);
+            -- Direction(1, 0, 0) 
+            -- | Lm 1 
+            -- | Bend (0, -1, 0, 1);
+            -- Direction(0, 1, 0)
+            -- | Lm 2; 
+            -- Direction(1, 0, 0)
+            -- | Lm 2; 
+            -- -- | Bend (1, 0, 0, 1);
+            Am 0.0;
+        ]
+        | Seq [
+            Vm 1; 
+            Vm 1 | Xa 1;
+        ]
+    }
+    | Color [red, white, black, yellow]
+    | Gm 1/4
+    | FitLength thing1
+}
+
+bass = {
+    Overlay [
+        {2/1, 3, 1/2, 0},
+        {3/2, 0, 1/2, 0},
+        {1/2, 2, 1/2, 0},
+        {1/4, 0, 1/2, 0},
+    ]
+    | Seq [Fm 1, Fm 0, Fm 1, Fm 1, Fm 0]
+    | Seq [Pa 1, Pa -1]
+    | Repeat 4
+    | Overlay [
+        Seq [
+            Fm 0 | Lm 4, Fm 0, Fm 3/4, Fm 3/2 | Lm 4, Fm 0 | Lm 4
+        ] 
+        | Seq [Fm 0, Fm 1]
+    ]
+    | Seq [
+        Fm 1, Fm 0, Fm 0, Fm 5/6
+    ] 
+    | Color [white, black, pink, purple]
+    | wgsl {
+        Ym 1/2
+        | Sm 8
+        | Vm 8
+        | Xa -1
+        | Seq [
+            Direction(0, 0, -1) | Lm 1
+            | ArcTo (2, 2, -0.4, 1);
+            Am 0;
+        ]
+    }
+    | FitLength thing1
+
+}
+
+main = {
+    Overlay [
+        -- thing1,
+        thing2 | #a,
+        thing3 | #b,
+        bass | #c,
+    ]
+    | wgsl {
+        Xm 1/1
+        | Direction(0, 0, -1);
+    }
+    | Repeat 5
+} -> [a, b, c]

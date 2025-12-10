@@ -1,4 +1,6 @@
 .DS_STORE
 *.mov
+*.mp4
 *.wav
+*.zip
 out/

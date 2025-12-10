@@ -225,14 +225,14 @@ melody_a = {
         {2/1, 0, 1/8, 0},
         {1/1, 0.01, 1, 1},
         {1/1, 0, 1, -1},
-    ]
+    ] | #a
 }
 
 melody_b = {
     Overlay [
         thing2, 
         chords,
-    ] | Fm 7/8
+    ] | Fm 7/8 | #b
 }
 
 main = {
@@ -270,4 +270,4 @@ main = {
         r = r * sin(time) * 30.0;
         scale = scale * 1.5;
     }
-}
+} -> [a, b]
