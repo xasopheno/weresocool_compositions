@@ -23,8 +23,7 @@ thing3 = {
             Sm 0;
         ];
     }
-    | Color [blue, grey, green]
-    | Color [white, grey, black, black, black] | Gradient(0, 1, 0)
+    | Color [firebrick, white, grey, black, black, black] | Gradient(0, 1, 0)
 }
 
 main = {
