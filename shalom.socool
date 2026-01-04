@@ -35,7 +35,7 @@ thing1 = {
         Fm 5/6, Fm 4/5 | Lm 4, Fm 3/4 | Lm 4,
         Fm 2/3 | Lm 4, Fm 5/8 | Lm 4,
     ]
-    | Color [firebrick, white, grey, black, black, black] | Gradient(0, 1, 0)
+    | Color [#FF003C, #FFCCCC, #004444, black, #332200, black] | Gradient(-1, 1.2, 0)
     | wgsl {
         Direction (0, 0, -1) | Bend (0.3, 0.2, 0, 0.4) | Vm 1/2;
         Xa "sin(time * 0.4 + y * 2.0) * 0.08";
@@ -44,7 +44,7 @@ thing1 = {
         Rz "sin(time * 0.2) * 0.1";
         Sm 4.0;
         Seq [
-            Sm 1 | Lm 2;
+            Sm 1 | Lm 2.5;
             Sm 0;
         ]
     }
@@ -71,7 +71,7 @@ thing2 = {
         -- Fm 2/3, Fm 5/8 | Lm 2
     ]
     | FitLength thing1
-    | Color [blue, grey, black, black, black] | Gradient(0, 1, 0)
+    | Color [lightpurple, black, black, #5C1A4D, black, black, #0A1628, black, black, #7B1A55, black, #4B0082, black] | Gradient(0, 0.8, 0)
     | wgsl {
         Xm 1/3;
         Seq [
@@ -93,6 +93,7 @@ main = {
         thing1,
         thing2
     ]
-    | Repeat 8
+    | Seq [Fm 1 | Repeat 2, Fm 7/8 | Lm 8/7]
+    | Repeat 2
     | Lm 1/9
 }
