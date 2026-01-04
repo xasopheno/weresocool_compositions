@@ -15,8 +15,7 @@ thing1 = {
     ]
     | Seq [
         Fm 4/5, Fm 5/4, Fm 9/8, Fm 1, Fm 7/8, Fm 4/5, Fm 3/4,
-        Fm 9/16, Fm 1/2 | Lm 2,
-        Fm 0, Fm 0, Fm 9/8, Fm 0, Fm 0,
+        Fm 9/16, Fm 1/2 | Lm 2, Fm 0, Fm 0, Fm 9/8, Fm 0, Fm 0,
         Fm 1/2, Fm 0, Fm 0, Fm 1/2, Fm 0,
         Fm 3/4, Fm 1, Fm 3/4, Fm 1, Fm 0,
         Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
@@ -38,9 +37,16 @@ thing1 = {
     ]
     | Color [firebrick, white, grey, black, black, black] | Gradient(0, 1, 0)
     | wgsl {
+        Direction (0, 0, -1) | Bend (0.3, 0.2, 0, 0.4) | Vm 1/2;
+        Xa "sin(time * 0.4 + y * 2.0) * 0.08";
+        Ya "cos(time * 0.3) * 0.05";
+        Ry "time * 0.15";
+        Rz "sin(time * 0.2) * 0.1";
+        Sm 4.0;
         Seq [
-            Direction (0, 0, -1);
-        ];
+            Sm 1 | Lm 2;
+            Sm 0;
+        ]
     }
     | Overlay [
         Sine, Sine 3/2 | Wavefolder (0.2, 1, 1, 0.3)
@@ -67,9 +73,18 @@ thing2 = {
     | FitLength thing1
     | Color [blue, grey, black, black, black] | Gradient(0, 1, 0)
     | wgsl {
+        Xm 1/3;
         Seq [
-            Direction (0, -0.2, -1) | Lm 8;
+            Direction (1, 1, 1) | Bend (0.4, 2, 0.2, 0.3) | Vm 1/8 | Lm 4;
+            Direction (0.2, 1, 1) | Bend (-0.2, 0, 0, 0.5) | Vm 1/2 | Lm 4;
+            Sm 0;
         ];
+        Xa "cos(time * 0.5 - y * 1.5) * 0.06";
+        Ya "sin(time * 0.25 + x * 2.0) * 0.04";
+        Rx "time * 0.08";
+        Ry "sin(time * 0.12) * 0.15";
+        Sm 3.5;
+        Am "0.8 + sin(life * 3.0) * 0.2";
     }
 }
 

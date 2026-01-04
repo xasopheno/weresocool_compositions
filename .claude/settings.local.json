@@ -3,7 +3,8 @@
     "allow": [
       "Bash(find:*)",
       "Bash(ffmpeg:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(weresocool-cli:*)"
     ],
     "deny": [],
     "ask": []
