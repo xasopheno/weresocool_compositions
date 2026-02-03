@@ -1,6 +1,14 @@
 { f: 311.127, l: 1, g: 1/3, p: 0 }
 
-thing1 = {
+colors1a = { Color [#FF003C, #FFCCCC, #004444, black, #332200, black] }
+
+colors1b = { Color [#00BFFF, #001133, #003366, black, #002244, black] }
+
+colors2a = { Color [lightpurple, black, black, #5C1A4D, black, black, #0A1628, black, black, #7B1A55, black, #4B0082, black] }
+
+colors2b = { Color [#FFD700, black, black, #8B4513, black, black, #1A1A00, black, black, #CC6600, black, #553300, black] }
+
+thing1_base = {
     Overlay [
         { 2/1, 0, 1/2, 0 },
         { 2/1, 1, 1/2, 0 },
@@ -21,21 +29,21 @@ thing1 = {
         Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
         Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
         Fm 3/4, Fm 9/8, Fm 3/4, Fm 5/4, Fm 0,
-        Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
+        Fm 0, Fm 1/2, Fm 0,
+        Fm 0, Fm 1/2, Fm 0, Fm 2
+        | Overlay [Fm 3/2 | Lm 1/5, Fm 9/8 | Lm 1/5, Fm 1]
+        | Overlay [Fm 1, Fa 4
+        ] | Gm 1/2, Fm 0,
         Fm 1/2, Fm 3/4, Fm 1,
-        -- Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        -- Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        -- Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        -- Fm 2/3, Fm 9/8, Fm 5/6, Fm 4/3, Fm 0,
-        -- Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        -- Fm 0, Fm 1/2, Fm 0, Fm 1/2, Fm 0,
-        -- Fm 3/4, Fm 9/8, Fm 3/4, Fm 1, Fm 5/6,
         Fm 7/6, Fm 9/8, Fm 1, Fm 7/8,
         Fm 5/6, Fm 4/5 | Lm 4, Fm 3/4 | Lm 4,
         Fm 2/3 | Lm 4, Fm 5/8 | Lm 4,
     ]
-    | Color [#FF003C, #FFCCCC, #004444, black, #332200, black] | Gradient(-1, 1.2, 0)
+}
+
+thing1(c) = {
+    thing1_base
+    | c | Gradient(-1, 1.2, 0)
     | wgsl {
         Direction (0, 0, -1) | Bend (0.3, 0.2, 0, 0.4) | Vm 1/2;
         Xa "sin(time * 0.4 + y * 2.0) * 0.08";
@@ -53,7 +61,7 @@ thing1 = {
     ]
 }
 
-thing2 = {
+thing2(c) = {
     Overlay [
         { 3/1, -0.02, 1, -1 },
         { 3/1, 0, 1, 1 },
@@ -65,13 +73,11 @@ thing2 = {
         { 1/1, 0, 1, 1 },
     ]
     | Seq [
-        Fm 3/4, Fm 11/16 | Lm 1/8, Fm 3/4, Fm 1/2,
-        Fm 3/4, Fm 11/16 | Lm 1/8, Fm 3/4 | Lm 1/8, Fm 0 | Lm 2,
-        -- Fm 9/16, Fm 5/8, Fm 9/16, Fm 2/3 | Lm 3,
-        -- Fm 2/3, Fm 5/8 | Lm 2
+        Fm 3/4, Fm 11/16 | Lm 1/8 | wgsl { Ym 5/6; Xm 9/8; }, Fm 3/4, Fm 1/2,
+        Fm 3/4, Fm 11/16 | Lm 1/8 | wgsl { Ym 5/6; Xm 9/8; }, Fm 3/4 | Lm 1/8, Fm 0 | Lm 2,
     ]
-    | FitLength thing1
-    | Color [lightpurple, black, black, #5C1A4D, black, black, #0A1628, black, black, #7B1A55, black, #4B0082, black] | Gradient(0, 0.8, 0)
+    | FitLength thing1_base
+    | c | Gradient(0, 0.8, 0)
     | wgsl {
         Xm 1/3;
         Seq [
@@ -88,12 +94,18 @@ thing2 = {
     }
 }
 
-main = {
+piece(c1, c2) = {
     Overlay [
-        thing1,
-        thing2
+        thing1(c1),
+        thing2(c2)
     ]
-    | Seq [Fm 1 | Repeat 2, Fm 7/8 | Lm 8/7]
+}
+
+main = {
+    Seq [
+        piece(colors1a, colors2a) | Repeat 2,
+        piece(colors1b, colors2b) | Fm 7/8 | Lm 8/7
+    ]
     | Repeat 2
     | Lm 1/9
 }
