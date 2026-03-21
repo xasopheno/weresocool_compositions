@@ -39,7 +39,7 @@ thing2Base = {
     ]
     | Repeat 2
     | wgsl {
-        Sm 1;
+        Sm 3/2;
         Xm 1/3;
         Vm 3;
         Xa "cos(time * 3) * sin(time * 5) * 0.25";
@@ -51,6 +51,24 @@ thing2Base = {
         ];
     }
     | FitLength thing1Base
+}
+
+thing3base = {
+    Overlay [
+        { 2, 0, 1, 0 },
+        { 3/2, 0, 1/2, 0 },
+        { 1/1, 2, 1, 1/4 },
+        { 1/1, 0, 1, -1/4 },
+        { 1/2, 0, 1, 0 },
+    ]
+    | Seq [
+        Fm 2/1 | Lm 32, Fm 3/2, Fm 4/3 | Seq [Fm 1, Fm 15/16, Lm 1] | Lm 1/3, Fm 3/2 | Lm 1/3
+    ] | Repeat 8
+    | ModBy [
+        Seq [
+            Lm 8, Fm 0, Fa -10, Lm 8
+        ] | Repeat 24
+    ]
 }
 
 coloredBase(c1, c2) = {
@@ -74,15 +92,37 @@ seqWithColors(colorOp1a, colorOp1b, colorOp2a, colorOp2b) = {
     ]
 }
 
-seq1 = {
+melody = {
     seqWithColors(
     Color [firebrick, orange, yellow, black, black, black] | Gradient(0, 1, 0),
-    Color [cyan, teal, darkblue, black, black, black] | Gradient(0, 1, 0),
+    Color [white, darkpink, teal, darkblue, black, black, black] | Gradient(0, 1, 0),
     Color [purple, magenta, pink, black, black, black] | Gradient(0, 1, 0),
-    Color [lime, green, forestgreen, black, black, black] | Gradient(0, 1, 0)
+    Color [white, lime, green, forestgreen, black, black, black] | Gradient(0, 1, 0)
     )
+}
+
+seq1 = {
+    Overlay [
+        melody,
+        thing3base
+        | FitLength melody | #c | Color [yellow, black, bluegreen, darkgreen, blue, purple, black] | Gradient(1, -1, -1)
+        | Fm 1/6
+        | wgsl {
+            Sm "3 / (2.0 * time + 0.9)";
+            Xm 1/3;
+            Vm 1/2;
+            Ya 5/3;
+            Xa -2.0;
+            Ya "cos(time * 2) * 0.14";
+            Seq [
+                Direction (1, 0.3, 0) | Lm 2;
+                Sm 0;
+            ];
+        }
+    ]
 }
 
 main = {
     seq1
+    -- | Color [vomitgreen]
 } -> [a, b]

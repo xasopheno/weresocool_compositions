@@ -137,7 +137,6 @@ bass = {
     }
     | Color [brightgreen, purple, grey, black, black, black] | Gradient(0, 1, 0)
     | FitLength thing1
-
 }
 
 main = {
@@ -145,7 +144,7 @@ main = {
         thing1 | #a,
         thing2 | #b,
         thing3 | #c,
-        -- bass,
+        bass,
     ]
     | Repeat 2
 } -> [a, b, c]
