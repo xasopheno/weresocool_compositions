@@ -1,0 +1,90 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        { 7/6, 8, 1/3, 1/4 },
+        { 7/6, 0, 1/3, -1/4 },
+        { 9/8, 7, 1/2, 1/3 },
+        { 9/8, 0, 1/2, -1/3 },
+        { 1/1, 2, 1, 1/4 },
+        { 1/1, 0, 1, -1/4 },
+        { 1/2, 1, 1/2, 1/2 },
+        { 1/2, 0, 1/2, -1/2 },
+        { 1/4, 1, 1/4, 1/2 },
+        { 1/4, 0, 1/4, -1/2 },
+    ]
+    | Overlay [
+        Noise | Seq [Gm 1/7, Fm 0, Fm 0] | Lm 1/4,
+        Sine 1/2 | Seq [Gm 1/5, Fm 0, Fm 0] | Lm 1/4,
+        Seq [Fm 1, Fm 0, Fm 0] | Lm 1/4,
+        Seq [Fm 3/4, Fm 0, Fm 0] | Lm 1/5,
+        Seq [Fm 5/4, Fm 0, Fm 0] | Lm 1/6,
+        Fm 0,
+    ]
+    | Seq [
+        Fm 1/3 | Lm 3/5, Fm 9/4 | Lm 2/5
+        | Repeat 3 | Lm 1/3 | Overlay [Fa 0 | Pa -1, Fa 3 | Pa 1] | Gm 3/4,
+        Fm 1/4 | Lm 3/5
+        | Choose [Fm 1, Fm 1/2],
+        Fm 3/4 | Lm 2/5,
+        Fm 11/4
+        | Lm 3/5
+        | Choose [Fm 1, Fm 8/7 | Lm 1/3 | Seq [Fm 0, Fm 1, Fm 0]],
+        Fm 2/3 | Lm 2/5
+        | Repeat 2 | Lm 1/2,
+        Fm 1/3 | Lm 3/5, Fm 3/2 | Lm 2/5,
+    ]
+    | Repeat 10
+    | #a
+}
+
+thing2 = {
+    Overlay [
+        { 2/1, 0, 1/3, 1/8 },
+        { 2/1, 11, 1/3, -1/8 },
+        { 1/1, 14, 1, 1/8 },
+        { 1/1, 0, 1, -1/8 },
+    ]
+    | Seq [
+        Fm 0, Fm 0, Fm 0, Fm 9/8, Fm 7/8, Fm 0, Fm 3/4 | Seq [Fm 2, Fm 1, Fm 1] | Lm 1/3, Fm 0
+    ]
+    | Seq [Fa 1, Fa -1/2, Fa 1/2, Fm 0, Fm 1, Fm 0 | Repeat 3]
+    | Choose [Fm 1, Fm 0]
+    | FitLength thing1
+    | #b
+}
+
+thing3 = {
+    Overlay [
+        { 7/3, 0, 1/3, 1/2 },
+        { 7/3, 13, 1/3, -1/2 },
+        { 2/1, 0, 1/3, 1/2 },
+        { 2/1, 11, 1/3, -1/2 },
+        { 1/1, 14, 1, 1/2 },
+        { 1/1, 0, 1, -1/2 },
+        { 1/2, 7, 1, 1/2 },
+        { 1/2, 0, 1, -1/2 },
+    ]
+    | Seq [Fm 3/4]
+    | ModBy [
+        Gm 0, Gm 0, Gm 0, Gm 0, Gm 1/3, Gm 1/4, Gm 1/3,
+        Gm 1/2 | Lm 1/2 | Overlay [Fm 1, Fm 2, Fm 4 | Gm 1/2]
+    ]
+    | Overlay [
+        Fm 3/4, Fm 5/3 | Lm 1/2 | Pm 1/3 | Gm 1/2
+        | Choose [Fm 1, Fm 0]
+    ]
+    | FitLength thing1
+    | #c
+}
+
+main = {
+    Overlay [
+        thing1,
+        thing2,
+        thing3,
+    ]
+    | Fm 4/3
+    | Lm 3/10
+    | Repeat 8
+} -> [a, b, c]

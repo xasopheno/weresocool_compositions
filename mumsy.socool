@@ -1,0 +1,51 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        { 1/1, 2, 1, 1 },
+        { 1/1, 0, 1, -1 },
+        { 1/2, 2, 1, 1 },
+        { 1/2, 0, 1, -1 },
+    ]
+    | Overlay [
+        Seq [Fm 2, Fm 0, Fm 0] | Lm 1/6,
+        Fm 1
+    ]
+    | Seq [
+        Fm 1/2, Fm 2, Fm 1/2, Fm 2,
+        Fm 2, Fm 1/2, Fm 1/2, Fm 2,
+        Fm 1/2, Fm 2, Fm 0, Fm 2,
+        Fm 1/2, Fm 1/2, Fm 2, Fm 1/4,
+    ]
+    | Overlay [
+        ModBy [
+            Seq [Fm 3, Fm 0, Fm 3, Fm 3] | Repeat 3 | Gm 1/3
+        ] | #a,
+        ModBy [
+            Seq [Fm 2, Fm 0, Fm 2, Fm 2] | Repeat 4 | Gm 1/3
+        ] | #b,
+        ModBy [
+            Seq [Fm 1, Fm 0, Fm 1, Fm 1] | Repeat 8
+        ] | #c,
+    ]
+}
+
+thing2 = {
+    Overlay [
+        { 1/1, 3, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | Seq [
+        Fm 3/4 | Lm 6, Fm 1/4 | Lm 2
+    ]
+    | FitLength thing1
+}
+
+main = {
+    Overlay [
+        thing1,
+        -- thing2
+    ]
+    | Lm 1/8
+    | Repeat 10
+} -> [a, b, c]

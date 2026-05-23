@@ -1,0 +1,77 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+thing1 = {
+    Overlay [
+        { 3/2, 2, 1/4, 1 },
+        { 3/2, 0, 1/4, -1 },
+        { 1/1, 2, 1, 1 },
+        { 1/1, 0, 1, -1 },
+        { 1/2, 2, 1, 1 },
+        { 1/2, 0, 1, -1 },
+    ]
+    | Overlay [
+        Seq [Fm 2, Fm 0, Fm 0] | Lm 1/8,
+        Fm 1,
+    ]
+    | Seq [
+        Fm 5/12, Fm 1, Fm 5/4,
+        Fm 1/3, Fm 1, Fm 5/4,
+        Fm 5/8, Fm 2/3, Fm 3/2,
+        Fm 1/4, Fm 1/2, Fm 1,
+        Fm 2, Fm 1/2 | Lm 2,
+    ]
+    | Repeat 6
+    | Repeat 2
+    | Overlay [
+        Sine,
+        Wavefolder (0.1, 1, 1, 0.3),
+        Square | Gm 1/8 | Fm 2,
+    ]
+    | #a
+}
+
+thing2 = {
+    Overlay [
+        { 2/1, 8, 1, 1 },
+        { 2/1, 0, 1, -1 },
+        { 1/1, 3, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | Seq [
+        Fm 0 | Lm 1/2,
+        Overlay [
+            { 15/16, 3, 1, 1 },
+            { 3/4, 0, 1, -1 },
+        ] | Lm 1/8,
+        Overlay [
+            { 5/6, 3, 1, 1 },
+            { 3/4, 0, 1, -1 },
+        ],
+        Overlay [
+            { 9/8, 3, 1, 1 },
+            { 2/3, 0, 1, -1 },
+        ] | Lm 2/3,
+        Overlay [
+            { 5/4, 3, 1, 1 },
+            { 3/4, 0, 1, -1 },
+        ],
+        Overlay [
+            { 4/3, 3, 1, 1 },
+            { 5/6, 0, 1, -1 },
+        ] | Lm 1/3
+    ]
+    | Seq [Fm 0 | Lm 1/4, Fm 1, Fm 0 | Lm 1/4]
+    | Seq [Fm 1, Reverse | Overlay [Fa 3, Fa 0] | Gm 1/2 | Fm 4/3]
+    | FitLength thing1
+    | #b
+}
+
+main = {
+    Overlay [
+        thing1,
+        thing2
+    ]
+    | Fm 9/8 | Fm 9/8
+    | Lm 1/7
+    | Repeat 2
+} -> [a, b]

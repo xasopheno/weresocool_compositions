@@ -102,7 +102,7 @@ birds = {
         { 1/8, 0, 1, -1/2 },
     ]
     | Overlay [
-        FromSound(50, 1) ./bird.mp3
+        FromSound(20, 1) ./bird.mp3
     ]
     | ModBy [Lm 1, $a, Lm 13] -> [a]
     | ModBy [$a, Lm 3] -> [a, a | Lm 1/16 | Reverse | Fm 1/2]
