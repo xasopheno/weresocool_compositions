@@ -1,0 +1,242 @@
+{ f: 55, l: 1/16, g: 1, p: 0 }
+
+bd = {
+    Overlay [
+        { 1/2, 0, 1, -3/4 },
+        { 1/2, 0, 1, 3/4 },
+        { 1/4, -1 , 1, 3/4 },
+        { 1/4, -1 , 1, -3/4 },
+    ]
+    | Kick {
+        pitch_decay: 0.015,
+        pitch_range: 4.2,
+        amp_decay: 0.35,
+        click_amount: 0.01,
+        click_freq: 180,
+        saturation: 0.85,
+        hump: 2.85
+    }
+    | Color [firebrick, deepbrown, red, black, black, black] | Gradient(1, 0, 0)
+    | wgsl {
+        Sm 12;
+        Vm 1/4;
+        Ya -0.4;
+        Seq [
+            Direction (0, -1, -0.2);
+        ];
+    }
+}
+
+sn = {
+    Snare {
+        shell_decay: 0.33,
+        wire_decay: 0.20,
+        wire_mix: 0.55,
+        shell_pitch_range: 0.50,
+        crack: 0.75,
+        attack_amount: 0.55,
+        saturation: 0.50
+    }
+    | Gm 1/4
+    | Color [white, grey, firebrick, black, black, black] | Gradient(0.5, 1, 0)
+    | wgsl {
+        Sm 24;
+        Vm 1/3;;
+        Ya -3.1;
+        Xa 3;
+        Smy 6;
+        Seq [
+            Direction (1, 0.2, -0.3);
+        ];
+    }
+}
+
+sn_g = {
+    Snare {
+        shell_decay: 0.27,
+        wire_decay: 0.50,
+        shell_pitch_range: 0.50,
+        wire_mix: 0.65,
+        crack: 0.35,
+        attack_amount: 0.28
+    }
+    | Fm 4
+    | Gm 0.4
+    | Color [slategrey, blue, grey, black, black, black] | Gradient(-0.5, 1, 0)
+    | wgsl {
+        Sm 24;
+        Vm 1/3;
+        Ya -3.05;
+        Xa -4;
+        Smy 6;
+        Seq [
+            Direction (-1/3, 0.1, 0.2);
+        ];
+    }
+}
+
+hh = {
+    HiHat {
+        decay_rate: 60,
+        brightness: 0.5,
+        pitch_drop: 0.010
+    }
+    | Fm 55
+    | Gm 0.45
+    | Color [sunfloweryellow, gold, white, black, black, black] | Gradient(-1, 1, 0)
+    | wgsl {
+        Sm 39;
+        Vm 4;
+        Ya -0.5;
+        Seq [
+            Direction (0.2, 1, -0.5);
+        ];
+    }
+}
+
+oh = {
+    OpenHat {
+        decay_rate: 7,
+        brightness: 0.85,
+        pitch_drop: 0.020
+    }
+    | Fm 45
+    | Gm 0.45
+    | Color [turquoise, white, bluegreen, black, black, black] | Gradient(-1, 1, 0)
+    | wgsl {
+        Sm 7;
+        Vm 5/2;
+        Ya -0.5;
+        Seq [
+            Direction (0.4, 0.8, -0.6);
+        ];
+    }
+}
+
+x = { Silence 1 }
+
+kick_a = {
+    Seq [
+        bd | Lm 1/2 | Repeat 2 | Pa -1/2 | Gm 1/3, x, x, x, x, x, x, x,
+        x, x, bd, x, x, x, x, x, bd
+    ]
+}
+
+bass_a = {
+    Overlay [
+        Seq [Fm 0, Fm 1, Fm 0] | Lm 1/8,
+        Fm 1 | Gm 1/3
+        -- Fm 1/5
+    ]
+    | Overlay [
+        { 10, 11, 1/4, -1/4 },
+        { 10, 0, 1/4, 1/4 },
+        { 9, 7, 1/5, -1/5 },
+        { 9, 0, 1/7, 1/5 },
+        { 3, 0, 1/3, 0 },
+        { 1/1, 3, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | FitLength kick_a
+    | Color [vividpurple, blue, deepgreen, black, black, black] | Gradient(-1, 0.3, 0)
+    | wgsl {
+        Sm 14;
+        Vm 1/3;
+        Za -0.3;
+        Seq [
+            Direction (0, 0.3, -1);
+        ];
+    }
+}
+
+kick_b = {
+    Seq [
+        bd, x, x, x, x, x, x, bd | Gm 0.55,
+        x, x, bd, x, x, x, x, x, bd | Lm 1/2 | Repeat 2 | Pa 1/2 | Gm 1/3
+    ]
+}
+
+bass_b = {
+    Overlay [
+        { 5, -3, 1/1, 1/3 },
+        { 5, 8, 1, -1/2 },
+        { 3/4, -1/3, 1, -3/4 },
+        { 3/4, 3, 1, 3/4 },
+    ]
+    | FitLength kick_b
+    | Color [purple, vividpurple, turquoise, black, black, black] | Gradient(1, 0.3, 0)
+    | wgsl {
+        Sm 13;
+        Vm 1/2;
+        Za -0.3;
+        Seq [
+            Direction (0, -0.3, -1);
+        ];
+    }
+}
+
+snare_a = {
+    Seq [
+        x, x, x, x, sn, x, x, x,
+        x, x, x, x, sn, x, x, x, sn
+    ]
+}
+
+snare_b = {
+    Seq [
+        x, x, sn_g, x, sn, x, x, sn_g,
+        x, sn_g, x, x, sn, x, sn_g, x
+    ]
+}
+
+snare_fill = {
+    Seq [
+        x, x, x, x, sn, x, x, x,
+        x, sn_g, sn_g, sn, sn, sn | Gm 0.85, sn | Gm 1.0, sn | Gm 1.15 | Lm 1/3 | Repeat 3
+    ]
+}
+
+hats_a = {
+    Seq [
+        hh, x, hh, x, hh, hh, x, hh, x,
+        hh, x, hh | Pa 1/3, x, hh, x, hh | Pa -1/5, x
+    ]
+    | Lm 200/204
+}
+
+hats_b = {
+    Seq [
+        hh, x, hh, x, hh, hh, x, hh, x,
+        hh, x, hh, x, hh, x, oh, x
+    ] | Fm 2
+}
+
+bar_basic = { Overlay [
+        kick_a ,
+        bass_a,
+        snare_a,
+        hats_a
+    ]
+}
+
+bar_groove = { Overlay [
+        kick_b,
+        snare_b,
+        hats_b,
+    ]
+}
+
+bar_fill = { Overlay [kick_a, snare_fill, hats_b] }
+
+main = {
+    Seq [
+        bar_basic, bar_groove, bar_basic, bar_fill,
+        bar_basic, bar_groove, bar_groove, bar_fill
+    ]
+    | Repeat 2
+    | Lm 2
+    | wgsl {
+        Zm 3;
+        Vm 3
+    }
+}

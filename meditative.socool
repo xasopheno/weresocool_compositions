@@ -1,0 +1,478 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0, background_color: #050302 }
+
+-- ═══ forest ══════════════════════════════════════════════════════════════
+-- A luminous additive layer behind (sky, fireflies, drifting glow), black
+-- tree silhouettes composited OVER it — actually occluding the fireflies as
+-- they pass behind trunks — and multiply layers for ground shadow and night.
+--
+-- The occlusion trick: the compositor forces alpha = max(rgb), so a black
+-- stamp can never cover anything. Trunks are therefore painted PURE BLUE
+-- (full coverage, a≈1) in an `over` chain — they really do replace the
+-- fireflies behind them — and the topmost `night multiply` layer is
+-- Solid(1,1,0), which deletes the blue channel from the whole frame. Blue
+-- trunk light becomes blackness; everything luminous lives in red+green.
+
+-- ─── warps ───────────────────────────────────────────────────────────────
+-- glow: the luminous medium. Feedback trails + bloom + a dusk gradient
+-- (Background adds each frame, so values are desired_sky × (1−decay)).
+warp glow = {
+    Prev
+    | CurlFlow(amp: 0.0025, freq: 11)
+    | Blur 0.8
+    | Decay 0.93
+    | Add (Scene | Bloom(threshold: 0.5, strength: 0.12))
+    | Background(top: (0.013, 0.008, 0.0), bottom: (0.001, 0.003, 0.0), split: 0.7, soft: 0.3)
+    | Knee 0.33
+    | Gamma 1.12
+}
+
+-- canopy: crisp trunk coverage. Scene only — no feedback, no trails. Gain
+-- saturates coverage alpha so the silhouette fully replaces what's behind it.
+warp canopy over = {
+    Scene | Gain 6 | Knee 0.3
+}
+
+-- shade: ground shadow. A blue gradient strongest at the floor — multiply
+-- kills the warm channels there (the blue it passes dies in `night` above).
+warp shade multiply = {
+    Gradient(0, 1, 0)
+    | Gamma 3
+    | Tint(0, 0, 1)
+    | Gain 0.85
+}
+
+-- night: the frame-wide blue executioner. out = (r, g, 0).
+warp night multiply = {
+    Solid(1, 1, 0)
+}
+
+-- ─── marks ───────────────────────────────────────────────────────────────
+draw fly = {
+    Point
+    | Jitter 0.04
+}
+
+-- trunk: one note = one tree. A 72-step column starting well below the
+-- note's pitch-y and reaching past the top of frame; noise gives the
+-- silhouette an organic edge.
+draw trunk = {
+    Point
+    | Ya(-0.55)
+    | Lerp(to: Direction(0, 1.55, 0), n: 72)
+    | Modulate(Noise(scale: 3), 0.008)
+}
+
+-- ─── audio sources (unchanged music) ─────────────────────────────────────
+thing1 = {
+    Overlay [
+        { 1/1, 0.01, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | Seq [
+        Overlay [
+            { 3/1, 5, 1, 1 },
+            { 3/1, 0, 1, -1 },
+            { 5/2, 2, 1, 1 },
+            { 5/2, 0, 1, -1 },
+            { 3/2, 2, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 9/8, 2, 1, 1 },
+            { 9/8, 0, 1, -1 },
+            { 1/1, 8, 1, 1 },
+            { 1/1, 0, 1, -1 },
+            { 1/2, 3, 1, 1 },
+            { 1/2, 0, 1, -1 },
+        ],
+        Overlay [
+            { 8/3, 4, 1, 1/4 },
+            { 8/3, 0, 1, -1/4 },
+            { 9/4, 3, 1, 1 },
+            { 9/4, 0, 1, -1 },
+            { 5/3, 3, 1, 1/2 },
+            { 5/3, 0, 1, -1/2 },
+            { 3/2, 3, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 1/1, 2, 1, 1 },
+            { 1/1, 0, 1, -1 },
+            { 1/2, 2, 1, 1/8 },
+            { 1/2, 0, 1, -1/8 },
+        ],
+        Overlay [
+            { 9/4, 2, 1, 1 },
+            { 9/4, 0, 1, -1 },
+            { 2/1, 2, 1, 1/2 },
+            { 2/1, 0, 1, -1/2 },
+            { 5/3, 2, 1, 1/8 },
+            { 5/3, 0, 1, -1/8 },
+            { 11/8, 3, 1, 1 },
+            { 11/8, 0, 1, -1 },
+            { 1/1, 2, 1, 1/8 },
+            { 1/1, 0, 1, -1/8 },
+            { 1/2, 3, 1, 1 },
+            { 1/2, 0, 1, -1 },
+        ],
+        Overlay [
+            { 5/2, 5, 1, 1 },
+            { 5/2, 0, 1, -1/3 },
+            { 9/4, 5, 1, 1/3 },
+            { 9/4, 0, 1, -1 },
+            { 8/5, 3, 1, 1 },
+            { 8/5, 0, 1, -1 },
+            { 4/3, 3, 1, 1/4 },
+            { 4/3, 0, 1, -1/4 },
+            { 1/1, 4, 1, 1 },
+            { 1/1, 0, 1, -1 },
+            { 1/2, 3, 1, 1/2 },
+            { 1/2, 0, 1, -1/2 },
+        ] | Lm 2/3,
+        Overlay [
+            { 2, 7, 1, 1 },
+            { 2, 0, 1, -1 },
+            { 15/8, 7, 1, 1/4 },
+            { 15/8, 0, 1, -1/4 },
+            { 3/2, 3, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 4/3, 3, 1, 1/4 },
+            { 4/3, 0, 1, -1/4 },
+            { 1/1, 4, 1, 1 },
+            { 1/1, 0, 1, -1 },
+            { 1/2, 1, 1, 1/2 },
+            { 1/2, 0, 1, -1/2 },
+        ],
+        Overlay [
+            { 2, 5, 1, 1/4 },
+            { 2, 0, 1, -1/4 },
+            { 5/3, 5, 1, 1 },
+            { 5/3, 0, 1, -1 },
+            { 3/2, 3, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 4/3, 3, 1, 1/2 },
+            { 4/3, 0, 1, -1/2 },
+            { 5/4, 4, 1, 1 },
+            { 5/4, 0, 1, -1 },
+            { 1/2, 1, 1, 1 },
+            { 1/2, 0, 1, -1 },
+        ],
+        Overlay [
+            { 15/8, 5, 1, 1 },
+            { 15/8, 0, 1, -1 },
+            { 5/3, 5, 1, 1/3 },
+            { 5/3, 0, 1, -1/3 },
+            { 3/2, 3, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 5/4, 3, 1, 1 },
+            { 5/4, 0, 1, -1 },
+            { 9/8, 4, 1, 1/3 },
+            { 9/8, 0, 1, -1/3 },
+            { 1/2, 1, 1, 1 },
+            { 1/2, 0, 1, -1 },
+        ] | Lm 4/3,
+        Overlay [
+            { 2/1, 5, 1, 1 },
+            { 2/1, 0, 1, -1/2 },
+            { 5/3, 5, 1, 1 },
+            { 5/3, 0, 1, -1 },
+            { 4/3, 3, 1, 1/2 },
+            { 4/3, 0, 1, -1 },
+            { 5/4, 3, 1, 1 },
+            { 5/4, 0, 1, -1 },
+            { 9/8, 4, 1, 1 },
+            { 9/8, 0, 1, -1/2 },
+            { 1/3, 1, 1, 1/2 },
+            { 1/3, 0, 1, -1 },
+        ] | Lm 2,
+        Overlay [
+            { 2/1, 5, 1, 1 },
+            { 2/1, 0, 1, -1 },
+            { 5/3, 5, 1, 1 },
+            { 5/3, 0, 1, -1 },
+            { 3/2, 3, 1, 1/3 },
+            { 3/2, 0, 1, -1/3 },
+            { 5/4, 3, 1, 1 },
+            { 5/4, 0, 1, -1/4 },
+            { 1/1, 4, 1, 1/4 },
+            { 1/1, 0, 1, -1 },
+            { 1/4, 1, 1, 1 },
+            { 1/4, 0, 1, -1 },
+        ] | Lm 2 | Portamento 8,
+        Fm 0 | Lm 1/8,
+    ]
+    | Overlay [
+        Sine 3/2 | Gm 1/4,
+        Sine,
+        Wavefolder(0.4, 8, 3, 1/3) | Gm 1/3,
+        Fm 1/2 | Gm 1/4
+    ]
+}
+
+-- ─── luminous layer: sky + fireflies ─────────────────────────────────────
+-- sky: the chords themselves as broad, dim, slowly receding glow. The
+-- palette is deliberately blue-free — blue dies in the night layer.
+sky = {
+    thing1
+    | Color [olive, darkolivegreen, darkgoldenrod, darkgreen, olive]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Xm 1.9;
+        Sm 2.5;
+        Bm 0.05;
+        Vm 1/16;
+        Seq [
+            Direction (0.1, 0.04, -0.6) | Lm 30;
+        ];
+    }
+    | glow
+}
+
+-- fireflies: a whisper-quiet double of the chords two octaves up. Each
+-- sustained note sheds a fresh fly every ~2s; each fly wanders, blinks on a
+-- slow duty cycle, drifts laterally far enough to pass behind trunks, and
+-- dies before the pool would take it.
+fireflies = {
+    thing1 | Fm 4 | Gm 1/50
+    | Color [gold, chartreuse, orange, gold]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Xm 1.9;
+        Ym 0.55;
+        Ya -0.1;
+        Sm 0.8;
+        Sa 0.012;
+        Vm 1/14;
+        Am "0.15 + 0.85 * pow(0.5 + 0.5 * sin(time * 2.1 + x * 23.0), 4.0)";
+        x = x + sin(time * 0.7 + y * 9.0) * 0.05;
+        y = y + sin(time * 0.43 + x * 7.0) * 0.04;
+        Die 10;
+        Seq [
+            Direction (0.7, 0.15, -0.06) | Lm 12;
+        ];
+    }
+    | draw fly
+    | glow
+}
+
+part1 = {
+    Overlay [sky, fireflies]
+    | Seq [
+        Lm 1/5 | Fm 5/4,
+        Lm 1/3 | Fm 9/8,
+        Lm 1, Lm 4, Lm 8, Lm 12,
+        Lm 1/5 | Fm 5/4,
+    ]
+}
+
+-- ─── part2 voices ────────────────────────────────────────────────────────
+bd = {
+    Overlay [
+        { 5/4, 0, 1/4, -1/4 },
+        { 5/4, -3, 1/4, 1/4 },
+        { 3/4, 0, 1/4, -1/4 },
+        { 3/4, -2, 1/4, 1/4 },
+        { 1/2, 0, 1, -3/4 },
+        { 1/2, 0, 1, 3/4 },
+        { 1/4, -1 , 1, 3/4 },
+        { 1/4, -1 , 1, -3/4 },
+    ]
+    | Kick {
+        body: 0.85,
+        pitch_decay: 0.015,
+        pitch_range: 0.5,
+        amp_decay: 0.55,
+        click_amount: 0.2,
+        saturation: 0.85,
+        hump: 2.85,
+        shell: 0.8,
+        ks_mix: 0.25
+    }
+    | Color [darkred, maroon, darkred]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Xm 1.9;
+        Sm 1.2;
+        Smy 0.5;
+        Bm 0.25;
+        Vm 0;
+        Die 2;
+    }
+    | glow
+}
+
+hh = {
+    HiHat {
+        metal: 0.75,
+        decay_rate: 20,
+        brightness: 0.85,
+        pitch_drop: 0.05,
+        ping_amount: 0.72
+    }
+    | Fm 8
+    | Color [gold, yellow, orange]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Xm 1.9;
+        Ya -0.5;
+        Sm 0.3;
+        Bm 0.5;
+        Vm 1/10;
+        Die 3/2;
+        Seq [
+            Direction (0, 0.4, -0.1) | Lm 2;
+        ];
+    }
+    | glow
+}
+
+thing2 = {
+    Seq [
+        Overlay [
+            { 11/4, 8, 1, 1/8 },
+            { 11/4, 0, 1, -1/8 },
+            { 5/2, 3, 1, 1/8 },
+            { 5/2, 0, 1, -1/8 },
+            { 7/3, 3, 1, 1 },
+            { 7/3, 0, 1, -1 },
+            { 9/4, 3, 1, 1 },
+            { 9/4, 0, 1, -1 },
+            { 2/1, 3, 1/2, 1/8 },
+            { 2/1, 0, 1/2, -1/8 },
+            { 3/2, 8, 1, 1 },
+            { 3/2, 0, 1, -1 },
+            { 3/4, 2, 1, 1 },
+            { 3/4, 0, 1, -1 },
+            { 1/2, 3, 1, 1 },
+            { 1/2, 0, 1, -1 },
+            { 1/4, 3, 1, 1 },
+            { 1/4, 0, 1, -1 },
+        ]
+        | Seq [
+            Lm 8,
+            Lm 1/8
+            | Seq [Fm 7/4, Fm 9/4, Fm 11/4, Fm 13/4, Fm 15/4]
+            | Overlay [AsIs, Invert | Lm 9/10 | Fm 4 | Pm -1/2]
+            | Portamento 4
+        ]
+    ]
+    | Sine
+    | Color [gold, darkorange, orangered, darkgoldenrod]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Xm 1.9;
+        Sm 0.5;
+        Bm 0.35;
+        Vm 1/10;
+        Die 7;
+        Seq [
+            Direction (-0.1, 0.25, -0.15) | Lm 8;
+        ];
+    }
+    | glow
+}
+
+x = { Gm 0 }
+
+bass_drum = {
+    Seq [
+        bd, x, bd, x, x, bd,
+    ]
+    | Repeat 16 | Lm 1/8
+    | ModBy [Lm 13, Gm 0]
+    | Gm 2
+    | FitLength thing2
+}
+
+hi_hat = {
+    Overlay [
+        Seq [
+            hh, x, hh, hh, x, hh, hh, x,
+        ] | Repeat 12
+        | ModBy [Lm 13, Gm 0]
+    ]
+    | FitLength thing2
+}
+
+part2 = {
+    Overlay [
+        thing2,
+        bass_drum,
+        hi_hat
+    ]
+    | Seq [
+        Repeat 3,
+        Fm 7/6 | Lm 7/6,
+        Repeat 3,
+        Fm 7/8 | Lm 7/8,
+        Fm 0 | Lm 1/100,
+    ]
+    | Gm 3/2
+}
+
+coda = {
+    Overlay [sky, fireflies]
+    | Seq [
+        Fm 8/5 | Lm 1/8,
+        Fm 2 | Lm 1/10,
+        Fm 9/8 | Lm 1/7,
+        Fm 5/2 | Lm 1/6 | Reverse,
+    ]
+}
+
+score = {
+    Seq [
+        part1,
+        part2,
+        Fm 0 | Lm 1/100,
+        coda
+    ]
+    | Gm 1/2
+}
+
+-- ─── the trees ───────────────────────────────────────────────────────────
+-- Seven trunks = a seven-voice unison sub-drone (two octaves down), each
+-- voice detuned a fraction of a Hz for slow beating, each pan one trunk's
+-- x position. The chord holds for the whole piece, so the ~2s re-trigger
+-- keeps every silhouette refreshed forever. Pure blue: the night layer
+-- turns that into black.
+trunk_tone = {
+    Overlay [
+        { 1/4, 0.13, 1/3, -14/15 },
+        { 1/4, -0.21, 1/4, -3/5 },
+        { 1/4, 0.34, 1/3, -4/15 },
+        { 1/4, -0.08, 1/5, 1/15 },
+        { 1/4, 0.27, 1/3, 2/5 },
+        { 1/4, -0.31, 1/4, 2/3 },
+        { 1/4, 0.18, 1/3, 14/15 },
+    ]
+}
+
+trees = {
+    trunk_tone
+    | FitLength score
+    | Gm 1/6
+    | Color [blue, blue]
+    | wgsl {
+        Xm 1.9;
+        Sm 8;
+        Sa 0.015;
+        Smx 0.8;
+        Smy 3;
+        Bm 8;
+        Vm 0;
+    }
+    | draw trunk
+    | canopy
+}
+
+-- ─── silent anchors for the multiply layers ──────────────────────────────
+-- The shade and night warps are pure generators (they never sample their
+-- scene); these rests exist only to give each chain a brush routing.
+shade_anchor = { Fm 0 | Lm 1 | Color [black] | shade }
+night_anchor = { Fm 0 | Lm 1 | Color [black] | night }
+
+main = {
+    Overlay [
+        score,
+        trees,
+        shade_anchor,
+        night_anchor
+    ]
+}

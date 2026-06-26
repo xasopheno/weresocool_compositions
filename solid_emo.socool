@@ -1,74 +1,252 @@
 { f: 55, l: 1/16, g: 1, p: 0 }
 
+// Plasma drift — curl-noise fluid feedback.
+// Recreates the exact shader we landed on, expressed in the new warp DSL.
+//
+// Per frame:
+//   1. Trail: Prev sampled along a curl-noise velocity field, blurred, decayed.
+//   2. Scene gets the same curl displacement (no "first frame" — brushes only
+//      appear as fluid-drifted smoke, never at their literal screen position).
+//   3. Additive composite, soft-knee tonemap caps highlights so feedback can't
+//      run away, gamma 1.32 deepens the shadows.
+// Plasma — fine curl-noise drift layered with a slow large-scale Noise
+// Modulate. Two scales of turbulence: the fast curl writes detail, the
+// slow noise generator displaces the whole field underneath. The Modulate
+// is the difference between "fluid" and "fluid that's alive".
+warp plasma = {
+    Prev
+    | CurlFlow(amp: 0.012, freq: 9)
+    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | Blur 1.5
+    | Decay 0.93
+    | Add (Scene | CurlFlow(amp: 0.012, freq: 10)) | Knee 0.3
+    | Gamma 1.32
+}
+
+// Tunnel — for the chord (bass_a). Sibling to plasma but distinctly its own:
+//   - curl flow with a tighter frequency (faster eddies)
+//   - Osc generator Modulates the trail along a rhythmic horizontal wave
+//   - chromatic aberration + slow Hue rotation tint the sustain
+//   - longer decay (0.96) so chord notes leave persistent trails
+warp tunnel = {
+    Prev
+    | CurlFlow(amp: 0.212, freq: 34)
+    | Modulate(Osc(freq: 34, sync: 0.8, offset: 8.0), 0.012)
+    | ChromaShift 4.01
+    | Hue (Time * 3.04)
+    | Blur 1.5
+    | Decay 0.96
+    | Max (Scene | CurlFlow(amp: 0.022, freq: 3000))
+    | Knee 0.2
+    | Gamma 1.1
+}
+
+// Pulse — for the kick. Plasma's fluid baseline + a heavy bloomed outward
+// pulse on top. The character section runs first (sets the look of new hits),
+// then plasma's body carries it through the feedback chain.
+warp pulse = {
+    Prev
+    -- character: outward scale + heavy bloom + warm Noise jitter
+    | Scale 1.008
+    | Modulate(Noise(scale: 4, offset: 0.05), 0.022)
+    | Bloom(threshold: 0.15, strength: 0.9)
+    -- plasma body
+    | CurlFlow(amp: 0.012, freq: 9)
+    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | Blur 1.5
+    | Decay 0.93
+    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Knee 0.3
+    | Gamma 1.32
+}
+
+// Shatter — for the snares. Plasma fluid + a fast oscillating chromatic jolt
+// that fires with each snare hit and gets smeared into the curl drift.
+warp shatter = {
+    Prev
+    -- character: hard glitch Modulate + heavy ChromaShift
+    | Modulate(Osc(freq: 40, sync: 0.9, offset: 0.0), 0.05)
+    | ChromaShift 0.035
+    -- plasma body
+    | CurlFlow(amp: 0.012, freq: 9)
+    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | Blur 1.5
+    | Decay 0.93
+    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Knee 0.3
+    | Gamma 1.32
+}
+
+// Sparkle — for the hats. Plasma fluid + fine-grain noise displacement +
+// fast Hue cycling on the trail. Hat hits glitter and shift hue as they drift.
+warp sparkle = {
+    Prev
+    -- character: high-freq Noise Modulate + visible Hue rotation
+    | Modulate(Noise(scale: 14, offset: 0.5), 0.025)
+    | Hue (Time * 0.2)
+    -- plasma body
+    | CurlFlow(amp: 0.012, freq: 9)
+    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | Blur 1.5
+    | Decay 0.93
+    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Knee 0.3
+    | Gamma 1.32
+}
+
 bd = {
     Overlay [
+        { 5/4, 0, 1/4, -1/4 },
+        { 5/4, -3, 1/4, 1/4 },
+        { 3/4, 0, 1/4, -1/4 },
+        { 3/4, -2, 1/4, 1/4 },
         { 1/2, 0, 1, -3/4 },
         { 1/2, 0, 1, 3/4 },
         { 1/4, -1 , 1, 3/4 },
         { 1/4, -1 , 1, -3/4 },
     ]
     | Kick {
+        -- Body macro engages fatter shell + saturation defaults, on top of
+        -- the explicit settings below. Cleaner low end than the previous
+        -- click_freq:180 micro-tone (which sat *inside* the body band and
+        -- muddied it). amp_decay extended so the sub has room to breathe.
+        body: 0.85,
         pitch_decay: 0.015,
-        pitch_range: 4.2,
-        amp_decay: 0.35,
-        click_amount: 0.01,
-        click_freq: 180,
-        saturation: 0.85,
-        hump: 2.85
+        pitch_range: 2.2,
+        amp_decay: 0.55,
+        click_amount: 0,
+        saturation: 0.75,
+        hump: 2.85,
+        shell: 0.8,
+        ks_mix: 0.95
     }
+    | Color [black, deepred, firebrick, deepbrown, red, black, black, black] | Gradient(1, 0, 0)
+    | wgsl {
+        Sm 12;
+        Vm 1/4;
+        Ya -0.4;
+        Seq [
+            Direction (0, -1, -0.2);
+        ];
+    }
+    | pulse
 }
 
 sn = {
     Snare {
-        shell_decay: 0.33,
-        wire_decay: 0.20,
+        -- wires/tone macros bring sizzle + brightness up to match the
+        -- aggressive crack character. Shortened the shell decay so the
+        -- body doesn't ring long enough to compete with the next hit,
+        -- and pulled back shell_pitch_range from 0.80 — that much pitch
+        -- drop reads as "boing" rather than "snare." Crack center moved
+        -- up to 4500 Hz where modern hip-hop snare bite lives.
+        wires: 0.7,
+        tone: 0.75,
+        shell_decay: 0.22,
+        wire_decay: 0.30,
         wire_mix: 0.55,
-        shell_pitch_range: 0.50,
-        crack: 0.75,
-        attack_amount: 0.55,
-        saturation: 0.50
+        shell_pitch_range: 0.45,
+        crack: 0.85,
+        attack_amount: 0.85,
+        saturation: 0.80,
+        ks_mix: 0.65,
+        crack_freq: 4500
     }
-    | Gm 1/4
+    | Color [darkorange, darkpurple, grey, firebrick, black, black, black] | Gradient(-0.5, 1, 0)
+    | wgsl {
+        Sm 24;
+        Vm 1/3;;
+        Ya -3.1;
+        Xa 2.5;
+        Smy 6;
+        Seq [
+            Direction (1, 0.2, -0.3);
+        ];
+    }
+    | shatter
 }
 
 sn_g = {
     Snare {
-        shell_decay: 0.27,
-        wire_decay: 0.50,
-        shell_pitch_range: 0.50,
+        -- Ghost gets tighter envelopes + a snappier crack center than the
+        -- main hit (5000 Hz vs 4500 Hz). Bumped attack_amount slightly so
+        -- ghosts have enough definition to read at low velocity.
+        shell_decay: 0.15,
+        wire_decay: 0.12,
+        shell_pitch_range: 0.20,
         wire_mix: 0.65,
-        crack: 0.35,
-        attack_amount: 0.28
+        crack: 0.75,
+        attack_amount: 0.25,
+        ks_mix: 0.7,
+        crack_freq: 5000
     }
-    | Fm 4
-    | Gm 0.4
+    -- | Fm 4
+    | Color [deepred, blue, deepgreen, black, black, black] | Gradient(0.5, 1, 0)
+    | wgsl {
+        Sm 24;
+        Vm 1/3;
+        Ya -3.05;
+        Xa -3.5;
+        Smy 6;
+        Seq [
+            Direction (-1/3, 0.1, 0.2);
+        ];
+    }
+    | shatter
 }
 
 hh = {
     HiHat {
-        decay_rate: 60,
-        brightness: 0.5,
-        pitch_drop: 0.010
+        -- metal macro engages shimmer + bright modes, which keeps the
+        -- shimmering high register in balance with the prominent ping.
+        -- Without it the modes sit dull and the ping floats alone on top.
+        metal: 0.75,
+        decay_rate: 20,
+        brightness: 0.85,
+        pitch_drop: 0.05,
+        ping_amount: 0.72
     }
     | Fm 55
     | Gm 0.45
+    | Color [black, bluegreen, gold, darkred, black, black, black] | Gradient(-1, 1, 0)
+    | wgsl {
+        Sm 39;
+        Vm 4;
+        Ya 0.9;
+        Seq [
+            Direction (0.2, 1, -0.5);
+        ];
+    }
+    | sparkle
 }
 
 oh = {
     OpenHat {
         decay_rate: 7,
         brightness: 0.85,
-        pitch_drop: 0.020
+        pitch_drop: 0.020,
+        -- Open hats: no ping, all sustain.
+        ping_amount: 0
     }
     | Fm 45
     | Gm 0.45
+    | Color [darkorange, black, deeppurple, bluegreen, black, black, black] | Gradient(-1, 1, 0)
+    | wgsl {
+        Sm 7;
+        Vm 5/2;
+        Ya -0.5;
+        Seq [
+            Direction (0.4, 0.8, -0.6);
+        ];
+    }
+    | sparkle
 }
 
 x = { Silence 1 }
 
 kick_a = {
     Seq [
-        bd | Lm 1/2 | Repeat 2 | Pa -1/2 | Gm 1/3, x, x, x, x, x, x, x,
+        bd | Fm 7/8 , x, x, x, x, x, x, x,
         x, x, bd, x, x, x, x, x, bd
     ]
 }
@@ -89,6 +267,16 @@ bass_a = {
         { 1/1, 0, 1, -1 },
     ]
     | FitLength kick_a
+    | Color [vividpurple, blue, deepgreen, black, black, black] | Gradient(-1, 0.3, 0)
+    | wgsl {
+        Sm 16;
+        Vm 1/3;
+        Za -0.3;
+        Seq [
+            Direction (0, 0.3, -1);
+        ];
+    }
+    | tunnel
 }
 
 kick_b = {
@@ -106,6 +294,16 @@ bass_b = {
         { 3/4, 3, 1, 3/4 },
     ]
     | FitLength kick_b
+    | Color [purple, vividpurple, turquoise, black, black, black] | Gradient(1, 0.3, 0)
+    | wgsl {
+        Sm 13;
+        Vm 1/2;
+        Za -0.3;
+        Seq [
+            Direction (0, -0.3, -1);
+        ];
+    }
+
 }
 
 snare_a = {
@@ -125,7 +323,7 @@ snare_b = {
 snare_fill = {
     Seq [
         x, x, x, x, sn, x, x, x,
-        x, sn_g, sn_g, sn, sn, sn | Gm 0.85, sn | Gm 1.0, sn | Gm 1.15 | Lm 1/3 | Repeat 3
+        x, sn_g, sn_g, sn, sn, sn, sn, sn | Lm 1/3 | Repeat 3
     ]
 }
 
@@ -168,4 +366,9 @@ main = {
     ]
     | Repeat 2
     | Lm 2
+    | wgsl {
+        Zm 3;
+        Vm 3
+    }
+    | plasma
 }

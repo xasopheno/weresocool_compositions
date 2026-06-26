@@ -1,0 +1,245 @@
+{ f: 311.127, l: 1, g: 1/3, p: 0 }
+
+// Ribbon — for the lead (thing1). Tight curl-noise eddies smear each note into
+// a glowing ribbon; chromatic aberration + a steady Hue rotation keep the trail
+// shifting color. Long decay (0.95) so the melody leaves persistent streaks.
+warp ribbon = {
+    Prev
+    | Iterate 5 { Prev | Fold 0.16 | Rotate 0.18 | Scale 1.22 }
+    | Kaleid 6
+    | Rotate (Time * 0.0175)
+    | CurlFlow(amp: 0.055, freq: 22)
+    | ChromaShift 9.0
+    | Hue (Time * 4.5)
+    | Blur 1.4
+    | Decay 0.975
+    | Add (Scene | CurlFlow(amp: 0.03, freq: 14))
+    | Knee 0.18
+    | Gamma 1.28
+}
+
+// Aurora — for thing2. A slow, large-scale Noise Modulate drifts the whole
+// field while a gentle curl writes detail; soft Bloom and a long decay turn
+// the sustained tones into a wide, breathing wash.
+warp aurora = {
+    Prev
+    | Iterate 5 { Prev | Fold 0.16 | Rotate 0.18 | Scale 1.22 }
+    | Kaleid 6
+    | Rotate (Time * 0.006)
+    | CurlFlow(amp: 0.06, freq: 8)
+    | Modulate(Noise(scale: 2, offset: 0.05), 0.04)
+    | Bloom(threshold: 0.1, strength: 1.6)
+    | Blur 2.2
+    | Decay 0.98
+    | Add (Scene | CurlFlow(amp: 0.04, freq: 10))
+    | Knee 0.18
+    | Gamma 1.32
+}
+
+// Ripple — for thing3. An Osc Modulate pushes the trail along a rhythmic
+// horizontal wave, layered over faster curl eddies; ChromaShift + slow Hue
+// give it an interference-pattern shimmer. Max composite keeps hits crisp.
+warp ripple = {
+    Prev
+    | Iterate 5 { Prev | Fold 0.16 | Rotate 0.18 | Scale 1.22 }
+    | Kaleid 6
+    | Rotate (Time * -0.025)
+    | Modulate(Osc(freq: 28, sync: 0.9, offset: 4.0), 0.06)
+    | CurlFlow(amp: 0.045, freq: 26)
+    | ChromaShift 7.0
+    | Hue (Time * 2.2)
+    | Blur 1.6
+    | Decay 0.965
+    | Max (Scene | CurlFlow(amp: 0.05, freq: 20))
+    | Knee 0.15
+    | Gamma 1.2
+}
+
+// Bloomstorm — for the busy thing4. Outward Scale + high-freq Noise jitter +
+// heavy Bloom make new hits flare; a shorter decay (0.92) keeps the dense
+// rhythmic figure from smearing into mush.
+warp bloomstorm = {
+    Prev
+    | Iterate 5 { Prev | Fold 0.16 | Rotate 0.18 | Scale 1.22 }
+    | Kaleid 6
+    | Rotate (Time * 0.04)
+    | Scale 1.012
+    | Modulate(Noise(scale: 10, offset: 0.4), 0.07)
+    | Bloom(threshold: 0.06, strength: 2.2)
+    | CurlFlow(amp: 0.04, freq: 16)
+    | Hue (Time * 3.0)
+    | Blur 1.8
+    | Decay 0.955
+    | Add (Scene | CurlFlow(amp: 0.035, freq: 18))
+    | Knee 0.22
+    | Gamma 1.34
+}
+
+// Bridge — a low sustained pad that plays across BOTH halves of main.
+// It's the through-line: same voice present before and after the Seq cut,
+// so the warp feedback chain (which samples Prev frame-to-frame) never
+// resets — section 2 evolves out of section 1 instead of starting cold.
+// Slow harmonic motion underneath thing1-4 keeps the harmony continuous.
+bridge = {
+    Overlay [
+        { 1/2, 0, 1, 0 },
+        { 1/3, -2, 1, -1/2 },
+        { 1/3, 2, 1, 1/2 },
+        { 1/4, 0, 1, 0 },
+        { 1/6, -1, 1, 0 },
+    ]
+    | Seq [
+        Fm 1 | Lm 4,
+        Fm 9/8 | Lm 4,
+        Fm 5/6 | Lm 4,
+        Fm 4/3 | Lm 4,
+    ]
+    | FitLength thing1
+    | Gm 1/4
+    | Color [white, slategrey, deeppurple, darkpurple, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, -0.05, -1) | Lm 8;
+        ];
+    }
+    | aurora
+}
+
+thing1 = {
+    Overlay [
+        { 1/1, 5, 1, 1 },
+        { 1/1, -2, 1, -1 },
+        { 1/2, 0, 1/2, 0 },
+        { 1/2, -0.02, 1/2, 0 },
+    ]
+    | Seq [
+        Fm 3/2,
+        Fm 9/8 | Lm 2, Fm 4/3,
+        Fm 1 | Lm 1,
+        Fm 0 | Lm 1,
+        Fm 5/4,
+        Fm 5/6 | Lm 3,
+        Fm 3/4 | Lm 2,
+    ]
+    | Color [gold, darkorange, firebrick, deepred, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, 0, -1);
+        ];
+    }
+    | ribbon
+}
+
+thing2 = {
+    Overlay [
+        { 1/1, 3, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | Seq [
+        Fm 0,
+        Fm 3/4,
+        Fm 5/6 | Lm 1,
+        Fm 1/2,
+        Fm 2/3 | Lm 1,
+        Fm 5/8,
+    ]
+    | FitLength thing1
+    | Color [turquoise, bluegreen, blue, deepgreen, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, -0.2, -1) | Lm 8;
+        ];
+    }
+    | aurora
+}
+
+thing3 = {
+    Overlay [
+        { 1/1, 7, 1, 1 },
+        { 1/1, 0, 1, -1 },
+    ]
+    | Seq [
+        Fm 0,
+        Fm 0,
+        Fm 2,
+        Fm 5/2 | Lm 1,
+        Fm 0 | Lm 1/2,
+        Fm 3/2 | Lm 1/2,
+        Fm 0,
+    ]
+    | FitLength thing1
+    | Color [vividpurple, purple, deeppurple, darkpurple, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, -0.2, -1) | Lm 8;
+        ];
+    }
+    | ripple
+}
+
+thing4 = {
+    Overlay [
+        { 1/1, 4, 1, 1 },
+        { 1/1, 0, 1, -1 },
+        { 3/4, 4, 1, 1 },
+        { 3/4, 0, 1, -1 },
+    ]
+    | Overlay [
+        Seq [
+            Fm 0, Fm 1, Fm 0
+        ] | Lm 1/8,
+        Fm 0
+    ]
+    | Seq [
+        Fm 0,
+        Fm 0,
+        Fm 5/2,
+        Fm 9/4,
+        Fm 0,
+        Overlay [
+            Seq [Fm 0, Fm 2, Fm 0] | Lm 1/3 | Repeat 2,
+            Fm 1,
+        ]
+        | Lm 1/3
+        | Seq [
+            Fm 0 | Lm 1/2,
+            Fm 5/2 | Lm 1/3,
+            Fm 10/3 | Lm 1/3,
+            Fm 3/1 | Lm 1/3,
+        ] | Seq [Fm 1, Fm 0, Fm 3/2 | Gm 1/3 | Pm -1/2, Fm 0, Fm 9/4 | Lm 1/3 | Gm 1/2],
+        Fm 0,
+    ]
+    | FitLength thing1
+    | Color [sunfloweryellow, green, darkforestgreen, bluegreen, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, -0.2, -1) | Lm 8;
+        ];
+    }
+    | bloomstorm
+}
+
+main = {
+    Seq [
+        Overlay [
+            bridge,
+            thing1,
+            thing2,
+            thing3,
+        ],
+        Overlay [
+            bridge,
+            thing1,
+            thing2,
+            thing3,
+            thing4
+        ],
+    ]
+    | wgsl {
+
+           Sm 2/1;
+           Xm 1/1;
+           Vm 30;
+    }
+    | Repeat 4
+}

@@ -4,7 +4,9 @@
       "Bash(find:*)",
       "Bash(ffmpeg:*)",
       "Bash(rm:*)",
-      "Bash(weresocool-cli:*)"
+      "Bash(weresocool-cli:*)",
+      "Bash(kintaro --llm)",
+      "Bash(kintaro --help)"
     ],
     "deny": [],
     "ask": []
