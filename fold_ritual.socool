@@ -1,0 +1,98 @@
+{ f: 60, l: 1/8, g: 1, p: 0 }
+
+-- Fold ritual: distortion is the melody.
+-- One Tom 808 plays one rhythm all piece. What changes is the
+-- wavefolder it passes through: four fold depths, f1 (barely warm)
+-- to f4 (snarling), assigned per-hit like pitches — a timbre melody
+-- over a fixed line. Then the folds run in reverse, then a bitcrusher
+-- rain (each beat one bit-depth grimier: 12 -> 8 -> 5 -> 3), then a
+-- tanh-flattened four-on-the-floor while folded toms cycle in 5s
+-- across it (5 x 16 = one 80-pulse turn).
+--
+-- Play: weresocool play fold_ritual.socool
+
+x = { Silence 1 }
+
+t = { Tom 808 | Gm 0.75 }
+bd = { Kick 909 | Tanh(4, 0.5) | Gm 0.9 }
+kfat = { Kick 808 | Wavefolder(0.2, 6, 2.2, 0.4) | Gm 1 }
+
+-- the four fold depths — the "notes"
+f1 = { Wavefolder(0.55, 2, 1.2, 0.7) }
+f2 = { Wavefolder(0.4, 3, 1.5, 0.6) }
+f3 = { Wavefolder(0.28, 5, 1.9, 0.5) }
+f4 = { Wavefolder(0.16, 7, 2.4, 0.4) }
+
+-- bit-depths for the rain
+h12 = { HiHat 909 | Bitcrusher(12, 1, 0.9) | Gm 0.3 | Pa 1/4 }
+h8 = { HiHat 909 | Bitcrusher(8, 1, 0.85) | Gm 0.3 | Pa -1/4 }
+h5 = { HiHat 909 | Bitcrusher(5, 1, 0.8) | Gm 0.3 | Pa 1/4 }
+h3 = { HiHat 909 | Bitcrusher(3, 1.2, 0.7) | Gm 0.3 | Pa -1/4 }
+
+-- ── one rhythm, four sound-slots ────────────────────────────────────
+line(a, b, c, d) = {
+    Seq [
+        a, x, b, c,   x, b, x, x,
+        d, x, b, x,   c, x, x, x
+    ]
+}
+
+anchor = {
+    Seq [
+        bd, x, x, x,   x, x, bd | Gm 0.5, x,
+        bd | Gm 0.7, x, x, x,   x, bd | Gm 0.5, x, x
+    ]
+}
+
+dry = { line(t, t | Gm 0.6, t | Gm 0.7, t | Gm 0.8) }
+rising = { line(t | f1, t | f2, t | f3, t | f4) }
+falling = { line(t | f4, t | f3, t | f2, t | f1) }
+
+-- ── bitcrusher rain: one bit-depth per beat ─────────────────────────
+rain = {
+    Seq [
+        h12 | Gm 1.6, h12, h12, h12,
+        h8 | Gm 1.6, h8, h8, h8,
+        h5 | Gm 1.6, h5, h5, h5,
+        h3 | Gm 1.6, h3, h3, h3
+    ]
+}
+
+-- ── the 5-turn: folded cell of 5 over four-on-the-floor ─────────────
+floor = {
+    Seq [bd, x, x, x] | Repeat 4
+}
+
+cell5 = {
+    Seq [t | f3, x, t | f1 | Gm 0.6, x, x]
+}
+
+turn = {
+    Overlay [
+        floor | Repeat 5,
+        cell5 | Repeat 16,
+        Seq [rain, rain, rain, rain, rain]
+    ]
+}
+
+coda = {
+    Seq [
+        Overlay [kfat | Lm 4, t | f4 | Lm 4],
+        Overlay [kfat | Lm 4, t | f4 | Fm 3/4 | Lm 4],
+        Overlay [kfat | Lm 8, t | f4 | Fm 2/3 | Lm 8]
+    ]
+}
+
+main = {
+    Seq [
+        Overlay [anchor, dry],
+        Overlay [anchor, rising],
+        Overlay [anchor, falling],
+        Overlay [anchor, rising, rain],
+        Overlay [anchor, falling, rain],
+        turn,
+        turn | Fm 6/5,
+        Overlay [anchor, rising],
+        coda
+    ]
+}

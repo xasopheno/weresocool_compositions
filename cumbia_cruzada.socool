@@ -1,0 +1,167 @@
+{ f: 75, l: 1/6, g: 1, p: 0 }
+
+-- Colombian double: cumbia crossed with currulao.
+-- Cumbia backbone: llamador on the upbeats, tambora wood + open lows,
+-- guacharaca scraping 16ths. Over it, a trap hat line grouped
+-- 5 + 5 + 6 — the accents crawl across the beat and only land with
+-- the bar at the top of each measure.
+-- Every fourth bar is currulao: 12 pulses stretched by Lm 4/3 to the
+-- exact length of a 16-pulse bar — a 6/8 Pacific-coast bar living
+-- inside the 4/4 grid. Tom glass plays the marimba de chonta figure.
+--
+-- Play: weresocool play cumbia_cruzada.socool
+
+x = { Silence 1 }
+
+-- tambora: wood shell clicks and open low strokes
+tw = { Rimshot acoustic | Fm 2 | Gm 0.5 | Pa -1/4 }
+tl = { Kick acoustic | Fm 2/3 | Gm 1 }
+
+-- llamador: one drum, always the upbeat
+ll = { Tom conga | Fm 5/6 | Gm 0.65 | Pa 1/5 }
+
+-- alegre: the talking drum
+ale = { Tom conga | Fm 5/4 | Gm 0.7 }
+als = { Tom conga | Fm 5/3 | Gm 0.55 }
+
+-- guacharaca
+gu = { Shaker cabasa | Gm 0.5 | Pa 1/3 }
+
+-- kit
+bd = { Kick 808 | Gm 0.9 }
+hh = { HiHat trap | Gm 0.18 | Pa -1/4 }
+ha = { HiHat trap | Gm 0.5 | Pa -1/4 }
+oh = { OpenHat trap | Gm 0.4 | Pa -1/4 }
+
+-- currulao voices
+bo = { Kick doom | Fm 2/3 | Gm 1 }
+cu = { Tom conga | Gm 0.7 }
+cs = { Tom conga | Fm 3/2 | Gm 0.5 }
+gz = { Shaker maraca | Gm 0.5 | Pa 1/4 }
+mar = { Tom glass | Gm 0.45 | Pa -1/5 }
+
+-- ── cumbia lines (16 pulses) ────────────────────────────────────────
+tambora = {
+    Seq [
+        tw, x, x, x,   tw, x, tl, x,
+        x, x, x, x,    tw, x, tl, x
+    ]
+}
+
+llamador = {
+    Seq [
+        x, x, ll, x,   x, x, ll, x,
+        x, x, ll, x,   x, x, ll, x
+    ]
+}
+
+guacha = {
+    Seq [
+        gu, x, gu | Gm 0.7, gu | Gm 0.8,
+        gu, x, gu | Gm 0.7, gu | Gm 0.8,
+        gu, x, gu | Gm 0.7, gu | Gm 0.8,
+        gu, x, gu | Gm 0.7, gu | Gm 0.8
+    ]
+}
+
+alegre_a = {
+    Seq [
+        x, x, x, ale | Gm 0.5,   x, ale, x, x,
+        ale | Gm 0.5, x, als, x,   x, ale, als | Gm 0.7, x
+    ]
+}
+
+alegre_b = {
+    Seq [
+        x, x, x, ale | Gm 0.5,   x, ale, x, ale | Lm 1/2 | Repeat 2 | Gm 0.5,
+        x, als, x, ale,   x, ale, als | Lm 1/2 | Repeat 2 | Gm 0.6, als
+    ]
+}
+
+kick = {
+    Seq [
+        bd, x, x, x,   x, x, x, x,
+        x, x, bd | Gm 0.7, x,   x, x, x, x
+    ]
+}
+
+-- hats in 5 + 5 + 6: the accent slips off the quarter twice,
+-- then the long group catches the downbeat again
+hats556 = {
+    Seq [
+        ha, hh, hh, hh, hh,
+        ha, hh, hh, hh, hh,
+        ha, hh, hh, hh, hh, oh
+    ]
+}
+
+-- ── currulao bar: 12 pulses at Lm 4/3 = one 16-pulse bar ────────────
+bombo = {
+    Seq [
+        bo, x, x, bo | Gm 0.5, x, x,
+        bo | Gm 0.8, x, bo | Gm 0.5, x, x, x
+    ] | Lm 4/3
+}
+
+cununo = {
+    Seq [
+        x, cu, cs | Gm 0.8, x, cu, x,
+        x, cu | Gm 0.7, x, cu, cs | Gm 0.7, x
+    ] | Lm 4/3
+}
+
+guasa = {
+    Seq [
+        gz, x, gz, gz | Gm 0.7, x, gz,
+        gz, x, gz, gz | Gm 0.7, x, gz
+    ] | Lm 4/3
+}
+
+marimba = {
+    Seq [
+        mar, x, mar | Fm 6/5, x, mar | Fm 3/2, x,
+        mar | Fm 9/5, x, mar | Fm 3/2, mar | Fm 6/5, x, mar | Fm 9/8
+    ] | Lm 4/3
+}
+
+-- ── bars ────────────────────────────────────────────────────────────
+base = { Overlay [tambora, llamador, guacha] }
+
+cum_a = { Overlay [base, alegre_a, kick, hats556] }
+cum_b = { Overlay [base, alegre_b, kick, hats556] }
+curr = { Overlay [bombo, cununo, guasa] }
+curr_full = { Overlay [bombo, cununo, guasa, marimba] }
+
+cycle = { Seq [cum_a, cum_b, cum_a, curr] }
+
+drums = {
+    Seq [
+        base, base,
+        Seq [cum_a, cum_b],
+        cycle,
+        cycle,
+        Seq [curr_full, curr_full],
+        cycle,
+        Seq [cum_a, curr_full]
+    ]
+}
+
+bass = {
+    Overlay [
+        { 1/1, 0, 1, 1/4 },
+        { 1/2, 0, 1, -1/4 }
+    ]
+    | Seq [
+        Fm 1 | Lm 3, Fm 3/2 | Lm 1, Fm 1 | Lm 2, Fm 5/4 | Lm 2,
+        Fm 4/3 | Lm 3, Fm 3/2 | Lm 1, Fm 9/8 | Lm 2, Fm 1 | Lm 2
+    ]
+    | FitLength drums
+    | Gm 0.25
+}
+
+main = {
+    Overlay [
+        drums,
+        bass
+    ]
+}

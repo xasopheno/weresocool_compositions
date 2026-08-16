@@ -72,7 +72,7 @@ thing3 = {
     | wgsl {
         Seq [
             Direction (0, -0.7, -1) | Lm 8;
-            Ym "y + sin(time / x)"
+            Ym "y + sin(Time / x)"
         ];
     }
     | FitLength thing1
@@ -90,7 +90,7 @@ dinosaur = {
     | wgsl {
         Sm 2.0;
         Xm 1/2;
-        Ym "y + sin(time)"
+        Ym "y + sin(Time)"
     }
 }
 
@@ -113,8 +113,8 @@ birds = {
     | Color [white, orange, yellow, black] | Gradient(0, 1, 0)
     | wgsl {
         Direction (0, 0, -1) | Lm 8;
-        Ya "sin(time * 0.1)";
-        Xa "sin(time * 0.4 * (-x + 0.001))";
+        Ya "sin(Time * 0.1)";
+        Xa "sin(Time * 0.4 * (-x + 0.001))";
         Ya -2;
         Xm 3/2;
     }
@@ -138,8 +138,8 @@ bass = {
     ]
     | wgsl {
         Direction (0, 0, -1) | Lm 8;
-        Ya "sin(time * 0.1)";
-        Xa "sin(time * 0.4 * (-x + 0.001))";
+        Ya "sin(Time * 0.1)";
+        Xa "sin(Time * 0.4 * (-x + 0.001))";
         Ya -2;
         Xm 3;
     }

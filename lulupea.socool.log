@@ -1,0 +1,36 @@
+   0.002826083s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.002866833s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.025676541s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 22.59075ms
+   0.029037625s  INFO kintaro::processor: [length-env] 11 named lengths available
+   0.029078333s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.029084791s  INFO kintaro::color: [notan] 0              L 0.00..1.00  span 1.00  mean 0.36  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.029088833s  INFO kintaro::color: [notan] 1              L 0.00..0.67  span 0.67  mean 0.23  (5 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.029090166s  INFO kintaro::color: [notan] 2              L 0.00..0.97  span 0.97  mean 0.33  (5 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.029091083s  INFO kintaro::color: [notan] 3              L 0.67..1.00  span 0.33  mean 0.83  (2 stops)  lit end LIGHT (light→dark)
+   0.029120083s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.029122000s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.032409625s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 3.025708ms
+   0.032597500s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=1820   y 0.377..0.868  x -1.00..+1.00  gain 0.08..0.18  l 0.056..0.056
+  brush 1        n=192    y 0.622..0.835  x -0.25..+0.25  gain 0.16..0.17  l 0.271..0.271
+  brush 2        n=288    y 0.556..0.835  x -0.67..+0.67  gain 0.16..0.18  l 0.271..0.271
+  brush 3        n=64     y 0.193..0.749  x -0.50..+0.50  gain 0.06..0.17  l 2.528..2.528
+   0.032605625s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.034181458s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 1.424708ms
+   0.034299875s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.035787500s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.603708ms
+   0.035798083s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: grad warp=- draw=- surface=-
+  brush 1: grad warp=- draw=- surface=-
+  brush 2: grad warp=- draw=- surface=-
+  brush 3: grad warp=- draw=- surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.035799250s  INFO kintaro::processor: [SoCoolProcessor] Total: 35.170208ms
+   0.124541791s  INFO bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.124653041s  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.124701250s  WARN bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.200591208s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (24700 bytes)
+   0.211238291s  WARN bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.227784833s  INFO bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/lulupea.socool (0v0)
+   0.257488833s  INFO kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475

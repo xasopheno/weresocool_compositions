@@ -16,10 +16,10 @@ yokai_comp = {
             lightgrey,
         ]
         | wgsl {
-            red = red + sin(time * 3.0) * 2.0;
-            green = green + cos(time * 2.0) * 2.0;
-            blue = blue + sin(time * 1.0) * 2.0;
-            y = y * (2 - sin(time * 1.0) * 1.0);
+            red = red + sin(Time * 3.0) * 2.0;
+            green = green + cos(Time * 2.0) * 2.0;
+            blue = blue + sin(Time * 1.0) * 2.0;
+            y = y * (2 - sin(Time * 1.0) * 1.0);
             x = x - 30.0;
             z = z * 30.0;
             y = y + 10.0;
@@ -41,10 +41,10 @@ yokai_comp = {
         | Gm 3/2
         | FitLength yokai.main
         | wgsl {
-            red = red + sin(time * 3.0) * 2.0;
-            green = green + cos(time * 2.0) * 2.0;
-            blue = blue + sin(time * 1.0) * 2.0;
-            y = y * (2 - sin(time * 1.0) * 1.0);
+            red = red + sin(Time * 3.0) * 2.0;
+            green = green + cos(Time * 2.0) * 2.0;
+            blue = blue + sin(Time * 1.0) * 2.0;
+            y = y * (2 - sin(Time * 1.0) * 1.0);
             x = x - 30.0;
             z = z * 30.0;
             y = y + 10.0;

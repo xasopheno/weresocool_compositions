@@ -31,7 +31,7 @@ thing1 = {
             -- | Direction (1, 0, 0)
             -- | y = y + sin(time * 2)
             -- | Bend (0, -0.1, -0.1, 1) | Lm 2;
-            Direction (1, sin(time * 8), sin(time * 8)) | Lm 4;
+            Direction (1, sin(Time * 8), sin(Time * 8)) | Lm 4;
             Sm 0;
         ];
         scale = log(scale + 1) * 2;

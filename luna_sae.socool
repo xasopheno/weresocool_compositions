@@ -2,18 +2,18 @@
 
 warp impasto = {
     Prev
-    | CurlFlow(amp: 0.025, freq: 5)
-    | Modulate(Noise(scale: 1.6, offset: 0.020), 0.11)
+    | CurlFlow { amp: 0.025, freq: 5 }
+    | Modulate(Noise { scale: 1.6, offset: 0.020 }, 0.11)
     | Blur 3.1
     | Decay 0.88
-    | Add (Scene | Bloom(threshold: 0.18, strength: 0.66))
+    | Add (Scene | Bloom { threshold: 0.18, strength: 0.66 })
     | Knee 0.25
     | Gamma 1.68
 }
 
 draw stroke = {
-    Point | Lerp(to: Direction(0.04, 0.2, -0.5), n: 13)
-        | Modulate(Noise(scale: 0.3), 0.01)
+    Point | Lerp { to: Direction(0.04, 0.2, -0.5), n: 13 }
+        | Modulate(Noise { scale: 0.3 }, 0.01)
 }
 
 thing1 = {
@@ -88,8 +88,8 @@ main = {
     ]
     | wgsl {
         Seq [
-            Xm "sin(time)";
-            Ym "sin(time * 0.3) * 3";
+            Xm "sin(Time)";
+            Ym "sin(Time * 0.3) * 3";
             Direction (0, -0.2, -1) | Bend(0.08, -0.18, 0, 0.5) | Lm 8;
         ];
     }

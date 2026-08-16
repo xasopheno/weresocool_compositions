@@ -84,10 +84,10 @@ thing1 = {
         z = z - 100;
         x = x * 10.0;
         y = y + 5.0;
-        x = x + time * cos(time + 15.0) * 3.0;
-        y = y + time * sin(time * 12.0) * 3.0;
-        y = y + time * 4.0;
-        r = r * sin(time) * 30.0;
+        x = x + Time * cos(Time + 15.0) * 3.0;
+        y = y + Time * sin(Time * 12.0) * 3.0;
+        y = y + Time * 4.0;
+        r = r * sin(Time) * 30.0;
         scale = scale * 3.0;
         direction = vec3<f32>(0.0, -1.0, -0.3);
     }
@@ -189,7 +189,7 @@ intro = {
             ]
         ]
         | wgsl {
-            y = y - time * 2.5;
+            y = y - Time * 2.5;
         },
         Fm 0 | Lm 1/8,
         Seq [
@@ -265,10 +265,10 @@ melody = {
         z = z - 100;
         x = x * 10.0;
         y = y + 5.0;
-        x = x + time * cos(time + 15.0) * 3.0;
-        y = y + time * sin(time * 12.0) * 3.0;
-        y = y + time * 4.0;
-        r = r * sin(time) * 30.0;
+        x = x + Time * cos(Time + 15.0) * 3.0;
+        y = y + Time * sin(Time * 12.0) * 3.0;
+        y = y + Time * 4.0;
+        r = r * sin(Time) * 30.0;
         scale = scale * 3.0;
         direction = vec3<f32>(0.0, -1.0, -0.3);
     }
@@ -322,10 +322,10 @@ melody2 = {
         z = z - 100;
         x = x * 10.0;
         y = y + 5.0;
-        x = x + time * cos(time + 15.0) * 3.0;
-        y = y + time * sin(time * 12.0) * 3.0;
-        y = y + time * 4.0;
-        r = r * sin(time) * 30.0;
+        x = x + Time * cos(Time + 15.0) * 3.0;
+        y = y + Time * sin(Time * 12.0) * 3.0;
+        y = y + Time * 4.0;
+        r = r * sin(Time) * 30.0;
         scale = scale * 3.0;
         direction = vec3<f32>(0.0, -1.0, -0.3);
     }
@@ -394,7 +394,7 @@ blip = {
     ]
     | wgsl {
         y = y * 3.0;
-        y = y + log(y) * sin(time) * 7.0;
+        y = y + log(y) * sin(Time) * 7.0;
         y = y - 30;
     }
 }
@@ -433,10 +433,10 @@ blip2 = {
     ]
     | wgsl {
         x = x * 3.0;
-        x = x + log(y) * sin(time) * 7.0;
+        x = x + log(y) * sin(Time) * 7.0;
         x = x - 30;
         z = z - 50;
-        x = x + sin(time * 3.0);
+        x = x + sin(Time * 3.0);
         scale = scale * 2.0;
     }
     | FitLength blip
@@ -591,13 +591,13 @@ p_melody = {
     ]
     | wgsl {
         velocity = -z * velocity * 1.0;
-        x = sin(y) * x * 2.0 * (time + 3.0);
-        x = x + sin(time + 7.0);
-        y = y + sin(time * 5.0) * 1.5;
-        y = y + time * 4.0;
-        z = z + sin(time * 8.0) * 0.5;
-        velocity = velocity + (1.0 + sin(time)) * 10.0;
-        r = r * sin(time) * 30.0;
+        x = sin(y) * x * 2.0 * (Time + 3.0);
+        x = x + sin(Time + 7.0);
+        y = y + sin(Time * 5.0) * 1.5;
+        y = y + Time * 4.0;
+        z = z + sin(Time * 8.0) * 0.5;
+        velocity = velocity + (1.0 + sin(Time)) * 10.0;
+        r = r * sin(Time) * 30.0;
         scale = scale * 1.5;
     }
 }

@@ -1,0 +1,82 @@
+{ f: 58, l: 3/32, g: 1, p: 0 }
+
+-- After Jlin: footwork stripped to menace.
+-- 160 bpm, but the bar is built from 5-pulse cells — six of them plus
+-- a 2-pulse tail make 32, so the internal accents never sit where the
+-- grid says they should. Doom toms are the melody, quintuplet rolls
+-- (Lm 1/5 | Repeat 5) are the ornament, and silence is a full
+-- instrument: half a bar of nothing, then the kick lands alone.
+--
+-- Play: weresocool play dark_energy.socool
+
+x = { Silence 1 }
+
+-- overdriven kick, wavefolded doom toms: the folder adds snarling
+-- upper partials the doom preset doesn't have — Jlin's metallic edge
+kk = { Kick knock | Overdrive(3, 0.5) | Gm 1 }
+tl = { Tom doom | Fm 2/3 | Wavefolder(0.35, 3, 1.5, 0.6) | Gm 0.85 }
+tm = { Tom doom | Wavefolder(0.3, 4, 1.6, 0.55) | Gm 0.75 }
+th = { Tom doom | Fm 4/3 | Wavefolder(0.25, 5, 1.8, 0.5) | Gm 0.65 }
+rim = { Rimshot 909 | Gm 0.5 | Pa 1/4 }
+ks = { Snare snap | Gm 0.5 | Pa -1/4 }
+wd = { Rimshot acoustic | Fm 5/2 | Gm 0.4 | Pa -1/3 }
+
+-- ── 5-pulse cells ───────────────────────────────────────────────────
+c1 = { Seq [kk, x, rim, tl, x] }
+c2 = { Seq [x, ks, x, tl, tl | Gm 0.5] }
+c3 = { Seq [kk, rim, x, x, th] }
+c4 = { Seq [kk, x, x, tm | Lm 1/5 | Repeat 5, x] }
+
+-- ── bars (32 = 5x6 + 2) ─────────────────────────────────────────────
+bar_a = {
+    Seq [c1, c2, c1, c3, c2, c1, kk, x]
+}
+
+bar_b = {
+    Seq [c1, c2, c4, c3, c2, c4, kk, wd]
+}
+
+-- half a bar of nothing, then the kick alone
+bar_v = {
+    Seq [
+        c1, c2,
+        x | Lm 6,
+        kk | Gm 1.15, x, ks,
+        x | Lm 13
+    ]
+}
+
+-- ── tom melody layer: quintuplet rolls walking down ─────────────────
+tomline = {
+    Seq [
+        x | Lm 4, th | Lm 1/5 | Repeat 5 | Gm 0.6, x | Lm 3,
+        tm | Lm 1/5 | Repeat 5 | Gm 0.7, x | Lm 7,
+        tl | Lm 1/5 | Repeat 5 | Gm 0.8, x | Lm 3,
+        tl | Fm 3/4 | Lm 2, x | Lm 10
+    ]
+}
+
+-- ── bare bones: just kick and rim, the floor drops out ──────────────
+bones = {
+    Seq [
+        kk, x, x, x,   x, rim, x, x,   kk, x, x, x,   x, x, rim, x,
+        kk, x, x, x,   x, rim, x, x,   kk | Gm 0.7, x, kk, x,   x, x, x, x
+    ]
+}
+
+main = {
+    Seq [
+        bar_a,
+        bar_a,
+        bar_v,
+        bar_b,
+        Overlay [bar_a, tomline],
+        Overlay [bar_b, tomline],
+        bar_v,
+        bones,
+        Overlay [bones, tomline],
+        Overlay [bar_b, tomline] | Fm 9/8,
+        bar_v,
+        Overlay [kk | Lm 6, tl | Lm 6]
+    ]
+}

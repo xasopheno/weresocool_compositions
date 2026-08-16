@@ -1,0 +1,37 @@
+   0.001212459s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.001233792s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.030086167s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 28.774666ms
+   0.035294209s  INFO kintaro::processor: [length-env] 3 named lengths available
+   0.035330334s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.035333834s  INFO kintaro::color: [notan] 0              L 0.00..1.00  span 1.00  mean 0.36  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.035338125s  INFO kintaro::color: [notan] 1              L 0.00..0.67  span 0.67  mean 0.23  (5 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.035353834s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.035355417s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.040731292s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 5.15525ms
+   0.041232125s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=9072   y 0.295..1.034  x -0.50..+0.50  gain 0.08..0.17  l 0.028..0.667
+   0.041235459s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.043085084s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 1.507792ms
+   0.043191209s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.044315500s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.226208ms
+   0.044341292s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: grad warp=- draw=- surface=-
+  brush 1: grad warp=- draw=- surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.044342834s  INFO kintaro::processor: [SoCoolProcessor] Total: 43.294458ms
+   0.130149917s  INFO bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.130242500s  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.130271084s  WARN bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.202786334s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (16259 bytes)
+   0.213035167s  WARN bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.228895459s  INFO bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/annie_rocks.socool (0v0)
+   0.257899209s  INFO kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   0.558967167s  INFO kintaro::brush: [brush] skipped 48 note(s) the playhead had already passed (the render path was still warming up)
+   1.109140667s  INFO kintaro::brush: [brush] skipped 36 note(s) the playhead had already passed (the render path was still warming up)
+   2.092558084s  INFO kintaro::brush: [brush] skipped 48 note(s) the playhead had already passed (the render path was still warming up)
+   3.217358417s  INFO kintaro::brush: [brush] skipped 36 note(s) the playhead had already passed (the render path was still warming up)
+   4.884244000s  INFO kintaro::brush: [brush] skipped 48 note(s) the playhead had already passed (the render path was still warming up)
+   5.209141167s  INFO kintaro::perf: [frame] 115 fps (8.7 ms avg, worst 135.4) — 6.1k marks/s, ~72.7k live (12.0 u life)
+   5.442140542s  INFO kintaro::brush: [brush] skipped 36 note(s) the playhead had already passed (the render path was still warming up)
+   6.217578250s  INFO kintaro::brush: [brush] skipped 36 note(s) the playhead had already passed (the render path was still warming up)

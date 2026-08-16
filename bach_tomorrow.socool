@@ -2,9 +2,9 @@
 
 bigger = {
     wgsl {
-        Sm 1; Ym time * 0.5; Ya -0.9;
-        Ym "0.1 + sin(time * 7) * 0.02";
-        Ym "0.1 + sin(time * 8) * 0.02";
+        Sm 1; Ym Time * 0.5; Ya -0.9;
+        Ym "0.1 + sin(Time * 7) * 0.02";
+        Ym "0.1 + sin(Time * 8) * 0.02";
     }
 }
 
@@ -132,8 +132,8 @@ melody(fn) = {
         | Color [blue, purple, white, blue, white, blue, white, blue, white, blue],
         thing3
         | wgsl {
-            Sm "10 / (time + 0.5)";
-            Bm "0.002 + sin (time * 0.5) * 0.01";
+            Sm "10 / (Time + 0.5)";
+            Bm "0.002 + sin (Time * 0.5) * 0.01";
             Seq [
                 Direction (0, 0, -0.001) | Lm 4;
             ];

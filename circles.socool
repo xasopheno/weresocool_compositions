@@ -32,17 +32,17 @@ thing1 = {
         let y_n     : f32 = clamp(abs(y) / height, 0.0, 1.0);
         let profile : f32 = pow(1.0 - y_n, power);        // 1 at center, 0 at top/bottom
 
-        let sx : f32 = select(-1.0, 1.0, x >= 0.0);
+        let Sx : f32 = select(-1.0, 1.0, x >= 0.0);
 
-        x = sx * width * profile;
+        x = Sx * width * profile;
 
         x = x * 4.0;  
         x = x * 4.0;
         y = y * 5.0;
         direction = vec3<f32>(0.3, -0.1, -1.0);
-        alpha = 1.0 - (time * 0.15);
-        x = x - log(time) * 2.0;
-        scale = scale + 1.0 / log(time + 0.9999) / 10;
+        alpha = 1.0 - (Time * 0.15);
+        x = x - log(Time) * 2.0;
+        scale = scale + 1.0 / log(Time + 0.9999) / 10;
         x = x - 5;
     }
 }
@@ -66,7 +66,7 @@ thing2 = {
         let b      = 17.0;                        // minor radius
         let center = vec3<f32>(0.0, 0.0, 0.0);   // ellipse center
         let deg_per_sec = 90.0;                  // angular speed (deg/s)
-        let angle_deg   = time * deg_per_sec;    // drive with time
+        let angle_deg   = Time * deg_per_sec;    // drive with Time
 
         // build an orthonormal frame (u, v, k) from the axis, inline
         let k = normalize(axis);
@@ -81,11 +81,11 @@ thing2 = {
     let p   = center + u * (a * cos(ang)) + v * (b * sin(ang));
 
     x = p.x;
-    y = p.y + sin(time * 30);
+    y = p.y + sin(Time * 30);
     z = p.z;
     velocity = 3.0;
     scale = scale * 2.0;
-    alpha = 1.0 - (time * 0.25);
+    alpha = 1.0 - (Time * 0.25);
     }
     | Color [turquoise]
 }
@@ -109,7 +109,7 @@ thing3 = {
         let b      = 20.0;                        // minor radius
         let center = vec3<f32>(0.0, 0.0, 0.0);   // ellipse center
         let deg_per_sec = 90.0;                  // angular speed (deg/s)
-        let angle_deg   = time * deg_per_sec;    // drive with time
+        let angle_deg   = Time * deg_per_sec;    // drive with Time
 
         // build an orthonormal frame (u, v, k) from the axis, inline
         let k = normalize(axis);
@@ -124,11 +124,11 @@ thing3 = {
     let p   = center + u * (a * cos(ang)) + v * (b * sin(ang));
 
     x = p.x;
-    y = p.y + cos(time * 20); 
+    y = p.y + cos(Time * 20); 
     z = p.z;
     velocity = 3.0;
     scale = scale * 2.0;
-    alpha = 1.0 - (time * 0.25);
+    alpha = 1.0 - (Time * 0.25);
     }
     | Color [blue]
 }

@@ -1,0 +1,8 @@
+   0.000549708s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.000591042s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.003376625s  WARN kintaro::app: 
+\x1b[1;31mError:\x1b[0m Parse error: Parse error: Unexpected 'Am'
+Expected: Bend, Direction, Lm, Sa, Seq, Sm, Va, Vm, Xa, Xm, Ya, Ym, Za, Zm, ]
+  → line 63, column 155
+
+   0.003381375s  INFO kintaro::app: \x1b[2m[watch] waiting for /Users/danny/code/weresocool_compositions/crossroad.socool to be saved again (Ctrl-C to quit)…\x1b[0m

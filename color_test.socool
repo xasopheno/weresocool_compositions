@@ -17,7 +17,7 @@ thing3 = {
         Ya 0.5;
         Sm 10;
         -- r = r * 3;
-        Sm "1 - (time * 1.5)";
+        Sm "1 - (Time * 1.5)";
         Seq [
             Direction (0, 0, -1) | Bend (0, 1, 0, 1) | Lm 5;
             Sm 0;

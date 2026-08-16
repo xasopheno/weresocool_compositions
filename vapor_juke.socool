@@ -1,0 +1,107 @@
+{ f: 55, l: 3/32, g: 1, p: 0 }
+
+-- Footwork / juke after Machinedrum's Vapor City.
+-- 160 bpm sixteenths. The engine is the dotted-eighth kick chain:
+-- kicks every 3 pulses across a 32-pulse bar (0,3,6...30) — pure 3s
+-- sliding over the 4-grid, claps holding halftime on 8 and 24.
+-- 808 toms play the melody in the gaps; triplet retriggers
+-- (Lm 1/3 | Repeat 3) are the juke signature. Glass stabs stand in
+-- for the chopped vocal.
+--
+-- Play: weresocool play vapor_juke.socool
+
+x = { Silence 1 }
+
+-- soft clip keeps the 808 kick fat but stops the chain from stacking up;
+-- tanh warms the tom melody; the vocal-stab glass gets bitcrushed to tape
+bd = { Kick 808 | SoftClip(0.6, 2, 0.75) | Gm 1 }
+cp = { Clap 808 | Gm 0.75 }
+tm = { Tom 808 | Tanh(2, 0.7) | Gm 0.7 }
+hh = { HiHat trap | Gm 0.18 | Pa 1/4 }
+ha = { HiHat trap | Gm 0.45 | Pa 1/4 }
+st = { Tom glass | Fm 5/2 | Bitcrusher(5, 1, 0.8) | Gm 0.4 | Pa -1/4 }
+
+-- ── kick chains (32 pulses) ─────────────────────────────────────────
+kick3 = {
+    Seq [
+        Seq [bd, x, x] | Repeat 10,
+        bd, x
+    ]
+}
+
+kick_b = {
+    Seq [
+        bd, x, x, x,   x, x, bd, x,   x, x, x, x,   bd, x, x, x,
+        x, x, x, x,    bd, x, x, x,   x, x, bd, x,  x, x, x, x
+    ]
+}
+
+claps = {
+    Seq [x | Lm 8, cp | Lm 16, cp | Lm 8]
+}
+
+-- ── 808 tom melody ──────────────────────────────────────────────────
+toms_a = {
+    Seq [
+        x, x, tm, x,   x, tm | Fm 3/4, x, x,
+        x, x, tm | Fm 2/3, x,   x, x, tm | Fm 3/4, x,
+        x, x, tm, x,   x, tm | Fm 6/5, x, x,
+        tm | Lm 1/3 | Repeat 3, x, tm | Fm 3/4, x,   tm | Fm 2/3, x, x, x
+    ]
+}
+
+toms_b = {
+    Seq [
+        x, x, tm, x,   x, tm | Fm 3/4, x, tm | Fm 2/3 | Lm 1/3 | Repeat 3,
+        x, x, tm | Fm 2/3, x,   tm | Fm 1/2 | Lm 20
+    ]
+}
+
+-- ── hats and stabs ──────────────────────────────────────────────────
+hats = {
+    Seq [
+        ha, hh, hh, hh,   ha, hh, hh, hh,
+        ha, hh, hh, hh,   ha, hh, hh, hh | Lm 1/2 | Repeat 2,
+        ha, hh, hh, hh,   ha, hh, hh, hh,
+        ha, hh, hh, hh,   ha, hh, hh, hh | Lm 1/4 | Repeat 4
+    ]
+}
+
+stabs = {
+    Seq [
+        x | Lm 10,
+        st | Lm 1/3 | Repeat 3, x | Lm 5,
+        st | Fm 4/5, x | Lm 9,
+        st | Lm 1/3 | Repeat 3, x | Lm 5
+    ]
+}
+
+-- ── bars ────────────────────────────────────────────────────────────
+bar_a = { Overlay [kick3, claps, toms_a] }
+bar_b = { Overlay [kick3, claps, toms_a, hats, stabs] }
+bar_c = { Overlay [kick_b, claps, toms_b, hats] }
+
+bass = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 2/1, 0, 1/4, 0 }
+    ]
+    | Seq [
+        Fm 1 | Lm 3, Fm 2/3 | Lm 1, Fm 3/4 | Lm 2, Fm 5/6 | Lm 2
+    ]
+    | Gm 0.3
+}
+
+main = {
+    Seq [
+        Overlay [kick3, claps],
+        bar_a,
+        bar_b, bar_b,
+        bar_c,
+        Overlay [bar_b, bass | FitLength bar_b],
+        Overlay [bar_b, bass | FitLength bar_b] | Fm 6/5,
+        Overlay [bar_c, bass | FitLength bar_c],
+        Overlay [kick3, claps, toms_b],
+        Overlay [bd | Lm 8, cp | Lm 8, tm | Fm 1/2 | Lm 8]
+    ]
+}

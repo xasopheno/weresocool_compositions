@@ -1,0 +1,99 @@
+{ f: 260, l: 1/8, g: 1, p: 0 }
+
+-- Kotekan for imaginary bronze.
+-- Balinese interlocking figuration: polos and sangsih are two Tom glass
+-- voices that never strike on the same pulse — together they weld into
+-- one 16th-note shimmer, split left/right.
+-- Colotomic frame (the slow wheel under the fast surface):
+--   gong    every 64 pulses (Kick doom, an octave and more down)
+--   kempur  answers mid-cycle
+--   jegogan every 8 (long low glass tones)
+--   kempli  every 2 (the timekeeper tick)
+-- Angsel: the unison break figure that stops everything mid-flight,
+-- then the kotekan doubles to 32nds.
+--
+-- Play: weresocool play kotekan_bronze.socool
+
+x = { Silence 1 }
+
+pol = { Tom glass | Gm 0.5 | Pa -1/3 }
+san = { Tom glass | Gm 0.45 | Pa 1/3 }
+
+jeg = { Tom glass | Fm 1/2 | Gm 0.55 }
+kmp = { Rimshot glass | Fm 2 | Gm 0.3 }
+
+gong = { Kick doom | Fm 1/4 | Gm 1.1 }
+kpur = { Kick doom | Fm 3/8 | Gm 0.8 }
+klen = { Cowbell glass | Fm 1/2 | Gm 0.5 }
+
+-- ── kotekan pair: complementary 16-pulse figures ────────────────────
+-- polos strikes  0, 2, 3, 5, 7, 10, 12, 14
+-- sangsih strikes 1, 4, 6, 8, 9, 11, 13, 15
+polos = {
+    Seq [
+        pol, x, pol | Fm 9/8, pol | Fm 5/4,   x, pol | Fm 3/2, x, pol | Fm 5/4,
+        x, x, pol | Fm 9/8, x,   pol | Fm 5/4, x, pol | Fm 3/2, x
+    ]
+}
+
+sangsih = {
+    Seq [
+        x, san | Fm 5/3, x, x,   san | Fm 2, x, san | Fm 5/3, x,
+        san | Fm 2, san | Fm 5/3, x, san | Fm 2,   x, san | Fm 5/3, x, san | Fm 2
+    ]
+}
+
+kotekan = { Overlay [polos, sangsih] }
+
+-- ── the slow wheel (64 pulses) ──────────────────────────────────────
+gongline = {
+    Seq [
+        gong | Lm 32,
+        kpur | Lm 16,
+        klen | Lm 8,
+        kpur | Lm 8
+    ]
+}
+
+jegogan = {
+    Seq [
+        jeg | Lm 8, jeg | Fm 5/4 | Lm 8,
+        jeg | Fm 3/2 | Lm 8, jeg | Fm 5/4 | Lm 8,
+        jeg | Lm 8, jeg | Fm 5/4 | Lm 8,
+        jeg | Fm 9/8 | Lm 8, jeg | Lm 8
+    ]
+}
+
+kempli = {
+    Seq [kmp, x] | Repeat 32
+}
+
+wheel = { Overlay [gongline, jegogan, kempli] }
+
+-- ── angsel: unison break (16 pulses) ────────────────────────────────
+hit = { Overlay [pol | Fm 2, san | Fm 2, kpur | Gm 0.7] }
+
+angsel = {
+    Seq [
+        hit, x, x, hit,   hit, x, hit, x,
+        x, x, hit | Gm 1.3, x,   x, x, x, x
+    ]
+}
+
+-- ── sections ────────────────────────────────────────────────────────
+open = { wheel }
+full = { Overlay [wheel, kotekan | Repeat 4] }
+dbl = { Overlay [wheel, kotekan | Lm 1/2 | Repeat 8] }
+
+main = {
+    Seq [
+        open,
+        full,
+        full,
+        angsel,
+        dbl,
+        angsel, angsel | Lm 1/2,
+        dbl | Fm 9/8,
+        Overlay [gong | Lm 16, jeg | Lm 16, klen | Lm 16]
+    ]
+}

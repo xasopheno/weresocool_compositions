@@ -21,8 +21,8 @@ thing1Base = {
     | Lm 1/4
     | wgsl {
         Sm 3;
-        Xa "sin(time * 0.5) * 0.5 + 0.5";
-        Ya "cos(time * 0.7) * 0.3 + sin(time * 1.3) * 0.2";
+        Xa "sin(Time * 0.5) * 0.5 + 0.5";
+        Ya "cos(Time * 0.7) * 0.3 + sin(Time * 1.3) * 0.2";
         Seq [
             Direction (-0.5, 0.3, -1);
         ];
@@ -42,8 +42,8 @@ thing2Base = {
         Sm 3/2;
         Xm 1/3;
         Vm 3;
-        Xa "cos(time * 3) * sin(time * 5) * 0.25";
-        Ya "sin(time * 8) * 0.15 + cos(time * 11) * 0.12";
+        Xa "cos(Time * 3) * sin(Time * 5) * 0.25";
+        Ya "sin(Time * 8) * 0.15 + cos(Time * 11) * 0.12";
         Seq [
             Direction (-1, 0.3, 0) | Lm 1;
             Direction (0.5, 0.5, 0.7) | Lm 1;
@@ -108,12 +108,12 @@ seq1 = {
         | FitLength melody | #c | Color [yellow, black, bluegreen, darkgreen, blue, purple, black] | Gradient(1, -1, -1)
         | Fm 1/6
         | wgsl {
-            Sm "3 / (2.0 * time + 0.9)";
+            Sm "3 / (2.0 * Time + 0.9)";
             Xm 1/3;
             Vm 1/2;
             Ya 5/3;
             Xa -2.0;
-            Ya "cos(time * 2) * 0.14";
+            Ya "cos(Time * 2) * 0.14";
             Seq [
                 Direction (1, 0.3, 0) | Lm 2;
                 Sm 0;

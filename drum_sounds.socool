@@ -48,7 +48,7 @@ thing1 = {
     | Repeat 5
     | Color [firebrick, white, grey, black, black, black] | Gradient(0, 1, 0)
     | wgsl {
-        Sm "scale * 3.0 * (1 - time) * 3.0";
+        Sm "scale * 3.0 * (1 - Time) * 3.0";
         Seq [
             Direction (0, 0, -1);
         ];
@@ -75,7 +75,7 @@ thing2 = {
         Ya -0.3;
         Sm 3;
         Seq [
-            Direction (x * time * 0.05, -0.2, -1) | Lm 4;
+            Direction (x * Time * 0.05, -0.2, -1) | Lm 4;
         ];
     }
     | ModBy [Lm 5, Fm 2/3]
@@ -87,12 +87,12 @@ thing3 = {
     | Color [green, grey, black, black, black] | Gradient(0, 1, 0)
     | Overlay [
         wgsl {
-            Xm "scale * 1.0 * (1 - time) * 3.0";
+            Xm "scale * 1.0 * (1 - Time) * 3.0";
             Sm 1.1;
             Xm 1/10;
             Seq [
                 -- Direction (x * time, 0.05, -1) | Lm 4 | Ym "y - sin(time) * 0.3";
-                Direction (x * time, 0.05, -1) | Lm 5;
+                Direction (x * Time, 0.05, -1) | Lm 5;
                 Sm 0;
             ];
         },
@@ -133,7 +133,7 @@ bass = {
         Sm 2.1;
         Xm 1/10;
         Seq [
-            Direction (x * time, 0.001, -1) | Lm 4;
+            Direction (x * Time, 0.001, -1) | Lm 4;
         ];
     }
     | Color [brightgreen, purple, grey, black, black, black] | Gradient(0, 1, 0)

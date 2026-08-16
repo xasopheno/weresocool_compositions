@@ -39,8 +39,8 @@ thing1 = {
         Rx 8;
         Sm 15;
         Vm 8;
-        Xm "(3/2 / (time + 1.0))";
-        Ym "(3/2 * (time + 1.0))";
+        Xm "(3/2 / (Time + 1.0))";
+        Ym "(3/2 * (Time + 1.0))";
         Seq [
             Direction (0, 0, -1);
         ];

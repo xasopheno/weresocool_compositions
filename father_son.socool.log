@@ -1,0 +1,31 @@
+   0.004867041s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.005349791s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.026346458s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 20.138167ms
+   0.028446875s  INFO kintaro::processor: [length-env] 3 named lengths available
+   0.029024875s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.029028666s  INFO kintaro::color: [notan] 0              L 0.00..1.00  span 1.00  mean 0.52  (4 stops)  lit end DARK (dark→light)  ← very wide: reads as separate colours, not one family
+   0.029032750s  INFO kintaro::color: [notan] 1              L 0.32..0.55  span 0.23  mean 0.44  (3 stops)  lit end DARK (dark→light)
+   0.029071833s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.029074375s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.032656000s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 2.44325ms
+   0.033055791s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=6240   y 0.295..1.073  x -1.50..+1.50  gain 0.08..0.19  l 0.062..0.500
+  brush 1        n=720    y 0.232..0.835  x -2.00..+2.00  gain 0.14..0.20  l 0.682..5.455
+   0.033060625s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.035009791s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 1.354292ms
+   0.036361583s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.042127333s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 7.109417ms
+   0.042148708s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: flat warp=- draw=- surface=-
+  brush 1: flat warp=- draw=- surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.042150791s  INFO kintaro::processor: [SoCoolProcessor] Total: 39.156125ms
+   0.274129083s  INFO bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.274573541s  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.275096083s  WARN bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.391084375s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (16956 bytes)
+   0.411248166s  WARN bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.433241083s  INFO bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/father_son.socool (0v0)
+   0.465035833s  INFO kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   1.231108166s  INFO kintaro::brush: [brush] skipped 36 note(s) the playhead had already passed (the render path was still warming up)

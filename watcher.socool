@@ -55,13 +55,13 @@ main = {
     ]
     | wgsl {
         Xm 0.75;
-        Xa "sin(time) * 0.05";
+        Xa "sin(Time) * 0.05";
         Sm 1.9;
         -- Sm "1 + scale + sin(time * 4) * 0.2 + 0.8";
         Vm 1/5;
-        Xa "(x * time * 0.5)";
+        Xa "(x * Time * 0.5)";
         Xm 0.3;
-        Rz "sin(time * 0.1) * 0.2" | Lm 32;
+        Rz "sin(Time * 0.1) * 0.2" | Lm 32;
         -- Ry 3.0;
     }
     | Seq [Fm 1, Reverse, Fm 9/8, Fm 0 | Lm 1/3]

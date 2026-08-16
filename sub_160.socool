@@ -1,0 +1,111 @@
+{ f: 50, l: 3/32, g: 1, p: 0 }
+
+-- Halftime jungle at 160, after Om Unit / Machinedrum's slower sides.
+-- The drums move at 160 but the snare lands halftime (pulses 8 and 24),
+-- so the body hears 80. Sub bass carries the actual melody.
+-- The cycle trick: the ride/hat figure is 12 pulses long, laid over
+-- 32-pulse bars — it only re-meets the downbeat every three bars
+-- (96 pulses), so the top of the kit slowly rotates over the anchor.
+-- Bar C is the chop: jungle snare rolls climbing in pitch.
+--
+-- Play: weresocool play sub_160.socool
+
+x = { Silence 1 }
+
+bd = { Kick 808 | Gm 1 }
+sn = { Snare wsc | Fm 5/4 | Gm 0.85 }
+gh = { Snare dust | Fm 5/4 | Gm 0.22 }
+-- the rotor runs through a bitcrusher — lofi top over a clean low end
+rd = { Ride dark | Bitcrusher(6, 1, 0.9) | Gm 0.28 | Pa 1/4 }
+sh = { Shaker 808 | Bitcrusher(6, 1, 0.9) | Gm 0.3 | Pa -1/4 }
+oh = { OpenHat 808 | Bitcrusher(5, 1, 0.85) | Gm 0.35 | Pa 1/4 }
+
+-- ── halftime bars (32) ──────────────────────────────────────────────
+bar_a = {
+    Seq [
+        bd, x, x, x,   x, x, gh, x,   sn, x, x, x,   x, gh, x, x,
+        bd, x, x, bd | Gm 0.6,   x, x, gh, x,   sn, x, x, gh,   x, x, gh | Lm 1/2 | Repeat 2, x
+    ]
+}
+
+bar_b = {
+    Seq [
+        bd, x, x, x,   x, x, gh, x,   sn, x, x, x,   x, x, bd | Gm 0.7, x,
+        x, x, bd, x,   gh, x, x, x,   sn, x, x, gh | Lm 1/2 | Repeat 2,   gh, x, sn | Gm 0.4, x
+    ]
+}
+
+-- the chop: rolls climb
+bar_c = {
+    Seq [
+        bd, x, x, x,   sn | Lm 1/2 | Repeat 2 | Gm 0.5, x, gh, x,
+        sn, x, sn | Fm 9/8 | Lm 1/2 | Repeat 2 | Gm 0.6, x,
+        sn | Fm 6/5 | Lm 1/3 | Repeat 3 | Gm 0.6, x, gh, x,
+        bd, x, x, bd | Gm 0.6,   sn | Fm 4/3 | Lm 1/4 | Repeat 4 | Gm 0.7, x, x, x,
+        sn, x, sn | Fm 3/2 | Lm 1/4 | Repeat 4 | Gm 0.8,
+        sn | Fm 8/5, x, sn | Fm 2 | Lm 1/6 | Repeat 6 | Gm 0.7, x, x
+    ]
+    -- the whole chop bar drives into a soft clipper as the rolls climb
+    | SoftClip(0.5, 2.2, 0.7)
+}
+
+-- ── the 12-pulse rotor over the 32-grid ─────────────────────────────
+rotor = {
+    Seq [
+        rd, sh, sh,   rd | Gm 0.6, sh, oh,
+        rd, sh, sh,   sh, oh | Gm 0.6, sh
+    ]
+}
+
+-- three bars + eight rotors = 96 pulses, meeting only at the seam
+phrase(b1, b2, b3) = {
+    Overlay [
+        Seq [b1, b2, b3],
+        rotor | Repeat 8
+    ]
+}
+
+-- ── double-time release: full jungle bar ────────────────────────────
+dbl = {
+    Seq [
+        bd, x, x, bd | Gm 0.6,   sn | Gm 0.5, x, gh, sn,
+        x, gh, bd, x,   sn, x, gh, x,
+        bd, x, x, gh,   sn, x, bd | Gm 0.7, x,
+        x, sn | Gm 0.5, x, gh,   sn | Lm 1/4 | Repeat 4 | Gm 0.7, gh, sn, x
+    ]
+}
+
+sub = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/2, 0, 3/4, 0 }
+    ]
+    | Seq [
+        Fm 1 | Lm 5, Fm 4/3 | Lm 3,
+        Fm 7/6 | Lm 4, Fm 5/6 | Lm 4,
+        Fm 1 | Lm 6, Fm 9/8 | Lm 2,
+        Fm 2/3 | Lm 8
+    ]
+    -- tanh rounds the sub into a warm, slightly furry bassline
+    | Tanh(3, 0.6)
+    | Fm 2
+    | Gm 0.4
+}
+
+r8 = { rotor | Repeat 8 }
+p1 = { phrase(bar_a, bar_b, bar_a) }
+p2 = { phrase(bar_a, bar_b, bar_c) }
+p3 = { phrase(bar_b, bar_a, bar_c) }
+d2 = { Seq [dbl, dbl] }
+
+main = {
+    Seq [
+        Overlay [r8, sub | FitLength r8],
+        Overlay [p1, sub | FitLength p1],
+        Overlay [p2, sub | FitLength p2],
+        Overlay [d2, sub | FitLength d2],
+        Overlay [p3, sub | FitLength p3] | Fm 9/8,
+        Overlay [bar_a, sub | FitLength bar_a],
+        Overlay [bd | Lm 8, sn | Lm 8, rd | Lm 8]
+    ]
+}

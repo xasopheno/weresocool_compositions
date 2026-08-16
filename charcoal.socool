@@ -40,7 +40,7 @@ thing1 = {
         Ya -0.5;
         Sm 2;
         Xm 3;
-        Xa "sin(time * 2) * 0.1";
+        Xa "sin(Time * 2) * 0.1";
         Za -5;
     }
 }
@@ -59,7 +59,7 @@ thing2 = {
             { 3/2, 0, 1, -1 },
         ]
         | wgsl {
-            x = x * (sin(1 + time * 64));
+            x = x * (sin(1 + Time * 64));
         }
         | Color [blue, grey, black, black, black] | Gradient(0, 1, 0)
     ]
@@ -85,7 +85,7 @@ thing2 = {
         }
     ]
     | wgsl {
-        scale = 1 / (1 + time);
+        scale = 1 / (1 + Time);
     }
 }
 

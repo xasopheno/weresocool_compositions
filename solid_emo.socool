@@ -15,11 +15,11 @@
 // is the difference between "fluid" and "fluid that's alive".
 warp plasma = {
     Prev
-    | CurlFlow(amp: 0.012, freq: 9)
-    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | CurlFlow { amp: 0.012, freq: 9 }
+    | Modulate(Noise { scale: 3, offset: 0.1 }, 0.006)
     | Blur 1.5
     | Decay 0.93
-    | Add (Scene | CurlFlow(amp: 0.012, freq: 10)) | Knee 0.3
+    | Add (Scene | CurlFlow { amp: 0.012, freq: 10 }) | Knee 0.3
     | Gamma 1.32
 }
 
@@ -30,13 +30,13 @@ warp plasma = {
 //   - longer decay (0.96) so chord notes leave persistent trails
 warp tunnel = {
     Prev
-    | CurlFlow(amp: 0.212, freq: 34)
-    | Modulate(Osc(freq: 34, sync: 0.8, offset: 8.0), 0.012)
+    | CurlFlow { amp: 0.212, freq: 34 }
+    | Modulate(Osc { freq: 34, sync: 0.8, offset: 8.0 }, 0.012)
     | ChromaShift 4.01
     | Hue (Time * 3.04)
     | Blur 1.5
     | Decay 0.96
-    | Max (Scene | CurlFlow(amp: 0.022, freq: 3000))
+    | Max (Scene | CurlFlow { amp: 0.022, freq: 3000 })
     | Knee 0.2
     | Gamma 1.1
 }
@@ -48,14 +48,14 @@ warp pulse = {
     Prev
     -- character: outward scale + heavy bloom + warm Noise jitter
     | Scale 1.008
-    | Modulate(Noise(scale: 4, offset: 0.05), 0.022)
-    | Bloom(threshold: 0.15, strength: 0.9)
+    | Modulate(Noise { scale: 4, offset: 0.05 }, 0.022)
+    | Bloom { threshold: 0.15, strength: 0.9 }
     -- plasma body
-    | CurlFlow(amp: 0.012, freq: 9)
-    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | CurlFlow { amp: 0.012, freq: 9 }
+    | Modulate(Noise { scale: 3, offset: 0.1 }, 0.006)
     | Blur 1.5
     | Decay 0.93
-    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Add (Scene | CurlFlow { amp: 0.012, freq: 10 })
     | Knee 0.3
     | Gamma 1.32
 }
@@ -65,14 +65,14 @@ warp pulse = {
 warp shatter = {
     Prev
     -- character: hard glitch Modulate + heavy ChromaShift
-    | Modulate(Osc(freq: 40, sync: 0.9, offset: 0.0), 0.05)
+    | Modulate(Osc { freq: 40, sync: 0.9, offset: 0.0 }, 0.05)
     | ChromaShift 0.035
     -- plasma body
-    | CurlFlow(amp: 0.012, freq: 9)
-    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | CurlFlow { amp: 0.012, freq: 9 }
+    | Modulate(Noise { scale: 3, offset: 0.1 }, 0.006)
     | Blur 1.5
     | Decay 0.93
-    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Add (Scene | CurlFlow { amp: 0.012, freq: 10 })
     | Knee 0.3
     | Gamma 1.32
 }
@@ -82,14 +82,14 @@ warp shatter = {
 warp sparkle = {
     Prev
     -- character: high-freq Noise Modulate + visible Hue rotation
-    | Modulate(Noise(scale: 14, offset: 0.5), 0.025)
+    | Modulate(Noise { scale: 14, offset: 0.5 }, 0.025)
     | Hue (Time * 0.2)
     -- plasma body
-    | CurlFlow(amp: 0.012, freq: 9)
-    | Modulate(Noise(scale: 3, offset: 0.1), 0.006)
+    | CurlFlow { amp: 0.012, freq: 9 }
+    | Modulate(Noise { scale: 3, offset: 0.1 }, 0.006)
     | Blur 1.5
     | Decay 0.93
-    | Add (Scene | CurlFlow(amp: 0.012, freq: 10))
+    | Add (Scene | CurlFlow { amp: 0.012, freq: 10 })
     | Knee 0.3
     | Gamma 1.32
 }

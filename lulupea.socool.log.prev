@@ -1,0 +1,38 @@
+   0.001840333s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.001863833s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.020139500s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 18.122542ms
+   0.022658416s  INFO kintaro::processor: [length-env] 11 named lengths available
+   0.022706166s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.022709291s  INFO kintaro::color: [notan] 0              L 0.00..1.00  span 1.00  mean 0.36  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.022712791s  INFO kintaro::color: [notan] 1              L 0.00..0.67  span 0.67  mean 0.23  (5 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.022714041s  INFO kintaro::color: [notan] 2              L 0.00..0.97  span 0.97  mean 0.33  (5 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.022715000s  INFO kintaro::color: [notan] 3              L 0.67..1.00  span 0.33  mean 0.83  (2 stops)  lit end LIGHT (light→dark)
+   0.022739833s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.022742375s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.025898166s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 2.922ms
+   0.026069916s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=1820   y 0.377..0.868  x -1.00..+1.00  gain 0.08..0.18  l 0.056..0.056
+  brush 1        n=192    y 0.622..0.835  x -0.25..+0.25  gain 0.16..0.17  l 0.271..0.271
+  brush 2        n=288    y 0.556..0.835  x -0.67..+0.67  gain 0.16..0.18  l 0.271..0.271
+  brush 3        n=64     y 0.193..0.749  x -0.50..+0.50  gain 0.06..0.17  l 2.528..2.528
+   0.026077416s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.027393250s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 1.1825ms
+   0.027547208s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.028908500s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.505125ms
+   0.028920708s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: grad warp=- draw=- surface=-
+  brush 1: grad warp=- draw=- surface=-
+  brush 2: grad warp=- draw=- surface=-
+  brush 3: grad warp=- draw=- surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.028922083s  INFO kintaro::processor: [SoCoolProcessor] Total: 28.764875ms
+   0.119417458s  INFO bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.119575333s  INFO bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.119614916s  WARN bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.194712958s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (24700 bytes)
+   0.205622625s  WARN bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.221671041s  INFO bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/lulupea.socool (0v0)
+   0.245483041s  INFO kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   5.205942208s  INFO kintaro::perf: [frame] 115 fps (8.7 ms avg, worst 153.5) — 5.2k marks/s, ~62.9k live (12.0 u life)
+  10.206099833s  INFO kintaro::perf: [frame] 120 fps (8.3 ms avg, worst 9.1) — 5.0k marks/s, ~59.4k live (12.0 u life)

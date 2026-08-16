@@ -1,0 +1,130 @@
+{ f: 60, l: 1/7, g: 1, p: 0 }
+
+-- Maracatu de baque virado (Recife) with a JD Beck half-time flip.
+-- Alfaias play the baque with the "virado" turn at the end of the bar,
+-- gonguê carries the bell, caixa runs a ghost net, abê shakes quarters.
+-- Every fourth bar the floor drops out: gonguê stretches to 8th notes,
+-- the alfaia thins to two hits, and one dragged snare lands late on
+-- pulse 9 — half-time inside the same bar length.
+--
+-- Play: weresocool play maracatu_baque.socool
+
+x = { Silence 1 }
+
+-- alfaias: rope-tuned bass drums, low voice and answering mid voice
+af = { Kick doom | Fm 1/2 | Gm 1.1 }
+am = { Kick acoustic | Fm 2/3 | Gm 0.85 }
+
+-- gonguê bell
+go = { Cowbell acoustic | Fm 3/2 | Gm 0.5 | Pa -1/4 }
+
+-- caixa
+cx = { Snare wsc | Gm 0.65 }
+cg = { Snare wsc | Gm 0.18 }
+
+-- abê
+ab = { Shaker cabasa | Gm 0.5 | Pa 1/4 }
+ag = { Shaker cabasa | Gm 0.2 | Pa 1/4 }
+
+cr = { Crash acoustic | Gm 0.5 }
+
+-- ── baque bar (16 pulses) ───────────────────────────────────────────
+alfaia_a = {
+    Seq [
+        af, x, x, af | Gm 0.6,   x, x, am, x,
+        af, x, x, am | Gm 0.7,   x, x, am, am | Gm 0.8
+    ]
+}
+
+-- virado variation: the turn arrives one pulse early and doubles
+alfaia_b = {
+    Seq [
+        af, x, x, af | Gm 0.6,   x, x, am, x,
+        af, x, x, x,   x, am | Lm 1/2 | Repeat 2 | Gm 0.7, am, af
+    ]
+}
+
+gongue = {
+    Seq [
+        go, x, x, go,   x, x, go, x,
+        go, x, x, go,   x, x, go, x
+    ]
+}
+
+caixa = {
+    Seq [
+        cg, cg, cg, cx | Gm 0.8,   cg, cg, cx, cg,
+        cg, cg, cx | Gm 0.8, cg,   cg, cx, cg, cg
+    ]
+}
+
+abe = {
+    Seq [
+        ab, x, ag, x,   ab, x, ag, x,
+        ab, x, ag, x,   ab, x, ag, ag
+    ]
+}
+
+-- ── half-time flip: same 16-pulse length, everything opens up ───────
+alfaia_h = {
+    Seq [
+        af, x, x, x,   x, x, x, x,
+        af | Gm 0.7, x, x, x,   x, x, x, x
+    ]
+}
+
+gongue_h = {
+    Seq [
+        go | Lm 2, x | Lm 2, go | Lm 2, x | Lm 2,
+        go | Lm 2, x | Lm 2, go | Lm 2, x | Lm 2
+    ]
+}
+
+-- one snare, dragged past the backbeat onto pulse 9
+snare_h = {
+    Seq [
+        x, x, x, x,   x, x, x, x,
+        x, cx, x, x,   x, x, x, cg
+    ]
+}
+
+-- ── fill bar: alfaia roll descending ────────────────────────────────
+fill = {
+    Overlay [
+        Seq [
+            af, x, x, af | Gm 0.7,   x, x, am, am,
+            am | Lm 1/2 | Repeat 2 | Gm 0.8, am | Fm 8/9 | Lm 1/2 | Repeat 2 | Gm 0.8,
+            af | Fm 5/6, x,
+            af | Fm 3/4 | Lm 1/2 | Repeat 2, af | Fm 2/3, af | Fm 2/3 | Lm 1/2 | Repeat 2, x
+        ],
+        gongue,
+        Seq [
+            cg, cg, cg, cx,   cg, cg, cx, cg,
+            cx | Lm 1/2 | Repeat 2 | Gm 0.8, cg, cx, cg,
+            cx | Lm 1/4 | Repeat 4 | Gm 0.7, cx, cx | Fm 9/8, cx | Fm 5/4
+        ]
+    ]
+}
+
+-- ── bars ────────────────────────────────────────────────────────────
+bar_a = { Overlay [alfaia_a, gongue, caixa, abe] }
+bar_b = { Overlay [alfaia_b, gongue, caixa, abe] }
+bar_h = { Overlay [alfaia_h, gongue_h, snare_h, abe] }
+
+intro = { Overlay [gongue, abe] }
+intro_cx = { Overlay [gongue, abe, caixa] }
+
+main = {
+    Seq [
+        intro, intro_cx,
+        bar_a, bar_b, bar_a, bar_h,
+        bar_a, bar_b, fill,
+        Overlay [bar_a, cr | Lm 16],
+        bar_b, bar_h,
+        Seq [bar_a, bar_b] | Fm 9/8,
+        fill | Fm 9/8,
+        Overlay [bar_a, cr | Lm 16],
+        bar_h,
+        Overlay [af | Lm 8, go | Lm 8, cr | Lm 8]
+    ]
+}

@@ -1,0 +1,179 @@
+{ f: 311.127, l: 1, g: 1/2, p: 0 }
+
+warp impasto = {
+    Prev
+    | CurlFlow { amp: 0.025, freq: 5 } | Modulate(Noise { scale: 1.6, offset: 0.020 }, 0.11)
+    | Blur 3.1
+    | Decay 0.9
+    | Add (Scene | Bloom { threshold: 0.18, strength: 0.66 })
+    | Knee 0.25
+    | Gamma 1.5
+}
+
+bd = {
+    Overlay [
+        { 5/4, 0, 1/5, -1/8 },
+        { 5/4, -11, 1/5, 1/8 },
+        { 1/2, 1, 1/2, -3/4 },
+        { 1/2, 0, 1/2, 3/4 },
+        { 3/4, 0, 1/8, -1/4 },
+        { 3/4, -3, 1/8, 1/4 },
+        { 1/4, 0, 1, 3/4 },
+        { 1/4, -4, 1, -3/4 },
+    ]
+    | Kick {
+        body: 0.85,
+        pitch_decay: 0.025,
+        pitch_range: 0.3,
+        amp_decay: 0.45,
+        click_amount: 0.2,
+        saturation: 0.85,
+        hump: 4.85,
+        shell: 0.4,
+        ks_mix: 0.25
+    }
+    | Gm 3/2
+}
+
+hh = {
+    Overlay [
+        { 3/1, 0, 1/6, -1/8 },
+        { 3/1, -7, 1/6, 1/8 },
+        { 3/1, 0, 1/6, -1/2 },
+        { 3/1, -3, 1/6, 1/2 },
+        { 1/1, 1, 1/2, -3/4 },
+        { 1/1, 0, 1/2, 3/4 },
+    ]
+    | HiHat {
+        metal: 0.75,
+        decay_rate: 50,
+        brightness: 0.15,
+        pitch_drop: 0.08,
+        ping_amount: 0.42
+    }
+    | Gm 2/8
+}
+
+sn = {
+    Overlay [
+        { 1/1, 1, 1/2, -3/4 },
+        { 1/1, 0, 1/2, 3/4 },
+        { 3/4, 0, 1/8, -1/4 },
+        { 3/4, -3, 1/8, 1/4 },
+    ]
+    | Snare {
+        attack: 0.72,
+        wires: 0.55,
+        tone: 0.6,
+        length: 0.42,
+        saturation: 0.25
+    }
+    | Fm 5/4
+    | Gm 3/2
+}
+
+x = { Gm 0 }
+
+c1_a = {
+    Overlay [
+        Seq [
+            bd | Fm 5/8, x, x, bd, x, x, x, 
+            bd | Fm 3/4, x, x | Lm 1/2, bd, x | Lm 1/2, x | Lm 1/2,
+        ] | #bd,
+        Seq [
+            x, sn | Gm 1/3 | Fm 3/4, x, x, x, sn, x, x, x, 
+        ] | #sn,
+        Seq [
+            x, hh | Gm 2/3 | Fm 3/4, hh,
+            x, hh | Gm 1/2 | Fm 9/8,
+            x, hh | Fa -4, hh, hh | Gm 1/2,
+            hh | Fa -4, x, hh, hh | Gm 1/2,
+            hh | Fa -4, hh, x, hh | Gm 1/2,
+            hh, x, hh, x, hh, 
+        ] 
+        | Lm 1/2
+        | #hh,
+    ]
+}
+
+c1_f = {
+    Overlay [
+        Seq [
+            bd, x, x, bd, x, bd | Fm 1/2, x,
+            bd | Lm 1/2 | Seq [Fm 0, Fm 1, Fm 0, Fm 3/2]
+            | Fm 1/2
+        ] | #bd,
+        Seq [x, x, sn, x, x, sn, sn] | #sn,
+        Seq [
+            Fm 0 | Lm 4/100,
+            hh, hh | Gm 1/3, hh, hh | Gm 1/3, hh, hh,
+            hh | Lm 96/100
+        ] | #hh,
+    ]
+}
+
+cycle1 = { 
+    Seq [
+        c1_a, 
+        -- c1_a, c1_a, c1_f 
+    ] 
+}
+
+drums = {
+    Seq [
+        cycle1,
+    ]
+    | Repeat 4
+    | wgsl {
+        Xm 1/4
+    }
+}
+
+bass = {
+    Overlay [
+        { 3/4, 1, 1, 1 },
+        { 3/4, 0, 1, -1 },
+        { 1/1, 1, 1, 1 },
+        { 1/1, 1, 1, 1 },
+        { 1/2, 2, 1, 1 },
+        { 1/2, 0, 1, -1 },
+    ]
+    | Overlay [
+        -- Seq [Fm 0, Fm 4, Fm 0] | Lm 1/32 | Repeat 4, 
+        Fm 1, 
+    ]
+    | Seq [
+        Fm 1, Fm 1/2, Fm 5/4, Fm 2/3, Fm 7/12 | Lm 2/3, Fm 3/4 | Lm 1/3, Fm 5/6 | Lm 1/2, Fm 7/8 | Lm 1, Fm 1 | Lm 1/2,
+        Seq [
+            Fm 9/8, Fm 4/3, Fm 5/6, Fm 3/4, Fm 7/6 
+        ] | Lm 1/5
+    ]
+    | Color [paleturquoise, red, lightcyan, silver, slategrey, steelblue, black] | Gradient(0.5, 1, 0)
+    | wgsl {
+        Sm 2;
+    }
+    | FitLength drums
+    | Gm 1/3
+    | Overlay [
+        Sine, 
+        -- Sine 1/8 | Gm 1/10 | Pm 1/8
+    ]
+}
+
+main = {
+    Overlay [
+        bass,
+        drums,
+    ]
+    | Lm 1/6
+    | Color [purple, pink, magenta, brightgreen, red, blue, grey, black, neongreen, yellow, darkblue, red, black, black] | Gradient(0, 1, 0)
+    | wgsl {
+        Seq [
+            Direction (0, -0.2, -1) | Lm 8;
+        ];
+    }
+    | Gm 2
+    | impasto
+    | Fm 3/4
+    | Repeat 4
+} -> [sn, bd, hh]

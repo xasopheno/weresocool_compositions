@@ -7,10 +7,10 @@
 -- saturated.
 warp dream = {
     Prev
-    | CurlFlow(amp: 0.003, freq: 14)
+    | CurlFlow { amp: 0.003, freq: 14 }
     | Blur 0.7
     | Decay 0.92
-    | Add (Scene | Bloom(threshold: 0.3, strength: 0.45))
+    | Add (Scene | Bloom { threshold: 0.3, strength: 0.45 })
     | Knee 0.35
     | Gamma 1.18
 }
@@ -22,9 +22,9 @@ warp dream = {
 draw flower = {
     Point
     | Xa(0.04)
-    | Spawn(4, by: Rz(tau/4))
-    | Each(Point | Lerp(to: Direction(0.05, 0.028, 0), n: 4))
-    | Modulate(Noise(scale: 4), 0.006)
+    | Spawn { n: 4, by: Rz(Tau/4) }
+    | Each(Point | Lerp { to: Direction(0.05, 0.028, 0), n: 4 })
+    | Modulate(Noise { scale: 4 }, 0.006)
 }
 
 -- stem: every stem terminates at the SAME world point (0, -0.7, 0). The
@@ -39,7 +39,7 @@ draw flower = {
 -- packs them tightly enough that they read as a continuous line.
 draw stem = {
     Point
-    | Lerp(to: Direction(note.x, 0.15 - note.y, 0), n: 24)
+    | Lerp { to: Direction(Note.x, 0.15 - Note.y, 0), n: 24 }
 }
 
 -- ─── audio sources ──────────────────────────────────────────────────────

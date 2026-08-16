@@ -17,11 +17,11 @@
 -- (Background adds each frame, so values are desired_sky × (1−decay)).
 warp glow = {
     Prev
-    | CurlFlow(amp: 0.0025, freq: 11)
+    | CurlFlow { amp: 0.0025, freq: 11 }
     | Blur 0.8
     | Decay 0.93
-    | Add (Scene | Bloom(threshold: 0.5, strength: 0.12))
-    | Background(top: (0.013, 0.008, 0.0), bottom: (0.001, 0.003, 0.0), split: 0.7, soft: 0.3)
+    | Add (Scene | Bloom { threshold: 0.5, strength: 0.12 })
+    | Background { top: (0.013, 0.008, 0.0), bottom: (0.001, 0.003, 0.0), split: 0.7, soft: 0.3 }
     | Knee 0.33
     | Gamma 1.12
 }
@@ -58,8 +58,8 @@ draw fly = {
 draw trunk = {
     Point
     | Ya(-0.55)
-    | Lerp(to: Direction(0, 1.55, 0), n: 72)
-    | Modulate(Noise(scale: 3), 0.008)
+    | Lerp { to: Direction(0, 1.55, 0), n: 72 }
+    | Modulate(Noise { scale: 3 }, 0.008)
 }
 
 -- ─── audio sources (unchanged music) ─────────────────────────────────────
@@ -239,9 +239,9 @@ fireflies = {
         Sm 0.8;
         Sa 0.012;
         Vm 1/14;
-        Am "0.15 + 0.85 * pow(0.5 + 0.5 * sin(time * 2.1 + x * 23.0), 4.0)";
-        x = x + sin(time * 0.7 + y * 9.0) * 0.05;
-        y = y + sin(time * 0.43 + x * 7.0) * 0.04;
+        Am "0.15 + 0.85 * pow(0.5 + 0.5 * sin(Time * 2.1 + x * 23.0), 4.0)";
+        x = x + sin(Time * 0.7 + y * 9.0) * 0.05;
+        y = y + sin(Time * 0.43 + x * 7.0) * 0.04;
         Die 10;
         Seq [
             Direction (0.7, 0.15, -0.06) | Lm 12;

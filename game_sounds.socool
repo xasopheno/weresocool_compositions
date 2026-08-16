@@ -50,7 +50,7 @@ thing1 = {
     | Repeat 2
     | Color [firebrick, white, grey, black, black, black] | Gradient(0, 1, 0)
     | wgsl {
-        Sm "scale * 3.0 * (1 - time) * 3.0";
+        Sm "scale * 3.0 * (1 - Time) * 3.0";
         Seq [
             Direction (0, 0, -1);
         ];

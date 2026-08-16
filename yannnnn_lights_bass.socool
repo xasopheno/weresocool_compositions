@@ -263,14 +263,14 @@ main = {
     ]
     | wgsl {
         velocity = -z * velocity * 1.0;
-        scale = sin(time + 4.0) * 2.0;
+        scale = sin(Time + 4.0) * 2.0;
         alpha = alpha - 0.0005;
         life = life - 0.001;
-        x = sin(y) * x * 2.0 * (time + 3.0);
-        x = x + sin(time + 4.0) * 0.8;
-        y = y + sin(time * 2.0) * 0.8;
-        velocity = velocity + (1.0 + sin(time)) * 10.0;
-        r = r * sin(time) * 30.0;
+        x = sin(y) * x * 2.0 * (Time + 3.0);
+        x = x + sin(Time + 4.0) * 0.8;
+        y = y + sin(Time * 2.0) * 0.8;
+        velocity = velocity + (1.0 + sin(Time)) * 10.0;
+        r = r * sin(Time) * 30.0;
         scale = scale * 1.5;
     }
 } -> [a, b]

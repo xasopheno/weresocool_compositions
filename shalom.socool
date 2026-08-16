@@ -46,10 +46,10 @@ thing1(c) = {
     | c | Gradient(-1, 1.2, 0)
     | wgsl {
         Direction (0, 0, -1) | Bend (0.3, 0.2, 0, 0.4) | Vm 1/2;
-        Xa "sin(time * 0.4 + y * 2.0) * 0.08";
-        Ya "cos(time * 0.3) * 0.05";
-        Ry "time * 0.15";
-        Rz "sin(time * 0.2) * 0.1";
+        Xa "sin(Time * 0.4 + y * 2.0) * 0.08";
+        Ya "cos(Time * 0.3) * 0.05";
+        Ry "Time * 0.15";
+        Rz "sin(Time * 0.2) * 0.1";
         Sm 4.0;
         Seq [
             Sm 1 | Lm 2.5;
@@ -85,10 +85,10 @@ thing2(c) = {
             Direction (0.2, 1, 1) | Bend (-0.2, 0, 0, 0.5) | Vm 1/2 | Lm 4;
             Sm 0;
         ];
-        Xa "cos(time * 0.5 - y * 1.5) * 0.06";
-        Ya "sin(time * 0.25 + x * 2.0) * 0.04";
-        Rx "time * 0.08";
-        Ry "sin(time * 0.12) * 0.15";
+        Xa "cos(Time * 0.5 - y * 1.5) * 0.06";
+        Ya "sin(Time * 0.25 + x * 2.0) * 0.04";
+        Rx "Time * 0.08";
+        Ry "sin(Time * 0.12) * 0.15";
         Sm 3.5;
         Am "0.8 + sin(life * 3.0) * 0.2";
     }

@@ -74,7 +74,7 @@ thing1 = {
         Sm 1.0;
         Xm 0.03;
         Vm 1/5;
-        Xa "sin(time * 0.7) * 0.04";
+        Xa "sin(Time * 0.7) * 0.04";
         Seq [
             Direction (0, -1, -1) | Bend (0.4, 0, 0, 0.1) | Lm 2;
         ];
@@ -104,7 +104,7 @@ thing2 = {
         Xm 1/3;
         Ya 0.2;
         Sm 5.0;
-        Za "sin(time * 0.2) * 0.3";
+        Za "sin(Time * 0.2) * 0.3";
         Seq [
             Direction (0, 0, 0) | Lm 1/2;
             Sm 0;
@@ -130,7 +130,7 @@ thing3 = {
     | FitLength thing1
     | Color [sunfloweryellow, blue, black, black, black] | Gradient(-1, 1, 0)
     | wgsl {
-        Za "sin(time * 0.1) * 0.2";
+        Za "sin(Time * 0.1) * 0.2";
         Xm 1/2;
         Ya 0.3;
         Sm 5.5;
@@ -168,7 +168,7 @@ thing4 = {
         Xa 1/3;
         Ya 0.3;
         Ya 0.3;
-        Za "sin(time * 0.001) * 0.2";
+        Za "sin(Time * 0.001) * 0.2";
         Sm 6.0;
         Seq [
             Direction (0, 0, 0.0) | Lm 1/2;
@@ -241,7 +241,7 @@ thing6 = {
         Za -0.5;
         Xa -1.8;
         Vm 1/2;
-        Ry "sin(time * 0.005) * 0.5";
+        Ry "sin(Time * 0.005) * 0.5";
         Seq [
             Direction (0.0, 0.0, 0.0) | Lm 1 | Am 2;
             Direction (0.0, 0.0, 0.0) | Lm 3 | Am 1;

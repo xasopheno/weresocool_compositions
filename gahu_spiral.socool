@@ -1,0 +1,99 @@
+{ f: 65, l: 3/20, g: 1, p: 0 }
+
+-- Gahu (Ewe, Ghana/Togo) as a spiral of loop lengths.
+-- The gankogui bell plays the 16-pulse gahu key pattern
+-- (strokes on 0, 3, 6, 10, 12). Against it:
+--   kaganu   16-pulse offbeat pairs        x3
+--   kidi     12-pulse response phrase      x4   (3 against 4)
+--   sogo     24-pulse answer               x2
+--   kick     24-pulse anchor               x2
+-- Everything resolves only every 48 pulses — layers drift apart and
+-- lock back together, JD Beck by way of the Volta region.
+--
+-- Play: weresocool play gahu_spiral.socool
+
+x = { Silence 1 }
+
+-- gankogui: low mother bell on the downstroke, high bell answers
+bl = { Cowbell acoustic | Fm 2/3 | Gm 0.6 }
+bh = { Cowbell acoustic | Gm 0.48 }
+
+-- axatse: gourd rattle shadowing the bell
+ax = { Shaker wsc | Gm 0.42 | Pa 1/4 }
+ag = { Shaker wsc | Gm 0.18 | Pa 1/4 }
+
+-- drums
+ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3 }
+ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6 }
+so = { Tom acoustic | Fm 5/6 | Gm 0.8 | Pa -1/6 }
+bd = { Kick acoustic | Fm 2/3 | Gm 1 }
+
+-- ── 16-pulse layers ─────────────────────────────────────────────────
+bell = {
+    Seq [
+        bl, x, x, bh,   x, x, bh, x,
+        x, x, bh, x,    bh, x, x, x
+    ]
+}
+
+kaganu = {
+    Seq [
+        x, ka, ka, x,   x, ka, ka, x,
+        x, ka, ka, x,   x, ka, ka, x
+    ]
+}
+
+axatse = {
+    Seq [
+        ax, ag, ag, ax,   ag, ag, ax, ag,
+        ag, ag, ax, ag,   ax, ag, ag, ag
+    ]
+}
+
+-- ── 12-pulse layer: four times around while the bell goes three ─────
+kidi = {
+    Seq [
+        ki, x, ki, ki | Gm 0.7,   x, x, ki, x,
+        ki | Gm 0.5, x, x, x
+    ]
+}
+
+-- ── 24-pulse layers: twice around per 48 ────────────────────────────
+sogo = {
+    Seq [
+        so, x, x, x,   x, x, x, so | Gm 0.7,
+        x, x, x, x,    so, x, x, x,
+        x, x, x, so | Gm 0.6,   x, x, x, x
+    ]
+}
+
+anchor = {
+    Seq [
+        bd, x, x, x,   x, x, x, x,
+        x, bd | Gm 0.7, x, x,   x, x, bd | Gm 0.8, x,
+        x, x, x, bd | Gm 0.6,   x, x, x, x
+    ]
+}
+
+-- ── the 48-pulse spiral ─────────────────────────────────────────────
+spiral = {
+    Overlay [
+        bell | Repeat 3,
+        kaganu | Repeat 3,
+        axatse | Repeat 3,
+        kidi | Repeat 4,
+        sogo | Repeat 2,
+        anchor | Repeat 2
+    ]
+}
+
+main = {
+    Seq [
+        Overlay [bell | Repeat 3, axatse | Repeat 3],
+        Overlay [bell | Repeat 3, kaganu | Repeat 3, axatse | Repeat 3, kidi | Repeat 4],
+        spiral,
+        spiral,
+        spiral | Fm 6/5,
+        Overlay [bell | Repeat 3, kidi | Repeat 4, anchor | Repeat 2]
+    ]
+}

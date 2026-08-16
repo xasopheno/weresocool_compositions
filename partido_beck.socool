@@ -1,0 +1,204 @@
+{ f: 70, l: 5/32, g: 1, p: 0 }
+
+-- Partido-alto samba-funk through the JD Beck lens.
+-- The cycle is 16 + 16 + 16 + 14: the last bar loses two sixteenths,
+-- so the whole groove turns over early — a 62-pulse cycle.
+-- Surdo answers on beat 2, tamborim plays partido-alto, chocalho
+-- accents every 3 sixteenths against the 4-feel, snare drifts from
+-- the backbeat (bar A) to a dragged placement (bar B).
+--
+-- Play: weresocool play partido_beck.socool
+
+x = { Silence 1 }
+
+-- surdo: open on the answer beat, muted elsewhere
+su = { Kick acoustic | Fm 1/2 | Gm 1.1 }
+sm = { Kick acoustic { amp_decay: 0.18 } | Fm 1/2 | Gm 0.5 }
+
+-- kit
+bd = { Kick knock | Gm 0.9 }
+sn = { Snare wsc | Fm 5/4 | Gm 0.85 }
+gh = { Snare brush | Fm 5/4 | Gm 0.28 }
+
+-- hand percussion
+ta = { Rimshot acoustic | Fm 3 | Gm 0.55 | Pa 1/4 }
+al = { Cowbell acoustic | Gm 0.4 | Pa -1/3 }
+ah = { Cowbell acoustic | Fm 4/3 | Gm 0.36 | Pa -1/3 }
+ch = { Shaker wsc | Gm 0.5 | Pa 1/3 }
+cg = { Shaker wsc | Gm 0.22 | Pa 1/3 }
+
+-- ── 16-pulse lines, bar A ───────────────────────────────────────────
+surdo_a = {
+    Seq [
+        sm, x, x, x,   x, x, x, x,
+        su, x, x, x,   x, x, sm | Gm 0.6, x
+    ]
+}
+
+kick_a = {
+    Seq [
+        bd, x, x, bd | Gm 0.6,   x, x, x, x,
+        x, x, bd | Gm 0.8, x,    x, x, bd | Gm 0.45, x
+    ]
+}
+
+snare_a = {
+    Seq [
+        x, x, x, x,   sn, x, x, gh,
+        x, x, x, x,   sn, x, x, gh | Gm 0.6
+    ]
+}
+
+tamb_a = {
+    Seq [
+        x, x, ta, x,   ta, x, x, ta,
+        x, x, ta, x,   ta, x, x, x
+    ]
+}
+
+-- caixa: ghost net with offbeat accents on 2, 6, 10, 14
+caixa_a = {
+    Seq [
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5
+    ]
+}
+
+-- chocalho: accent every 3 sixteenths — a 3-cycle over the 4-grid
+choc_a = {
+    Seq [
+        ch, cg, cg,   ch, cg, cg,   ch, cg, cg,
+        ch, cg, cg,   ch, cg, cg,   ch
+    ]
+}
+
+agogo_a = {
+    Seq [
+        al, x, x, ah,   x, x, ah, x,
+        al, x, ah, x,   ah, x, x, x
+    ]
+}
+
+-- ── bar B: snare drags, kick opens up ───────────────────────────────
+kick_b = {
+    Seq [
+        bd, x, x, x,   x, x, bd | Gm 0.7, x,
+        x, bd | Gm 0.55, x, x,   x, x, x, bd | Gm 0.6
+    ]
+}
+
+snare_b = {
+    Seq [
+        x, x, x, x,   x, x, x, sn,
+        x, x, x, sn | Gm 0.75,   x, gh, x, x
+    ]
+}
+
+tamb_b = {
+    Seq [
+        x, x, ta, x,   x, ta, x, ta,
+        x, x, ta, x,   ta, x, ta | Gm 0.5, x
+    ]
+}
+
+-- ── bar F: only 14 pulses — the cycle turns over early ──────────────
+surdo_f = {
+    Seq [
+        sm, x, x, x,   x, x, x, x,
+        su, x, x, x,   su | Gm 0.7, x
+    ]
+}
+
+kick_f = {
+    Seq [
+        bd, x, x, bd | Gm 0.6,   x, x, x, x,
+        x, x, bd, x,   x, bd | Gm 0.7
+    ]
+}
+
+snare_f = {
+    Seq [
+        x, x, x, x,   sn, x, x, gh,
+        sn | Lm 1/2 | Repeat 2 | Gm 0.5, x,
+        sn | Fm 9/8 | Lm 1/2 | Repeat 2 | Gm 0.6, sn | Fm 6/5 | Gm 0.7,
+        sn | Fm 4/3 | Lm 1/4 | Repeat 4 | Gm 0.7, sn | Fm 3/2
+    ]
+}
+
+tamb_f = {
+    Seq [
+        x, x, ta, x,   ta, x, x, ta,
+        ta, x, ta | Gm 0.7, x,   ta, x
+    ]
+}
+
+caixa_f = {
+    Seq [
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 0.5, gh | Gm 2.2, gh | Gm 0.5,
+        gh, gh | Gm 2.2
+    ]
+}
+
+choc_f = {
+    Seq [
+        ch, cg, cg,   ch, cg, cg,   ch, cg, cg,
+        ch, cg, cg,   ch, cg
+    ]
+}
+
+agogo_f = {
+    Seq [
+        al, x, x, ah,   x, x, ah, x,
+        al, x, ah, x,   ah | Fm 3/2, x
+    ]
+}
+
+-- ── bars ────────────────────────────────────────────────────────────
+perc_a = { Overlay [surdo_a, tamb_a, caixa_a, choc_a, agogo_a] }
+perc_b = { Overlay [surdo_a, tamb_b, caixa_a, choc_a, agogo_a] }
+perc_f = { Overlay [surdo_f, tamb_f, caixa_f, choc_f, agogo_f] }
+
+bar_a = { Overlay [perc_a, kick_a, snare_a] }
+bar_b = { Overlay [perc_b, kick_b, snare_b] }
+bar_f = { Overlay [perc_f, kick_f, snare_f] }
+
+cycle = { Seq [bar_a, bar_b, bar_a, bar_f] }
+perc_cycle = { Seq [perc_a, perc_b, perc_a, perc_f] }
+
+drums = {
+    Seq [
+        perc_cycle,
+        cycle,
+        cycle,
+        cycle,
+        cycle | Fm 9/8,
+        perc_cycle
+    ]
+}
+
+bass = {
+    Overlay [
+        { 1/1, 0, 1, 1/4 },
+        { 1/2, 0, 1, -1/4 },
+        { 2/1, 1, 1/4, 0 }
+    ]
+    | Seq [
+        Fm 1 | Lm 3, Fm 3/2, Fm 9/8 | Lm 2, Fm 5/4 | Lm 2,
+        Fm 4/3 | Lm 2, Fm 3/2, Fm 5/3, Fm 2 | Lm 2,
+        Fm 9/5 | Lm 2, Fm 3/2 | Lm 2, Fm 4/3, Fm 6/5,
+        Fm 9/8 | Lm 2, Fm 1 | Lm 4
+    ]
+    | FitLength drums
+    | Gm 0.28
+}
+
+main = {
+    Overlay [
+        drums,
+        bass
+    ]
+}

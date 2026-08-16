@@ -1,0 +1,111 @@
+{ f: 78, l: 1/9, g: 1, p: 0 }
+
+-- Kopanitsa: Bulgarian 11/8, grouped 2+2+3+2+2.
+-- Tapan carries the limp (doum on the group heads, the 3-group gets
+-- the lean), dumbek chatters inside the groups, tambourine marks the
+-- frame. Then the JD move: a cowbell-and-hat cycle of 4 laid straight
+-- across the 11 — it slides through every position of the bar and
+-- only meets the downbeat again after four bars (44 pulses).
+--
+-- Play: weresocool play aksak_eleven.socool
+
+x = { Silence 1 }
+
+-- tapan: big double-headed drum — beater and switch
+tp = { Kick acoustic | Fm 5/6 | Gm 1 }
+tr = { Rimshot acoustic | Gm 0.5 | Pa -1/5 }
+
+-- dumbek
+dm = { Tom conga | Gm 0.75 }
+tk = { Tom conga | Fm 15/8 | Gm 0.45 | Pa 1/5 }
+
+tb = { Shaker tambourine | Gm 0.4 | Pa 1/3 }
+
+-- the straight 4-cycle laid across the 11
+cb = { Cowbell 808 | Gm 0.3 | Pa -1/3 }
+hh = { HiHat trap | Gm 0.15 | Pa -1/4 }
+ha = { HiHat trap | Gm 0.4 | Pa -1/4 }
+
+-- ── 11-pulse bars: groups start on 0, 2, 4, 7, 9 ────────────────────
+tapan_a = {
+    Seq [
+        tp, x,   tr, x,   tp, x, tr | Gm 0.35,   tp | Gm 0.7, x,   tr, x
+    ]
+}
+
+tapan_b = {
+    Seq [
+        tp, x,   tr, x,   tp, tr | Gm 0.35, tp | Gm 0.6,   tr, x,   tp | Gm 0.7, tr
+    ]
+}
+
+dumbek_a = {
+    Seq [
+        dm, tk | Gm 0.6,   x, tk,   dm, tk | Gm 0.6, tk,   x, tk,   dm | Gm 0.7, tk
+    ]
+}
+
+dumbek_b = {
+    Seq [
+        dm, tk | Gm 0.6,   x, tk,   dm, tk | Lm 1/2 | Repeat 2 | Gm 0.5, tk,   tk | Gm 0.6, tk,   dm | Gm 0.7, tk | Lm 1/2 | Repeat 2 | Gm 0.5
+    ]
+}
+
+tamb = {
+    Seq [
+        tb, x,   tb | Gm 0.5, x,   tb, x, x,   tb | Gm 0.5, x,   tb | Gm 0.7, x
+    ]
+}
+
+fill = {
+    Seq [
+        tp, x,   tr | Lm 1/2 | Repeat 2, tr,   tp, tk | Lm 1/2 | Repeat 2, tk | Fm 9/8,   tk | Fm 5/4, dm,   dm | Lm 1/2 | Repeat 2, tp
+    ]
+}
+
+-- ── the 4-cycle: 44 pulses of straight time over four limping bars ──
+bells4 = {
+    Seq [cb, x, x, x] | Repeat 11
+}
+
+hats4 = {
+    Seq [ha, hh, hh, hh] | Repeat 11
+}
+
+-- ── bars and supercycle ─────────────────────────────────────────────
+bar_a = { Overlay [tapan_a, dumbek_a, tamb] }
+bar_b = { Overlay [tapan_b, dumbek_b, tamb] }
+bar_f = { Overlay [fill, tamb] }
+
+super = {
+    Overlay [
+        Seq [bar_a, bar_b, bar_a, bar_f],
+        bells4,
+        hats4
+    ]
+}
+
+-- ending: only the group heads, hammered in unison
+ending = {
+    Seq [
+        Overlay [tp, dm, tb], x,
+        Overlay [tp, dm, tb], x,
+        Overlay [tp | Gm 1.2, dm, tb], x, x,
+        Overlay [tp, dm, tb], x,
+        Overlay [tp, dm, tb], x
+    ]
+}
+
+main = {
+    Seq [
+        Seq [Overlay [tapan_a, tamb], Overlay [tapan_b, tamb]],
+        Seq [bar_a, bar_b],
+        super,
+        super,
+        super | Fm 6/5,
+        Seq [bar_a, bar_b] | Fm 6/5,
+        ending | Fm 6/5,
+        ending,
+        Overlay [tp | Lm 6, dm | Lm 6, tb | Lm 6]
+    ]
+}
