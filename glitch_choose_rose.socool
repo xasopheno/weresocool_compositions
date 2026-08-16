@@ -1,27 +1,31 @@
-{ f: 65, l: 1/10, g: 1, p: 0, background_color: #000000, h: 1 }
+{ f: 65, l: 1/10, g: 1, p: 0, w: 1.6, h: 0.9, background_color: #05060c }
 
--- THE GAME, PAINTED.
+-- THE GAME, PLAYED IN A ROSE WINDOW.
 --
--- This piece rolls dice: Choose re-rolls every Repeat, so no two
--- performances are the same music. The picture takes that seriously —
--- the canvas is a TABLE, and every throw leaves a mark it cannot take
--- back. Placement is still a lattice walked by note index (the table
--- does not move); what the dice decide is WHICH marks land, how hard,
--- and how distorted. By the last bar the table is buried in the record
--- of its own game.
+-- Same dice, same music as glitch_choose — but the table is gone.
+-- Everything now lands on RINGS around a centre the marks never touch:
+-- the eye of the window stays open, and the piece assembles itself
+-- around that absence. Placement is radial — a note's index walks an
+-- angle around the ring, its row chooses which ring — and every mark
+-- is doubled across the vertical axis, because a rose window is
+-- bilateral before it is anything else.
 --
---   kick  → PIPS: filled discs, the die faces, set down in charcoal
---   blip  → ARCS: the glass melody sweeping through depth, cobalt
---   snare → COILS: spirals that unroll where the throw lands, cadmium
---   hats  → FLECKS: gold-green chaff thrown off the rolling dice
---   clap  → SLASHES: the tally strokes, violet, cutting across
+-- The medium is GLASS, not paper: pigment here is what the light comes
+-- THROUGH, and a raking light reads the piled-up lead of the game as
+-- relief. One harmony across all five voices, the old window-makers'
+-- chord: sunset glass, lapis, ruby, pale gold light, violet.
 --
--- Two lights, because the table has depth: a warm key from the near
--- corner, a cold rim from behind the far edge, and a deep blue ambient
--- standing in for the room.
-light key = { from: (-1.5, 0.95, 0.55), color: #ffe9c4, gain: 1.0 }
-light rim = { from: (1.1, -0.35, -1.4), color: #7fb0ff, gain: 0.60 }
-light air = { ambient, color: #2b3450, gain: 0.55 }
+--   kick  → PIPS: sunset roundels — yellow through orange to purple
+--   blip  → ARCS: lapis tracery sweeping between rings
+--   snare → COILS: ruby rosettes that unroll where the throw lands
+--   hats  → FLECKS: pale gold light scattered through the outer halo
+--   clap  → SPOKES: violet mullions cutting outward from the eye
+--
+-- Sun through glass: a warm gold key high and left, moonlight rim from
+-- behind the window, deep indigo ambient for the stone.
+light key = { from: (-1.2, 1.1, 0.6), color: #ffd9a0, gain: 1.0 }
+light rim = { from: (0.9, -0.3, -1.5), color: #8fb8ff, gain: 0.70 }
+light air = { ambient, color: #1c2440, gain: 0.60 }
 
 -- ── THE WET LAYER ───────────────────────────────────────────────────
 -- Marks accumulate here and only here. `Lay` keeps the paint in the
@@ -34,56 +38,62 @@ warp wet = {
     | Diffuse Sw { rate: 0.115 }
 }
 
--- ── THE TABLE ───────────────────────────────────────────────────────
--- Cotton rag. Paint is subtractive on it: a hex's value is how much
--- pigment sits there, not how bright the mark glows.
+-- ── THE WINDOW ──────────────────────────────────────────────────────
+-- Glass, not paper — the pigment is what the light comes through.
+-- The raking light comes AFTER the paint (Paint writes color
+-- wholesale; anything upstream of it is discarded), and it reads the
+-- coverage the game has piled up as leading standing off the pane.
 warp canvas = {
     Scene
-    | Paint(rag)
+    | Paint(glass)
+    | Raking { from: Sw, light: key, depth: 14.0 }
 }
 
 -- ── THE SHAPES ──────────────────────────────────────────────────────
 -- Every figure is the same three steps: Spawn a trail, drive x and y
--- from Stroke, run the weight down. Lattices are walked by Count —
--- the dice pick the events, never the places.
+-- from Stroke, run the weight down. Placement is RADIAL: the note's
+-- index walks an angle around the ring (by a step that never divides
+-- evenly, so the ring fills without repeating), its row picks the
+-- ring. Nothing lands at the centre — the eye stays open. And every
+-- mark is doubled with Mirror(X): the window is bilateral.
 
--- kick: a filled disc — a pip pressed into the felt
+-- kick: a sunset roundel set into the inner rings
 draw pip = {
-    let k = Wrap(Count, 9.0)
-    let m = Wrap(floor(Count / 9.0), 5.0)
-    let dir = 0.0 - 1.0 + 2.0 * floor(m / 3.0)
-    let depth = 0.0 - 0.15 - m * 0.42
-    let cx = 0.0 - 1.28 + k * 0.32
-    let cy = 0.0 - 0.34 + m * 0.30
-    let r = 0.055 + Note.z * 0.075
+    let a = Count * 0.8976
+    let m = Wrap(floor(Count / 7.0), 4.0)
+    let ring = 0.34 + m * 0.13
+    let depth = 0.0 - 0.15 - m * 0.40
+    let cx = sin(a) * ring * 1.45
+    let cy = cos(a) * ring * 0.82
+    let r = 0.16 + Note.z * 0.12
 
     Point
     | Spawn { n: 9, by: Sm(0.86) }
     | Spawn { n: 46, by: Sm(1.0) }
-        | Xa(sin(Stroke * 6.28318) * r * dir)
+        | Xa(sin(Stroke * 6.28318) * r)
         | Ya(cos(Stroke * 6.28318) * r * 2.0)
     | Jitter(0.0009)
     | Gradient
-    | Warm(0.42 - 0.10 * m)
+    | Warm(0.42 - 0.09 * m)
     | Xf(cx)
     | Overlay [
-        Yf(cy * 0.17),
-        Mirror(X) | Yf(0.30 + cy * 0.17),
-        Mirror(X) | Yf(0.0 - 0.30 - cy * 0.17),
+        Yf(cy),
+        Mirror(X) | Yf(cy),
       ]
-    | Tint(1.0, 0.98, 0.94, 0.42)
+    | Tint(1.0, 0.98, 0.94, 0.80)
 }
 
--- blip: an arc swung through depth — the glass note is the one voice
--- that moves TOWARD you, so it rides the rim light
+-- blip: lapis tracery — an arc swung between the rings, riding the
+-- rim light because it is the voice that moves toward you
 draw orbital = {
-    let k = Wrap(Count, 7.0)
-    let m = Wrap(floor(Count / 7.0), 4.0)
+    let a = Count * 1.2566
+    let m = Wrap(floor(Count / 5.0), 4.0)
     let dir = 0.0 - 1.0 + 2.0 * floor(m / 2.0)
+    let ring = 0.42 + m * 0.11
     let depth = 0.0 - 0.20 - m * 0.50
-    let ax = 0.0 - 1.10 + k * 0.36
-    let ay = 0.0 - 0.26 + m * 0.34
-    let sweep = 0.55 + Note.z * 0.55
+    let ax = sin(a) * ring * 1.45
+    let ay = cos(a) * ring * 0.82
+    let sweep = 0.40 + Note.z * 0.45
 
     Point
     | Spawn { n: 190, by: Sm(0.9990) }
@@ -96,24 +106,24 @@ draw orbital = {
     | Cool(0.20 + 0.09 * m)
     | Xf(ax)
     | Overlay [
-        Yf(ay * 0.17),
-        Mirror(X) | Yf(0.30 + ay * 0.17),
-        Mirror(X) | Yf(0.0 - 0.30 - ay * 0.17),
+        Yf(ay),
+        Mirror(X) | Yf(ay),
       ]
     | Tint(0.94, 0.97, 1.0, 0.30)
 }
 
--- snare: a spiral that unrolls at the moment of the throw — Stagger
--- lays the coil in order, so the hit draws itself outward
+-- snare: a ruby rosette — the spiral unrolls at one of eight petal
+-- stations; Stagger lays the coil in order, so the hit draws itself
 draw coil = {
-    let k = Wrap(Count, 11.0)
-    let m = Wrap(floor(Count / 11.0), 4.0)
+    let a = Wrap(Count, 8.0) * 0.7854
+    let m = Wrap(floor(Count / 8.0), 3.0)
     let dir = 0.0 - 1.0 + 2.0 * floor(m / 2.0)
+    let ring = 0.52 + m * 0.10
     let depth = 0.0 - 0.10 - m * 0.46
-    let sx = 0.0 - 1.30 + k * 0.26
-    let sy = 0.0 - 1.30 + m * 0.18
+    let sx = sin(a) * ring * 1.45
+    let sy = cos(a) * ring * 0.82
     let turns = 2.6 + Note.z * 1.6
-    let reach = (0.12 + Note.z * 0.16) * (1.5 - 0.22 * m)
+    let reach = (0.10 + Note.z * 0.14) * (1.4 - 0.20 * m)
 
     Point
     | Spawn { n: 620, by: Sm(0.9990) }
@@ -125,21 +135,22 @@ draw coil = {
     | Gradient
     | Xf(sx)
     | Overlay [
-        Yf(sy * 0.20 - 0.92),
-        Mirror(X) | Yf(0.0 - 0.52 + sy * 0.20),
-        Mirror(X) | Yf(0.0 - 1.18 - sy * 0.20),
+        Yf(sy),
+        Mirror(X) | Yf(sy),
       ]
     | Tint(1.0, 0.97, 0.96, 0.45)
 }
 
--- hats: flecks thrown off the roll, scattered through the volume
+-- hats: pale gold light scattered through the outer halo — the angle
+-- steps by the golden angle, so the halo fills like a seed head
 draw fleck = {
-    let k = Wrap(Count, 23.0)
-    let m = Wrap(floor(Count / 23.0), 7.0)
-    let dir = 0.0 - 1.0 + 2.0 * floor(m / 4.0)
+    let a = Count * 2.39996
+    let m = Wrap(floor(Count / 9.0), 5.0)
+    let dir = 0.0 - 1.0 + 2.0 * floor(m / 3.0)
+    let ring = 0.60 + m * 0.075
     let depth = 0.0 - 0.05 - m * 0.30
-    let px = 0.0 - 1.34 + k * 0.122
-    let py = 0.0 - 0.36 + m * 0.115
+    let px = sin(a) * ring * 1.45
+    let py = cos(a) * ring * 0.82
     let r = 0.012 + Note.z * 0.010
 
     Point
@@ -152,36 +163,32 @@ draw fleck = {
     | Warm(0.50 - 0.06 * m)
     | Xf(px)
     | Overlay [
-        Yf(py * 0.17),
-        Mirror(X) | Yf(0.30 + py * 0.17),
-        Mirror(X) | Yf(0.0 - 0.30 - py * 0.17),
+        Yf(py),
+        Mirror(X) | Yf(py),
       ]
     | Tint(1.0, 0.94, 0.92, 0.40)
 }
 
--- clap: a tally stroke — one straight cut across the felt
+-- clap: a violet mullion — a spoke cutting outward from the eye,
+-- running from the inner ring to the halo along its own angle
 draw slash = {
-    let k = Wrap(Count, 5.0)
-    let m = Wrap(floor(Count / 5.0), 4.0)
-    let dir = 0.0 - 1.0 + 2.0 * (k - 2.0 * floor(k / 2.0))
+    let k = Wrap(Count, 6.0)
+    let a = k * 1.0472 + 0.5236
+    let m = Wrap(floor(Count / 6.0), 4.0)
     let depth = 0.0 - 0.12 - m * 0.40
-    let px = 0.0 - 1.15 + k * 0.55
-    let py = 0.0 - 0.30 + m * 0.22
-    let len = 0.45 + Note.z * 0.40
+    let len = 0.30 + Note.z * 0.25
 
     Point
     | Spawn { n: 240, by: Sm(0.9992) }
-        | Xa((Stroke - 0.5) * len * 2.0 * dir)
-        | Ya((Stroke - 0.5) * len * 0.7)
+        | Xa(sin(a) * (0.30 + Stroke * len) * 1.45)
+        | Ya(cos(a) * (0.30 + Stroke * len) * 0.82)
         | Za(depth)
     | Jitter(0.0008)
     | Gradient
     | Cool(0.16 + 0.07 * m)
-    | Xf(px)
     | Overlay [
-        Yf(py * 0.17),
-        Mirror(X) | Yf(0.30 + py * 0.17),
-        Mirror(X) | Yf(0.0 - 0.30 - py * 0.17),
+        Yf(0.0),
+        Mirror(X) | Yf(0.0),
       ]
     | Tint(0.96, 0.94, 1.0, 0.36)
 }
@@ -214,27 +221,32 @@ bd = {
         ks_mix: 0.25
     }
     | Gm 1
-    -- one hue family, dark to light: charcoal pressed to raw umber —
-    -- thick is dark and neutral, thin lets the felt show through
-    | Color [#f7f4ef, #ddd3c4, #b3a48c, #7d6c52, #4c3e2b, #221a10]
+    -- SUNSET: many colors, ordered as one temperature ramp — pale
+    -- yellow through hard orange and rose down to deep purple. The
+    -- gradient runs across every roundel, so each kick wears the whole
+    -- sky instead of picking one pane.
+    | Color [#fff9c4, #ffd54f, #ff9e2e, #e05270, #8e3fa8, #451d6b]
     | wgsl {
         // THE PRESS: a pip lands narrow and heavy, spreads under the
         // weight, and thins where it came away.
-        Sm 0.013;
+        // bigger and brighter than the paper version: on glass the
+        // kick has to burn through, not sit on the surface
+        Sm 0.034;
         Smx "0.32";
         Smy "2.2";
         Ry "Clock * 0.010";
         SwingZ "0.72 - 1.44 * (note_event - 2.0 * floor(note_event / 2.0))";
         Shade key;
         Vm 0.0; Die 0.77;
-        Bm "(1.25 + Rand(3) * 0.8) * (0.90 + 1.40 * exp(0.0 - Time * 6.0))";
+        Bm "(2.6 + Rand(3) * 0.9) * (0.90 + 2.20 * exp(0.0 - Time * 6.0))";
         Bm Slew(0.55, 2.2);
 
-        // thick is dark and neutral, thin is warm
+        // the palette carries the color now, so the press curve stays
+        // neutral: fresh marks flare bright, loaded ones settle dark
         let press = exp(0.0 - Time * 4.0);
-        red   = red   * (1.55 - 0.55 * press);
-        green = green * (1.22 - 0.32 * press);
-        blue  = blue  * (0.90 + 0.20 * press);
+        red   = red   * (1.20 - 0.20 * press);
+        green = green * (1.20 - 0.20 * press);
+        blue  = blue  * (1.20 - 0.20 * press);
     }
     | pip
     | wet
@@ -243,9 +255,8 @@ bd = {
 
 sn = {
     Snare 909 | Gm 0.7
-    -- cadmium: orange at the moment of contact, toward alizarin as it
-    -- spreads and thins into the ground
-    | Color [#fff3ec, #ffd2b8, #f79c6a, #d95f2b, #9c3a12, #521c06]
+    -- ruby glass: rose at the surface, garnet where it thickens
+    | Color [#fff0f0, #ffc4c4, #f28080, #cc4444, #8a1f1f, #470c0c]
     | wgsl {
         // THE STRIKE FLARES: it arrives longer and thicker and settles
         // back inside a few frames — Time is the mark's own age.
@@ -272,8 +283,8 @@ sn = {
 
 hh = {
     HiHat 909 | Gm 0.25 | Pa 1/4
-    -- spark chaff: dense gold at the head, cooling through green
-    | Color [#fdfbe8, #f2e79a, #d9c44e, #99a13c, #4f7340, #1e3d2a]
+    -- pale gold light: the halo's small panes, whitest where freshest
+    | Color [#fffdf4, #fdf3cc, #f2e19a, #d9bf62, #a68a33, #594a14]
     | wgsl {
         // A BURST: big for an instant, then it holds as a speck. On a
         // white ground brightness buys density, not glow.
@@ -298,7 +309,7 @@ hh = {
 
 oh = {
     OpenHat 909 | Gm 0.35 | Pa 1/4
-    | Color [#fdfbe8, #f2e79a, #d9c44e, #99a13c, #4f7340, #1e3d2a]
+    | Color [#fffdf4, #fdf3cc, #f2e19a, #d9bf62, #a68a33, #594a14]
     | wgsl {
         // the open hat is the same chaff, wider and slower to settle
         Sm "(0.85 + Rand(31) * 0.55) * (0.9 + 1.2 * exp(0.0 - Time * 4.0))";
@@ -345,7 +356,7 @@ cp = {
 }
 
 bl = {
-    Tom glass | Fm 2 | Gm 0.4 | Pa -1/4
+    Tom glass | Fm 2 | Gm 0.4
     -- cobalt through ultramarine: a ramp of HOW MUCH PAINT, wash to
     -- load — the lit shoulder is written darkest because pigment
     -- subtracts
@@ -377,9 +388,9 @@ bl = {
 
 rs = {
     Rimshot 909 | Gm 0.45 | Pa -1/3
-    | Color [#fff3ec, #ffd2b8, #f79c6a, #d95f2b, #9c3a12, #521c06]
+    | Color [#fff0f0, #ffc4c4, #f28080, #cc4444, #8a1f1f, #470c0c]
     | wgsl {
-        // the rim click is a dry speck of the snare's cadmium
+        // the rim click is a small pane of the snare's ruby
         Sm "(0.45 + Rand(51) * 0.30) * (0.9 + 1.0 * exp(0.0 - Time * 6.0))";
         Smy "0.9 + 0.3 * Rand(52)";
         Smx "0.9 + 0.3 * Rand(53)";
@@ -442,18 +453,22 @@ blip_dice = {
         x,
         x,
         x,
-        bl,
-        bl | Fm 9/8,
+        x, 
+        bl | Fm 3/4,
+        bl | Fm 5/6,
         bl | Fm 5/4,
-    --    bl | Fm 3/2 | Wavefolder(0.25, 6, 2, 0.4),
-     --   bl | Fm 5/3 | Lm 1/2 | Repeat 2
+        bl | Fm 4/3,
     ] 
-| Overlay [
-    {1/1, 3, 1, 1},
-    {1/1, 0, 1, -1},
-    {1/2, -4, 1, 1/2},
-    {1/2, 0, 1, -1/2},
-]
+    | Overlay [
+        -- {3, 3, 1/7, 1},
+        -- {3, 0, 1/7, -1},
+        -- {5/3, 3, 1/14, 1},
+        -- {4/3, 0, 1/14, -1},
+        -- {5/4, 3, 1/14, 1},
+        -- {9/8, 0, 1/14, -1},
+        {1/2, -1, 1, 1/2},
+        {1/2, 0, 1, -1/2},
+    ]
     | Repeat 16
 }
 
