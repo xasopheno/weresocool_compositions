@@ -1,4 +1,4 @@
-{ f: 65, l: 1/10, g: 1, p: 0, w: 1.6, h: 0.9, background_color: #05060c }
+{ f: 65, l: 1/10, g: 1, p: 0, w: 1.6, h: 0.9, background_color: #05060c, rand_seed: 42 }
 
 -- THE GAME, PLAYED IN A ROSE WINDOW.
 --
@@ -15,17 +15,18 @@
 -- relief. One harmony across all five voices, the old window-makers'
 -- chord: sunset glass, lapis, ruby, pale gold light, violet.
 --
---   kick  → PIPS: sunset roundels — yellow through orange to purple
+--   kick  → PIPS: neon roundels — magenta and ultraviolet on black
 --   blip  → ARCS: lapis tracery sweeping between rings
---   snare → COILS: ruby rosettes that unroll where the throw lands
+--   snare → COILS: ruby spirals that unroll where the rolls land
 --   hats  → FLECKS: pale gold light scattered through the outer halo
---   clap  → SPOKES: violet mullions cutting outward from the eye
+--   clap  → PENTAGONS: the backbeat as molten five-sided shards,
+--           a different pentagon every hit, white-hot to ember
 --
 -- Sun through glass: a warm gold key high and left, moonlight rim from
 -- behind the window, deep indigo ambient for the stone.
-light key = { from: (-1.2, 1.1, 0.6), color: #ffd9a0, gain: 1.0 }
-light rim = { from: (0.9, -0.3, -1.5), color: #8fb8ff, gain: 0.70 }
-light air = { ambient, color: #1c2440, gain: 0.60 }
+light key = { from: (-1.2, 1.1, 0.6), color: #ffd9a0, gain: 1.30 }
+light rim = { from: (0.9, -0.3, -1.5), color: #8fb8ff, gain: 0.90 }
+light air = { ambient, color: #2a3358, gain: 0.85 }
 
 -- ── THE WET LAYER ───────────────────────────────────────────────────
 -- Marks accumulate here and only here. `Lay` keeps the paint in the
@@ -47,6 +48,62 @@ warp canvas = {
     Scene
     | Paint(glass)
     | Raking { from: Sw, light: key, depth: 14.0 }
+    -- ── THE NAVE ────────────────────────────────────────────────────
+    -- The dark under the window is a room, and the room is ALIVE but
+    -- never announces it. No beams, no stripes — three whispers, all
+    -- masked by `state.w` so they live on bare ground and recede as
+    -- the game fills the glass:
+    --
+    --   the CANDLE breathes on two incommensurate cycles — the swell
+    --   never repeats — and the flame SWAYS: the halo's centre
+    --   wanders on slow noise, like air moving in a closed room.
+    --   Two-tone: amber below the centre line, moon-blue above.
+    --
+    --   the DUST is almost never there: a handful of motes drifting
+    --   up through the dark, each on its own speed, and a slow cloud
+    --   term lets them catch light for a while and then lose it.
+    --
+    --   the VIGNETTE settles the corners into stone.
+    | Raw `let _dx = (uv.x - 0.5) * 1.78;
+           let _dy = uv.y - 0.5;
+           let _t = Time * tweak(0.021);
+           let _x0 = k_vnoise(vec2<f32>(floor(_t), 17.0));
+           let _x1 = k_vnoise(vec2<f32>(floor(_t) + 1.0, 17.0));
+           let _xf = fract(_t);
+           let _wx = mix(_x0, _x1, _xf * _xf * (3.0 - 2.0 * _xf)) - 0.5;
+           let _ty = Time * tweak(0.021) * 0.77;
+           let _y0 = k_vnoise(vec2<f32>(floor(_ty), 29.0));
+           let _y1 = k_vnoise(vec2<f32>(floor(_ty) + 1.0, 29.0));
+           let _yf = fract(_ty);
+           let _wy = mix(_y0, _y1, _yf * _yf * (3.0 - 2.0 * _yf)) - 0.5;
+           let _hx = _dx - _wx * tweak(1.10);
+           let _hy = _dy - _wy * 0.55;
+           let _d = sqrt(_hx * _hx + _hy * _hy);
+           let _dv = sqrt(_dx * _dx + _dy * _dy);
+           let _breath = 0.72 + 0.16 * sin(Time * tweak(0.23)) + 0.12 * sin(Time * 0.071 + 1.7);
+           let _halo = exp(0.0 - _d * tweak(3.2)) * _breath;
+           let _warmth = clamp(0.5 - _dy * 1.4, 0.0, 1.0);
+           let _glowc = mix(vec3<f32>(0.055, 0.080, 0.150), vec3<f32>(0.160, 0.105, 0.048), _warmth);
+           let _t2 = Time * tweak(0.034);
+           let _c0 = k_vnoise(vec2<f32>(floor(_t2), 3.0));
+           let _c1 = k_vnoise(vec2<f32>(floor(_t2) + 1.0, 3.0));
+           let _cf = fract(_t2);
+           let _cloud = mix(_c0, _c1, _cf * _cf * (3.0 - 2.0 * _cf));
+           let _lit = smoothstep(0.45, 0.85, _cloud);
+           let _p = uv * vec2<f32>(48.0, 27.0);
+           let _id = floor(_p);
+           let _f = fract(_p);
+           let _n = k_vnoise(_id);
+           let _m = k_vnoise(_id + 7.0);
+           let _rise = fract(Time * tweak(0.014) * (0.5 + _n) + _m);
+           let _mx = _f.x - (0.2 + 0.6 * _m);
+           let _my = _f.y - _rise;
+           let _mr = sqrt(_mx * _mx + _my * _my);
+           let _mote = (1.0 - smoothstep(0.015, 0.06, _mr)) * step(0.93, _n) * _lit;
+           let _grain = 0.85 + 0.15 * k_vnoise(floor(uv * 90.0) + floor(Time * 0.5));
+           let _bare = 1.0 - clamp(state.w * tweak(1.6), 0.0, 1.0);
+           let _vig = 1.0 - 0.20 * clamp(_dv * 1.15 - 0.45, 0.0, 1.0);
+           color = vec4<f32>(color.rgb * _vig + (_glowc * _halo * _grain + vec3<f32>(0.055, 0.045, 0.030) * _mote) * _bare, color.a);`
 }
 
 -- ── THE SHAPES ──────────────────────────────────────────────────────
@@ -112,8 +169,9 @@ draw orbital = {
     | Tint(0.94, 0.97, 1.0, 0.30)
 }
 
--- snare: a ruby rosette — the spiral unrolls at one of eight petal
--- stations; Stagger lays the coil in order, so the hit draws itself
+-- snare rolls: the ruby SPIRAL, back where it belongs — it unrolls at
+-- one of eight petal stations; Stagger lays the coil in order, so the
+-- hit draws itself outward
 draw coil = {
     let a = Wrap(Count, 8.0) * 0.7854
     let m = Wrap(floor(Count / 8.0), 3.0)
@@ -139,6 +197,47 @@ draw coil = {
         Mirror(X) | Yf(sy),
       ]
     | Tint(1.0, 0.97, 0.96, 0.45)
+}
+
+-- clap — THE BACKBEAT, the hit the ear calls the snare: a molten 2D
+-- PENTAGON, and a different pentagon every time. The five-sided
+-- outline comes from the polygon radius law (r = cos(pi/5) / cos of
+-- the angle within each edge segment); the note's index seeds a
+-- rotation, a squash, and a per-vertex wobble, so no two backbeats
+-- draw the same figure. Six stations of its own, inside the spiral
+-- ring, so it never lands on top of the rolls.
+draw shard = {
+    let a = Wrap(Count, 6.0) * 1.0472 + 0.5236
+    let m = Wrap(floor(Count / 6.0), 3.0)
+    let ring = 0.44 + m * 0.09
+    let depth = 0.0 - 0.12 - m * 0.40
+    let sx = sin(a) * ring * 1.45
+    let sy = cos(a) * ring * 0.82
+    let rot = Count * 2.3999
+    let sq = sin(Count * 12.9898) * 43758.5453
+    let squash = 0.72 + 0.55 * (sq - floor(sq))
+    let size = (0.15 + Note.z * 0.16) * (1.35 - 0.18 * m)
+    let th = Stroke * 6.28318
+    let seg = Stroke * 5.0
+    let f = seg - floor(seg)
+    let v = floor(seg)
+    let wob = sin((v + Count) * 7.13)
+    let rad = 0.809 / cos((f - 0.5) * 1.2566) * (1.0 + 0.16 * wob)
+
+    Point
+    | Spawn { n: 520, by: Sm(0.9990) }
+        | Xa(sin(th + rot) * rad * size)
+        | Ya(cos(th + rot) * rad * size * 2.0 * squash)
+        | Za(depth)
+    | Jitter(0.0007)
+    | Stagger { over: 0.60 }
+    | Gradient
+    | Xf(sx)
+    | Overlay [
+        Yf(sy),
+        Mirror(X) | Yf(sy),
+      ]
+    | Tint(1.0, 0.97, 0.96, 0.60)
 }
 
 -- hats: pale gold light scattered through the outer halo — the angle
@@ -169,30 +268,6 @@ draw fleck = {
     | Tint(1.0, 0.94, 0.92, 0.40)
 }
 
--- clap: a violet mullion — a spoke cutting outward from the eye,
--- running from the inner ring to the halo along its own angle
-draw slash = {
-    let k = Wrap(Count, 6.0)
-    let a = k * 1.0472 + 0.5236
-    let m = Wrap(floor(Count / 6.0), 4.0)
-    let depth = 0.0 - 0.12 - m * 0.40
-    let len = 0.30 + Note.z * 0.25
-
-    Point
-    | Spawn { n: 240, by: Sm(0.9992) }
-        | Xa(sin(a) * (0.30 + Stroke * len) * 1.45)
-        | Ya(cos(a) * (0.30 + Stroke * len) * 0.82)
-        | Za(depth)
-    | Jitter(0.0008)
-    | Gradient
-    | Cool(0.16 + 0.07 * m)
-    | Overlay [
-        Yf(0.0),
-        Mirror(X) | Yf(0.0),
-      ]
-    | Tint(0.96, 0.94, 1.0, 0.36)
-}
-
 x = { Silence 1 }
 
 bd = {
@@ -221,11 +296,11 @@ bd = {
         ks_mix: 0.25
     }
     | Gm 1
-    -- SUNSET: many colors, ordered as one temperature ramp — pale
-    -- yellow through hard orange and rose down to deep purple. The
-    -- gradient runs across every roundel, so each kick wears the whole
-    -- sky instead of picking one pane.
-    | Color [#fff9c4, #ffd54f, #ff9e2e, #e05270, #8e3fa8, #451d6b]
+    | #bd
+    -- NEON ON BLACK: pale lilac through hot magenta, ultraviolet and
+    -- electric blue, ending in ink — no orange, no green. Where the
+    -- pane loads heaviest the roundel goes straight to black.
+    | Color [#fbe9ff, #ff2fd6, #8f45ff, #2f7bff, #14092e, #000000]
     | wgsl {
         // THE PRESS: a pip lands narrow and heavy, spreads under the
         // weight, and thins where it came away.
@@ -255,6 +330,7 @@ bd = {
 
 sn = {
     Snare 909 | Gm 0.7
+    | #sn
     -- ruby glass: rose at the surface, garnet where it thickens
     | Color [#fff0f0, #ffc4c4, #f28080, #cc4444, #8a1f1f, #470c0c]
     | wgsl {
@@ -283,6 +359,7 @@ sn = {
 
 hh = {
     HiHat 909 | Gm 0.25 | Pa 1/4
+    | #hh
     -- pale gold light: the halo's small panes, whitest where freshest
     | Color [#fffdf4, #fdf3cc, #f2e19a, #d9bf62, #a68a33, #594a14]
     | wgsl {
@@ -309,6 +386,7 @@ hh = {
 
 oh = {
     OpenHat 909 | Gm 0.35 | Pa 1/4
+    | #hh
     | Color [#fffdf4, #fdf3cc, #f2e19a, #d9bf62, #a68a33, #594a14]
     | wgsl {
         // the open hat is the same chaff, wider and slower to settle
@@ -332,31 +410,36 @@ oh = {
 
 cp = {
     Clap 909 | Gm 0.6
-    -- the tally: violet, loaded to near-black where the stroke bites
-    | Color [#f6f2fa, #d5c4e8, #a888cc, #7355a4, #47316f, #251642]
+    | #cp
+    -- MOLTEN: the backbeat is the hot voice — white-hot at the strike,
+    -- through furnace orange, down to firebrick and a dark ember heart
+    | Color [#fff8e8, #ffd24a, #ff8c1a, #ef4d0a, #b22222, #4a0d04]
     | wgsl {
-        // one fast cut — thin, hard, over in a moment
-        Sm "0.0080 * (1.0 + 1.80 * exp(0.0 - Time * 4.0))";
-        Smx "0.16";
-        Smy "2.4";
+        // THE STRIKE FLARES: the backbeat arrives bigger and brighter
+        // and settles inside a few frames — Time is the mark's own age
+        Sm "0.0090 * (1.0 + 2.20 * exp(0.0 - Time * 3.0))";
+        Smx "0.20 * (1.0 + 1.40 * exp(0.0 - Time * 3.5))";
+        Smy "1.8 * (1.0 + 1.10 * exp(0.0 - Time * 3.0))";
         Ry "Clock * 0.010";
         SwingZ "0.60 - 1.20 * (note_event - 2.0 * floor(note_event / 2.0))";
         Vm 0.0; Die 0.77;
-        Bm "(1.10 + Rand(41) * 0.70) * (0.95 + 3.50 * exp(0.0 - Time * 3.5))";
-        Bm Slew(0.45, 2.4);
+        Bm "(1.35 + Rand(41) * 0.85) * (0.95 + 5.00 * exp(0.0 - Time * 3.2))";
+        Bm Slew(0.42, 2.6);
 
-        let bite = exp(0.0 - Time * 3.8);
-        red   = red   * (0.85 + 0.35 * bite);
-        green = green * (0.75 + 0.30 * bite);
-        blue  = blue  * (1.00 + 0.25 * bite);
+        // furnace arc: orange at contact, sinking toward ember red
+        let strike = exp(0.0 - Time * 3.4);
+        red   = red   * (1.00 + 0.50 * strike);
+        green = green * (0.55 + 1.15 * strike);
+        blue  = blue  * (0.70 + 0.45 * (1.0 - strike));
     }
-    | slash
+    | shard
     | wet
     | canvas
 }
 
 bl = {
     Tom glass | Fm 2 | Gm 0.4
+    | #bl
     -- cobalt through ultramarine: a ramp of HOW MUCH PAINT, wash to
     -- load — the lit shoulder is written darkest because pigment
     -- subtracts
@@ -388,6 +471,7 @@ bl = {
 
 rs = {
     Rimshot 909 | Gm 0.45 | Pa -1/3
+    | #sn
     | Color [#fff0f0, #ffc4c4, #f28080, #cc4444, #8a1f1f, #470c0c]
     | wgsl {
         // the rim click is a small pane of the snare's ruby
@@ -494,4 +578,4 @@ main = {
        -- Overlay [bd | Lm 6, cp | Lm 6, oh | Lm 6]
     ]
     | Repeat 3
-} -> [bd, sn, hh, bl]
+} -> [bd, sn, hh, cp, bl]
