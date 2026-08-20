@@ -1,81 +1,907 @@
-{ f: 65, l: 3/20, g: 1, p: 0 }
+{ f: 65, l: 3/20, g: 1, p: 0, w: 1.6, h: 0.9, background_color: #01060a, rand_seed: 19 }
 
--- Gahu (Ewe, Ghana/Togo) as a spiral of loop lengths.
--- The gankogui bell plays the 16-pulse gahu key pattern
--- (strokes on 0, 3, 6, 10, 12). Against it:
---   kaganu   16-pulse offbeat pairs        x3
---   kidi     12-pulse response phrase      x4   (3 against 4)
---   sogo     24-pulse answer               x2
---   kick     24-pulse anchor               x2
--- Everything resolves only every 48 pulses — layers drift apart and
--- lock back together, JD Beck by way of the Volta region.
+-- ════════════════════════════════════════════════════════════════════════
+-- GAHU SPIRAL — the forest at night, built by the drums.
 --
--- Play: weresocool play gahu_spiral.socool
+-- Same machinery as the nocturne: nothing here glows. One cold sky, and
+-- every note an opaque body standing in front of it (`over` chains ending
+-- in `| Opaque`, so coverage comes from geometry, not brightness — the
+-- only way a dark shape can hide light in an additive engine).
+--
+-- But the city is gone. The bodies here GREW, and a jungle has no
+-- skyline: it has a floor, a canopy, and everything between them
+-- reaching for the one gap in the leaves.
+--
+-- THE LAW: ACROSS IS WHEN, UP IS WHO.
+--
+-- Every voice in a Gahu ensemble plays ONE pitch and sits at ONE pan, so
+-- neither pitch nor pan can place anything. What every stroke does have
+-- is a POSITION IN THE BAR, and that is the x axis: the bell's sixteen
+-- strokes are 2.4 seconds, and a mark lands at
+--
+--     x = (t / 2.4 mod 1) across the frame
+--
+-- so the frame is read left to right as one turn of the bell, and every
+-- voice writes into the same ruler. A stroke is a column of light.
+--
+-- The parts are not all sixteen long — kidi is twelve, sogo and the
+-- anchor are twenty-four — so against that ruler they DRIFT, a little
+-- further right or left each turn, and take whole cycles to come back.
+-- That drift is the spiral in the title, and it is now the thing you
+-- watch: where two voices line up, two columns light at once.
+--
+-- y is which voice, and it is the forest's own order — fireflies in the
+-- air, flowers under them, vines hanging through, trees rooted in the
+-- water, blossoms and litter on the bank. So the picture is a jungle read
+-- top to bottom and a bar read left to right at the same time.
+--
+--   anchor (kick) → the TRUNKS. Each kick raises one, out of the stream,
+--                   tapered, leaning, buttressed, forking near the top.
+--   sogo   (low)  → FLOWERS: a five-petal night bloom that sweeps open
+--                   from its heart on every stroke of the low drum.
+--   kidi   (mid)  → the VINES hanging out of the canopy.
+--   kaganu (high) → BLOSSOMS: the same rose at a fifth the size, low on
+--                   the bank, four to a stroke.
+--   axatse (shk)  → THE BANK: leaf litter and low scrub along the water,
+--                   piling up stroke by stroke. It is the only voice on
+--                   every stroke, and ground is the only thing in a forest
+--                   that is continuous.
+--   bell   (gank) → FIREFLIES. The bell is the clock the whole ensemble
+--                   hears; the fireflies are the only marks that drift.
+--   bass          → THE STREAM in the foreground. Its pitch is how far
+--                   out the water lies, so the bassline is the current.
+--
+-- Gain is the only other thing that varies (`Gm 0.5`…`Gm 1`), so gain is
+-- weight everywhere: how tall the tree, how wide the flower, how much
+-- litter. Nothing is keyed to a field that does not move.
+--
+-- AUDIO UNCHANGED — every added op is Color / wgsl / draw / warp.
+-- ════════════════════════════════════════════════════════════════════════
+
+-- THE LIGHT IS THE NIGHT THIS PIECE ALREADY HAS.
+--
+--   moon    the one hard source, high and to the right, cold. It is the
+--           only thing in the frame that is far away.
+--   canopy  the ambient: filtered green. A shadow in a jungle is not a
+--           darkness, it is the colour of the leaf that made it.
+--   floor   from BELOW — rotting wood and fungus, faint, green-cyan. It
+--           reaches the near plane and nothing else, which is what makes
+--           it read as ground and not as a second moon.
+--
+-- The far planes say so by name: blossoms, vines, flowers and litter take
+-- `Shade moon` — at that distance nothing else gets to them. The trunks
+-- and the stream say nothing and so take every light, the floor among them.
+light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 0.94 }
+light canopy = { ambient, color: #16402c, gain: 0.86 }
+light floor  = { from: (0.0, -1, 0.55), color: #46ffb4, gain: 0.32 }
+
+-- ── THE SKY UNDER THE CANOPY ────────────────────────────────────────────
+-- The only emitter in the piece. It is a sky you can barely see: the moon
+-- is up there, and the canopy is between. Two octaves of slow leaf noise
+-- are the MASK — where the leaves are thin the light gets through, and
+-- because the mask also breaks the shafts, the rays move when the leaves
+-- do and not on a clock of their own. Flares on every kick.
+layer {
+    Raw {
+        // the moon, high and to the right
+        let a = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let dm = length(a);
+        let flare = 1.0 + hit(0u) * 0.30 + hit(5u) * 0.10;
+        let disc = exp(0.0 - dm * dm * 820.0);
+        let halo = exp(0.0 - dm * 3.10) * flare;
+
+        // THE CANOPY. Not drawn — a mask. It thins toward the bottom of
+        // the frame because below the branches there is nothing to block.
+        let d1 = k_vnoise(uv * vec2<f32>(9.0, 5.0) + vec2<f32>(Time * 0.013, Time * 0.007));
+        let d2 = k_vnoise(uv * vec2<f32>(23.0, 13.0) + vec2<f32>(Time * 0.021, 0.0 - Time * 0.011));
+        let leafy = clamp(d1 * 0.66 + d2 * 0.34, 0.0, 1.0);
+        let cover = mix(1.0, smoothstep(0.16, 0.74, leafy), smoothstep(0.66, 0.14, uv.y));
+
+        // SHAFTS — the same noise, so the light moves when the leaves do
+        let ang = atan2(a.y, a.x);
+        let ray = 0.5 + 0.5 * sin(ang * 17.0 + Time * 0.05 + leafy * 3.4);
+        let shaft = pow(ray, 5.0) * exp(0.0 - dm * 1.35) * smoothstep(0.02, 0.58, uv.y);
+
+        let silver = vec3<f32>(0.80, 0.88, 1.00);
+        let jade   = vec3<f32>(0.0060, 0.0270, 0.0180);
+        let ink    = vec3<f32>(0.0016, 0.0052, 0.0040);
+
+        // a forest has a TOP and a BOTTOM: cold and open above, black and
+        // close below. That vertical range is most of what makes it read
+        // as under something rather than out in the open.
+        let up = clamp(1.0 - uv.y * 1.10, 0.0, 1.0);
+        var c = mix(ink, jade, clamp(up * 1.25, 0.0, 1.0));
+        c = c + silver * halo * 0.115 * cover;
+        c = c + silver * disc * 1.70;
+        c = c + vec3<f32>(0.40, 0.62, 0.80) * shaft * 0.085 * cover;
+
+        // MIST, lying on the water and breathing
+        let mp = (uv.y - 0.68) * 4.2;
+        c = c + vec3<f32>(0.013, 0.024, 0.030) * exp(0.0 - mp * mp)
+              * (0.55 + 0.45 * sin(Time * 0.09 + uv.x * 3.1));
+
+        // and the floor's own light, thrown back up out of the leaf litter
+        let fl = clamp((uv.y - 0.80) * 4.4, 0.0, 1.0);
+        c = c + vec3<f32>(0.014, 0.058, 0.034) * fl * fl
+              * (0.70 + 0.30 * sin(Time * 0.23 + uv.x * 5.0));
+
+        // THE KICK IN THE GROUND. A thump of the floor's own light comes
+        // up out of the litter on every anchor stroke and is gone before
+        // the next — the lowest thing in the picture answering the lowest
+        // thing in the drums.
+        c = c + vec3<f32>(0.024, 0.092, 0.058) * hit(0u) * hit(0u)
+              * smoothstep(0.30, 1.00, uv.y);
+        // THE BELL IN THE AIR. The gankogui is the clock the whole
+        // ensemble hears, so it gets the whole frame — a cold lift, very
+        // small, on every stroke of the timeline.
+        c = c + vec3<f32>(0.013, 0.019, 0.028) * hit(5u);
+        // and the kaganu/kidi interlock, read as a breath in the canopy
+        c = c + vec3<f32>(0.006, 0.013, 0.010) * (hit(3u) * 0.6 + hit(2u))
+              * smoothstep(0.85, 0.10, uv.y);
+
+        // the night deepens across the piece. The clock is the music's.
+        let deep = smoothstep(3.0, 30.0, Time);
+        c = c * mix(vec3<f32>(1.0), vec3<f32>(0.62, 0.80, 0.92), deep);
+
+        let dv = length(vec2<f32>((uv.x - 0.5) * 1.5, uv.y - 0.5));
+        c = c * (1.0 - 0.80 * clamp(dv - 0.16, 0.0, 1.0));
+        c = c * (1.0 - 0.07 * k_vnoise(uv * 220.0));
+        color = vec4<f32>(c, 1.0);
+    }
+}
+
+-- ── the planes, far to near (definition order IS depth order) ───────────
+
+-- FAR: the understory, dissolved. Distance is a colour here as much as a
+-- size: the far blossoms lose their colour to the mist long before they
+-- lose their shape.
+warp thicket over = {
+    Scene
+    | Blur 0.6
+    | Gain 0.62
+    | Opaque
+    | Raw {
+        let low = smoothstep(0.30, 0.88, uv.y);
+        let fog = vec3<f32>(0.10, 0.17, 0.21);
+        color = vec4<f32>(mix(color.rgb, fog * 0.80, 0.26 * (1.0 - low) + 0.08), color.a);
+    }
+}
+
+-- MIDDLE: the flowers. This is the nocturne's window trick with the
+-- windows taken out — procedural detail living INSIDE the silhouette,
+-- masked by the mark's own coverage. What a night flower has instead of
+-- windows is WATER: every petal in this forest is wet, and the moon
+-- finds the film before it finds the flower. The dew fires on the sogo
+-- hit, so the whole canopy glints on the low drum.
+warp blooms over = {
+    Scene
+    | Tint(0.62, 0.52, 0.66)
+    | Opaque
+    | Raw {
+        // a slow sheen crawling across the petals
+        let sheen = 0.5 + 0.5 * sin(uv.x * 5.4 + uv.y * 3.1 + Time * 0.24);
+        let band = pow(sheen, 6.0);
+        // and dew, which only glints where the sheen is on it
+        let cell = uv * vec2<f32>(150.0, 84.0);
+        let id = floor(cell);
+        let g = fract(cell) - vec2<f32>(0.5);
+        let n = k_vnoise(id);
+        let dew = (1.0 - smoothstep(0.06, 0.20, length(g))) * step(0.90, n);
+        let twk = (0.45 + 0.35 * sin(Time * 2.3 + n * 40.0)) + 0.45 * hit(1u);
+        var c = color.rgb;
+        c = c + vec3<f32>(0.30, 0.44, 0.52) * band * 0.30 * color.a;
+        c = c + vec3<f32>(0.75, 0.92, 1.00) * dew * twk * band * 1.40 * color.a;
+        color = vec4<f32>(c, color.a);
+    }
+}
+
+-- NEAR: the trunks. Almost black, and the only bodies in the piece with a
+-- surface — bark, which is vertical because they are, and fungus, which
+-- is not: it sits in patches, breathes on its own hashed phase, and a
+-- kick sends a ring of it racing outward through the wood.
+warp boles over = {
+    Scene
+    | Tint(0.055, 0.075, 0.062)
+    | Opaque
+    | Raw {
+        let fib = k_vnoise(vec2<f32>(uv.x * 520.0, uv.y * 26.0));
+        let fib2 = k_vnoise(vec2<f32>(uv.x * 190.0, uv.y * 9.0));
+        let bark = 0.72 + 0.46 * (fib * 0.6 + fib2 * 0.4);
+
+        let pid = floor(uv * vec2<f32>(46.0, 26.0));
+        let pn = k_vnoise(pid);
+        let ring = sin(k_hit_dist(0u, uv) * 21.0 - hit_age(0u) * 7.0) * hit(0u);
+        let live = step(0.88 - max(ring, 0.0) * 0.24, pn);
+        let pf = fract(uv * vec2<f32>(46.0, 26.0)) - vec2<f32>(0.5);
+        let blot = (1.0 - smoothstep(0.10, 0.42, length(pf))) * live;
+        let puls = 0.45 + 0.55 * sin(Time * 1.4 + pn * 61.0);
+
+        var c = color.rgb * bark;
+        c = c + vec3<f32>(0.14, 0.62, 0.40) * blot * puls * (0.50 + 0.45 * hit(0u)) * color.a;
+        color = vec4<f32>(c, color.a);
+    }
+}
+
+-- The fireflies, in front of the trees. These are the one thing in the
+-- piece that is allowed to be a light instead of a body — no `Opaque`, so
+-- they add rather than cover, which is what a small lamp does.
+warp glow over = {
+    Scene
+    | Bloom(0.22, 1.30)
+    | Gain 1.10
+}
+
+-- The bank: the mat of litter between the water and the trees.
+warp bank over = {
+    Scene
+    | Gain 0.85
+    | Opaque
+    | Raw {
+        // the axatse is on every stroke, and the mat answers every one
+        color = vec4<f32>(color.rgb * (0.92 + 0.34 * hit(4u)), color.a);
+    }
+}
+
+-- FOREGROUND: the stream. Defined last, so it lies in front of everything
+-- — you are standing on the near bank. `Mix(boles, 0.0)` changes nothing
+-- on its own; it is there to REGISTER the reference, which binds the
+-- trunks' live image so the Raw below can sample it mirrored.
+warp water over = {
+    Scene
+    | Blur 0.25
+    | Tint(0.06, 0.12, 0.17)
+    | Opaque
+    | Mix(boles, 0.0)
+    | Raw {
+        // The forest, upside down, in the water — mirrored about the
+        // waterline and dragged by the current, times color.a, which
+        // Opaque set from the BASS's coverage. So the reflection exists
+        // only where the bass has laid water.
+        let h = 0.70;
+        if (uv.y > h) {
+            let d = uv.y - h;
+            let wob = sin(uv.y * 130.0 + Time * 1.05) * 0.0046
+                    + sin(uv.y * 47.0 - Time * 0.63) * 0.0033;
+            let src = clamp(vec2<f32>(uv.x + wob, h - d * 0.95), vec2<f32>(0.0), vec2<f32>(1.0));
+            let refl = textureSample(ref_tex, ref_samp, src).rgb;
+            let fade = exp(0.0 - d * 1.70);
+            // and the moon, broken on the surface
+            let cn = k_vnoise(vec2<f32>(uv.x * 34.0 + Time * 0.12, uv.y * 90.0 - Time * 0.28));
+            let cau = pow(clamp(cn, 0.0, 1.0), 6.0);
+            var c = color.rgb + refl * fade * 1.90 * color.a;
+            c = c + vec3<f32>(0.34, 0.52, 0.66) * cau * color.a * 0.90;
+            color = vec4<f32>(c, color.a);
+        }
+    }
+}
+
+-- ── THE FIGURES ─────────────────────────────────────────────────────────
+-- NOTE ON UNITS. Draw space is y-up; the waterline is y = 0.30, which the
+-- stream's Raw knows as uv.y = 0.70. Every figure is built with its base
+-- at the origin and then pinned: `Ya(seat - Note.y)` cancels the note's
+-- own pitch, which is CONSTANT in every drum voice here, so all of them
+-- land on the same ground line. `Xa(px)` does NOT cancel pan — the pan is
+-- allowed to nudge a figure sideways, so the stereo field is the width of
+-- the forest.
+--
+-- Every shape uses one Spawn and decomposes `Stroke` into two parameters:
+-- `floor(Stroke * N)` is which rib/band, `fract(Stroke * N)` is where
+-- along it. One expansion, two dimensions, no nesting.
+
+-- THE FRAME, MEASURED OFF THE RENDER (which is not what the reference
+-- says, and the render is the authority): a pinned mark at world y lands
+-- at screen fraction f = 0.90 - 0.36 * y, and at x it lands at
+-- f = 0.50 + 0.26 * x. So the visible window is
+--
+--     x in [-1.92, 1.92]      y in [-0.28, 2.50]
+--
+-- +y up, -z recedes and shrinks. The camera is NOT centred on the origin:
+-- the middle of the frame is y = 1.11, which is why the first pinned pass
+-- put the whole forest off the bottom edge. Every number below is derived
+-- from those two lines.
+-- Every figure below is built directly in those coordinates and then
+-- `Pin`ned, which makes the set ABSOLUTE — it stops riding the note's pan
+-- and pitch. That matters here more than in most pieces: a Gahu drum
+-- plays ONE pitch and sits at ONE pan, so riding them would pile every
+-- mark of a voice on a single point. Pinned, the note's INDEX is free to
+-- do the placing, which is the law this piece is built on.
+--
+-- The waterline is y = 0.556, which is uv.y = 0.70 — the same line the
+-- stream's Raw mirrors its reflection about.
+--
+-- And a stamp lives 12 s at most (the pool retires it), so no figure can
+-- outlast that: the forest is always the last twelve seconds of playing.
+-- A kick therefore plants a GROVE, not a tree — five at once, each with
+-- its own height, lean, width and place hashed from the note's index and
+-- the tree's own number. Three a kick against seven seconds of life is a
+-- forest that stays a BACKDROP; seven against twelve was a wall, and a
+-- wall is the one thing a rhythm cannot happen in front of.
+
+-- ANCHOR → a grove. Each tree rises out of the stream, tapering as it
+-- climbs, leaning the way its hash leans, buttressed at the water, and
+-- forking six ways near the top. `Stagger` orders the bands bottom-first,
+-- so they GROW rather than appear.
+draw trunk = {
+    let dth  = Note.t * 61.7 - floor(Note.t * 61.7)
+    let dt2  = Note.t * 37.3 - floor(Note.t * 37.3)
+    let base = 0.556
+
+    -- ── the boles: 3 trees x 26 bands x 6 across = 468 emits
+    let bidx = floor(Stroke * 467.0 + 0.5)
+    let bt   = floor(bidx / 156.0)
+    let brem = bidx - bt * 156.0
+    let bb   = floor(brem / 6.0)
+    let bc   = brem - bb * 6.0
+    let bv   = (bb + dth) / 26.0
+    let bu   = (bc + dt2) / 6.0
+
+    -- ACROSS IS WHEN: the bar is 16 strokes of 0.15 s, and where the
+    -- kick falls in it is where its trees stand.
+    let bph  = Note.t / 2.4 - floor(Note.t / 2.4)
+    let bs   = Count * 0.61803 + bt * 0.31830
+    let b1   = bs - floor(bs)
+    let bs2  = bs * 3.3301
+    let b2   = bs2 - floor(bs2)
+    let bs3  = bs * 7.7177
+    let b3   = bs3 - floor(bs3)
+
+    let bpx  = bph * 3.40 - 1.70 + (bt - 1.0) * 0.20 + (b1 - 0.5) * 0.10
+    let bh   = (0.78 + b2 * 0.78) * (0.72 + Note.z * 0.46)
+    let blen = b3 * 0.34 - 0.17
+    let bwid = (0.0130 + b2 * 0.0115) * (0.72 + Note.z * 0.46)
+    let btap = 1.0 - 0.58 * bv
+    let bbut = 0.021 / (1.0 + bv * 18.0)
+    let bswy = sin(bv * 5.1 + b3 * 6.2831) * 0.019 * bv
+
+    -- ── the limbs: 3 trees x 6 limbs x 13 along = 234 emits
+    let lidx = floor(Stroke * 233.0 + 0.5)
+    let lt   = floor(lidx / 78.0)
+    let lrem = lidx - lt * 78.0
+    let lb   = floor(lrem / 13.0)
+    let lq   = (lrem - lb * 13.0 + dth) / 13.0
+
+    let lph  = Note.t / 2.4 - floor(Note.t / 2.4)
+    let ls   = Count * 0.61803 + lt * 0.31830
+    let l1   = ls - floor(ls)
+    let ls2  = ls * 3.3301
+    let l2   = ls2 - floor(ls2)
+    let ls3  = ls * 7.7177
+    let l3   = ls3 - floor(ls3)
+
+    let lpx  = lph * 3.40 - 1.70 + (lt - 1.0) * 0.20 + (l1 - 0.5) * 0.10
+    let lh   = (0.78 + l2 * 0.78) * (0.72 + Note.z * 0.46)
+    let llen = l3 * 0.34 - 0.17
+    let ldir = 0.0 - 1.0 + 2.0 * Wrap(lb, 2.0)
+    let lhi  = floor(lb / 2.0)
+    let lspr = 0.55 + Wrap(lb * 7.0, 3.0) * 0.28
+    let lv   = 0.70 + lhi * 0.12
+    let lx0  = lpx + llen * lv * lv + sin(lv * 5.1 + l3 * 6.2831) * 0.019 * lv
+
+    Point
+    | Overlay [
+        Spawn { n: 468, by: Sm(1.0) }
+            | Xa(bpx + blen * bv * bv + bswy + (bu - 0.5) * 2.0 * (bwid * btap + bbut))
+            | Ya(base + bv * bh),
+        Spawn { n: 234, by: Sm(1.0) }
+            | Xa(lx0 + ldir * lq * (0.080 + Note.z * 0.072) * lspr)
+            | Ya(base + lv * lh + lq * lh * (0.24 - lhi * 0.05) - lq * lq * lh * 0.11),
+      ]
+    | Jitter(0.0009)
+    | Stagger { over: 0.20 }
+    | Pin
+    | Gradient
+    | Tint(1.0, 1.0, 0.98, 0.90)
+}
+
+-- SOGO → a night flower. A corolla of five petals opening from the heart
+-- outward: the index runs round the rim, and `Stagger` lays it in that
+-- order, so the flower does not appear — it SWEEPS open like a second
+-- hand, once per sogo stroke. Three of them, hung at three heights.
+--
+-- The petal outline is the polar rose |cos(n·θ/2)|, lifted off zero so
+-- the lobes stay joined at the heart instead of pinching to points, and
+-- the whole figure is rotated by its own hash so no two open alike.
+draw bloom = {
+    let dth  = Note.t * 61.7 - floor(Note.t * 61.7)
+    let fph  = Note.t / 2.4 - floor(Note.t / 2.4)
+
+    let na   = 40.0
+    let nr   = 9.0
+    let idx  = floor(Stroke * 1079.0 + 0.5)
+    let fi   = floor(idx / 360.0)
+    let rem  = idx - fi * 360.0
+    let ai   = floor(rem / nr)
+    let qi   = rem - ai * nr
+
+    let fs   = Count * 0.38197 + fi * 0.61803
+    let f1   = fs - floor(fs)
+    let fs2  = fs * 3.3301
+    let f2   = fs2 - floor(fs2)
+    let fs3  = fs * 7.7177
+    let f3   = fs3 - floor(fs3)
+
+    let px   = fph * 3.40 - 1.70 + (fi - 1.0) * 0.26 + (f1 - 0.5) * 0.10
+    let py   = 0.92 + f2 * 1.00
+    let siz  = (0.085 + f2 * 0.065) * (0.72 + Note.z * 0.46)
+    let spin = f3 * 6.28318
+    let tha  = (ai + dth * 0.7) / na * 6.28318
+    let lobe = abs(cos(tha * 2.5))
+    let rr   = siz * (0.26 + 0.74 * pow(lobe, 0.62))
+    let qf   = (qi + dth) / nr
+    let rad  = rr * qf
+    let th   = tha + spin
+
+    Point
+    | Spawn { n: 1080, by: Sm(1.0) }
+        | Xa(px + sin(th) * rad)
+        -- 1.28 is the aspect: one x unit covers more of the frame than
+        -- one y unit, so a circle needs the taller radius
+        | Ya(py + cos(th) * rad * 1.28)
+    | Jitter(0.0010)
+    | Stagger { over: 0.14 }
+    | Pin
+    | Gradient(moon)
+    -- gold at the heart, moon-white at the rim
+    | Tint(1.0, 0.78 + 0.22 * qf, 0.34 + 0.66 * qf, 0.85)
+}
+
+-- KAGANU → blossoms on the understory. The same polar rose with four
+-- petals and a fifth the size, four to a stroke, low and close to the
+-- bank. Kaganu is the fastest of the drums, so this is the figure that
+-- has to stay cheap — twenty points round the rim is enough at that size.
+draw blossom = {
+    let dth  = Note.t * 61.7 - floor(Note.t * 61.7)
+    let nph  = Note.t / 2.4 - floor(Note.t / 2.4)
+
+    let na   = 20.0
+    let nr   = 5.0
+    let idx  = floor(Stroke * 399.0 + 0.5)
+    let ni   = floor(idx / 100.0)
+    let rem  = idx - ni * 100.0
+    let ai   = floor(rem / nr)
+    let qi   = rem - ai * nr
+
+    let ns   = Count * 0.38197 + ni * 0.61803
+    let n1   = ns - floor(ns)
+    let ns2  = ns * 3.3301
+    let n2   = ns2 - floor(ns2)
+    let ns3  = ns * 7.7177
+    let n3   = ns3 - floor(ns3)
+
+    let px   = nph * 3.40 - 1.70 + (ni - 1.5) * 0.15 + (n1 - 0.5) * 0.08
+    let py   = 0.40 + n2 * 0.30
+    let siz  = (0.030 + n2 * 0.030) * (0.72 + Note.z * 0.46)
+    let tha  = (ai + dth * 0.7) / na * 6.28318
+    let lobe = abs(cos(tha * 2.0))
+    let rr   = siz * (0.30 + 0.70 * pow(lobe, 0.55))
+    let qf   = (qi + dth) / nr
+    let rad  = rr * qf
+    let th   = tha + n3 * 6.28318
+
+    Point
+    | Spawn { n: 400, by: Sm(1.0) }
+        | Xa(px + sin(th) * rad)
+        | Ya(py + cos(th) * rad * 1.28)
+    | Jitter(0.0008)
+    | Pin
+    | Gradient(moon)
+    | Tint(1.0, 0.72 + 0.28 * qf, 0.52 + 0.48 * qf, 0.80)
+}
+
+-- KIDI → vines out of the canopy. They start above the frame and fall on
+-- the stroke; the sway grows as they descend, because a rope swings most
+-- where it is furthest from what holds it.
+draw vine = {
+    let dth = Note.t * 61.7 - floor(Note.t * 61.7)
+    let vph = Note.t / 2.4 - floor(Note.t / 2.4)
+
+    let idx = floor(Stroke * 269.0 + 0.5)
+    let vi  = floor(idx / 90.0)
+    let t   = (idx - vi * 90.0 + dth) / 90.0
+
+    let vs  = Count * 0.61803 + vi * 0.38197
+    let v1  = vs - floor(vs)
+    let vs2 = vs * 3.3301
+    let v2  = vs2 - floor(vs2)
+
+    let px  = vph * 3.40 - 1.70 + (vi - 1.0) * 0.13 + (v1 - 0.5) * 0.08
+    let len = (1.25 + v2 * 1.35) * (0.72 + Note.z * 0.46)
+    let amp = 0.060 + v2 * 0.110
+
+    Point
+    | Spawn { n: 270, by: Sm(1.0) }
+        | Xa(px + sin(t * 4.2 + v2 * 6.2831) * amp * t)
+        | Ya(2.72 - t * len)
+    | Spawn { n: 3, by: Xa(0.005) }
+    | Jitter(0.0008)
+    | Pin
+    | Gradient(moon)
+    | Tint(0.86, 1.0, 0.92, 0.95)
+}
+
+-- AXATSE → the bank. A clump of litter: small blades fanning out of one
+-- point just above the water. Six clumps a stroke, and the axatse is on
+-- every stroke, so the mat fills and refills — ground, not weather.
+draw litter = {
+    let dth = Note.t * 61.7 - floor(Note.t * 61.7)
+
+    let idx = floor(Stroke * 359.0 + 0.5)
+    let ci  = floor(idx / 60.0)
+    let rem = idx - ci * 60.0
+    let bi  = floor(rem / 12.0)
+    let q   = (rem - bi * 12.0 + dth) / 12.0
+
+    let cph = Note.t / 2.4 - floor(Note.t / 2.4)
+    let cs  = Count * 0.61803 + ci * 0.38197
+    let c1  = cs - floor(cs)
+    let cs2 = cs * 3.3301
+    let c2  = cs2 - floor(cs2)
+
+    let px  = cph * 3.40 - 1.70 + (ci - 2.5) * 0.09 + (c1 - 0.5) * 0.07
+    let py  = 0.40 + c2 * 0.13
+    let ang = bi * 1.2566 + c2 * 6.2831
+    let ln  = (0.050 + Note.z * 0.150) * (0.55 + 0.45 * sin(ang * 2.7))
+
+    Point
+    | Spawn { n: 360, by: Sm(1.0) }
+        | Xa(px + sin(ang) * q * ln * 1.6)
+        | Ya(py + cos(ang) * q * ln * 0.6 + q * ln * 0.45)
+    | Jitter(0.0007)
+    | Pin
+    | Gradient(moon)
+    | Tint(0.92, 1.0, 0.90, 0.85)
+}
+
+-- BELL → fireflies. Three a stroke, each a small lozenge. Everything else
+-- in this forest is rooted; these are the only marks with anywhere to go,
+-- and the wgsl below gives them one shared drifting field, so they wander
+-- together the way air moves in a closed place.
+draw firefly = {
+    let idx = floor(Stroke * 119.0 + 0.5)
+    let fi  = floor(idx / 24.0)
+    let rem = idx - fi * 24.0
+    let ri  = floor(rem / 12.0)
+    let th  = ((rem - ri * 12.0) / 12.0) * 6.28318
+
+    let bph = Note.t / 2.4 - floor(Note.t / 2.4)
+    let fs  = Count * 0.61803 + fi * 0.38197
+    let f1  = fs - floor(fs)
+    let fs2 = fs * 3.3301
+    let f2  = fs2 - floor(fs2)
+
+    let px  = bph * 3.40 - 1.70 + (fi - 2.0) * 0.11 + (f1 - 0.5) * 0.09
+    let py  = 0.22 + f2 * 1.72
+    let r   = (0.010 + Note.z * 0.018) * (1.0 - ri * 0.45)
+
+    Point
+    | Spawn { n: 120, by: Sm(1.0) }
+        | Xa(px + sin(th) * r)
+        | Ya(py + cos(th) * r)
+    | Jitter(0.0009)
+    | Pin
+    | Tint(1.0, 1.0, 0.92, 0.85)
+}
+
+-- BASS → the stream. One streak of water per note lying flat in front of
+-- the forest, between the waterline and your feet. Its PITCH is how far
+-- out it lies — high notes ride up by the far bank, low notes come toward
+-- you — and it is the one voice in the piece whose pitch actually moves,
+-- so it is the one place pitch is allowed to place anything. The span is
+-- the note's gain, not its length: `Note.l` here is 0.005, because a
+-- sustained voice is sampled every 5 ms and its length is a tick.
+draw current = {
+    let ws  = Count * 0.61803
+    let w1  = ws - floor(ws)
+    let wy  = 0.520 - (Note.y - 0.18) * 0.72
+    let wx  = w1 * 3.34 - 1.67
+
+    Point
+    | Xa(wx)
+    | Ya(wy)
+    | Lerp { to: Direction(0.60 + Note.z * 1.38, 0, 0), n: 10 }
+    | Modulate(Flow { scale: 2.2 }, 0.004)
+    | Pin
+    -- along the current: silver where the moon reaches it, black as it
+    -- runs under the trees. Named, so the water's ramp and the light on
+    -- every other body in the piece are the same fact.
+    | Gradient(moon)
+    -- and THINNER as it runs: full at the head of the streak, trailing
+    -- off at the tail, so the current has a direction in substance and
+    -- not only in hue.
+    | Tint(1, 1, 1, 0.40 + 0.60 * (1.0 - Stroke))
+}
+
+-- ── THE VOICES ──────────────────────────────────────────────────────────
 
 x = { Silence 1 }
 
--- gankogui: low mother bell on the downstroke, high bell answers
-bl = { Cowbell acoustic | Fm 2/3 | Gm 0.6 }
-bh = { Cowbell acoustic | Gm 0.48 }
+-- the gankogui: two bells, one figure. Both draw fireflies, and the low
+-- bell — the one that starts the cycle — burns brighter and lives longer,
+-- so the downbeat is a lamp the others gather around.
+bl = { Cowbell acoustic | Fm 2/3 | Gm 0.6
+    | #bl
+    | Color [#ffffe4, #f4ff9c, #c8ff5a, #6ee02c, #2c7a1a, #0a2408]
+    | wgsl {
+        Sm 0.030; Smx 1.1; Smy 1.1;
+        Vm 0.05; Die 2.4;
+        // it blinks. Each fly on its own phase, and the blink is what a
+        // firefly IS — a steady dot would be a star.
+        Bm "(2.60 + Rand(2) * 1.40) * (0.55 + 1.20 * exp(0.0 - Time * 5.0))";
+        Bm "0.05 + 0.95 * smoothstep(0.0, 0.55, life)";
+        Za "0.02 - Rand(5) * 0.18";
+        // ONE drifting field, read at each fly's own position: neighbours
+        // get nearly the same answer and move as a body, far ones peel off
+        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48)";
+        Ya "0.030 * cos(x * 3.8 - Clock * 0.62) + 0.018 * cos(x * 8.7 + Clock * 0.91)";
+        Seq [ Direction(0.020, 0.012, 0) | Lm 6; ];
+    }
+    | firefly
+    | glow
+}
 
--- axatse: gourd rattle shadowing the bell
-ax = { Shaker wsc | Gm 0.42 | Pa 1/4 }
-ag = { Shaker wsc | Gm 0.18 | Pa 1/4 }
+bh = { Cowbell acoustic | Gm 0.48
+    | #bl
+    | Color [#ffffe4, #e8ffb0, #a8f06a, #55c62a, #256614, #081c06]
+    | wgsl {
+        Sm 0.024; Smx 1.1; Smy 1.1;
+        Vm 0.05; Die 2.0;
+        Bm "(2.10 + Rand(6) * 1.20) * (0.55 + 1.20 * exp(0.0 - Time * 6.0))";
+        Bm "0.05 + 0.95 * smoothstep(0.0, 0.55, life)";
+        Za "0.02 - Rand(9) * 0.18";
+        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48)";
+        Ya "0.030 * cos(x * 3.8 - Clock * 0.62) + 0.018 * cos(x * 8.7 + Clock * 0.91)";
+        Seq [ Direction(0.024, 0.010, 0) | Lm 6; ];
+    }
+    | firefly
+    | glow
+}
 
--- drums
-ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3 }
-ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6 }
-so = { Tom acoustic | Fm 5/6 | Gm 0.8 | Pa -1/6 }
-bd = { Kick acoustic | Fm 2/3 | Gm 1 }
+-- the axatse: the loud stroke lays a whole clump, the ghost lays a few
+-- blades. Neither moves once it is down — this is ground.
+ax = { Shaker wsc | Gm 0.42 | Pa 1/4
+    | #ax
+    | Color [#f2f8ff, #cfe2ff, #9ec2e8, #5f89b4, #2d4a6c, #0d1c2e]
+    | wgsl {
+        Sm 0.030; Smx 1.0; Smy 1.8;
+        Shade moon;
+        Vm 0.0; Die 1.2;
+        Bm "(1.20 + Rand(11) * 0.50) * (0.62 + 1.10 * exp(0.0 - Time * 6.0))";
+        Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
+        Za "0.0 - 0.02 - Rand(12) * 0.10";
+    }
+    | litter
+    | bank
+}
 
--- ── 16-pulse layers ─────────────────────────────────────────────────
+ag = { Shaker wsc | Gm 0.18 | Pa 1/4
+    | #ax
+    | Color [#eef5ff, #c2d8f2, #8fb0d4, #4d7099, #22384f, #0a1420]
+    | wgsl {
+        Sm 0.024; Smx 1.0; Smy 1.6;
+        Shade moon;
+        Vm 0.0; Die 0.9;
+        Bm "(0.75 + Rand(13) * 0.35) * (0.62 + 0.90 * exp(0.0 - Time * 7.0))";
+        Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
+        Za "0.0 - 0.02 - Rand(15) * 0.10";
+    }
+    | litter
+    | bank
+}
+
+-- kaganu: the understory. Cheapest figure, shortest life, furthest back —
+-- it is the voice that fires most often and it has to be able to.
+ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3
+    | #ka
+    | Color [#fffdf6, #ffe9c4, #ffc2a8, #e08fb0, #96557e, #33163a]
+    | wgsl {
+        Sm 0.036; Smx 1.0; Smy 2.4;
+        Shade moon;
+        Vm 0.0; Die 1.8;
+        Bm "(1.15 + Rand(13) * 0.50) * (0.60 + 1.30 * exp(0.0 - Time * 6.0))";
+        Bm "0.05 + 0.95 * smoothstep(0.0, 0.40, life)";
+        Za "0.0 - 0.26 - Rand(14) * 0.22";
+        // a blossom in a draught: it opens a little wider on the strike
+        Smy "1.4 * (1.0 + 0.35 * exp(0.0 - Time * 7.0))";
+    }
+    | blossom
+    | thicket
+}
+
+-- kidi: the vines. Slower than kaganu, longer-lived, and they hang still
+-- — a liana that swayed on every stroke would be a rope in a gale.
+ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6
+    | #ki
+    | Color [#cdf0dc, #8fd3b4, #4f9f80, #2c6a55, #164236, #071d17]
+    | wgsl {
+        Sm 0.040; Smx 1.0; Smy 3.6;
+        Shade moon;
+        Vm 0.0; Die 2.8;
+        Bm "(1.45 + Rand(16) * 0.60) * (0.55 + 1.40 * exp(0.0 - Time * 5.0))";
+        Bm "0.08 + 0.92 * smoothstep(0.0, 0.30, life)";
+        Za "0.0 - 0.10 - Rand(17) * 0.18";
+        // the whole vine leans, very slowly, all of it together
+        Ya "0.0 - 0.09 * exp(0.0 - Time * 4.5)";
+    }
+    | vine
+    | thicket
+}
+
+-- sogo: the flowers. Big, slow, few — the low drum gets the largest single
+-- body in the picture, and it sweeps open from its heart on the strike
+-- and settles back, the way a night flower does.
+so = { Tom acoustic | Fm 5/6 | Gm 0.8 | Pa -1/6
+    | #so
+    | Color [#ffffff, #fff2d6, #ffd9a0, #f0a8c8, #b06a9c, #40204a]
+    | wgsl {
+        Sm "0.038 * (1.0 + 0.45 * exp(0.0 - Time * 5.0))";
+        Smx 1.0; Smy 2.4;
+        Shade moon;
+        Vm 0.0; Die 4.5;
+        Bm "(1.05 + Rand(19) * 0.45) * (0.72 + 1.30 * exp(0.0 - Time * 5.0))";
+        Bm Slew(0.55, 2.6);
+        Bm "0.10 + 0.90 * smoothstep(0.0, 0.28, life)";
+        Za "0.0 - 0.05 - Rand(20) * 0.14";
+        // it dips on the strike and comes back up
+        Ya "0.0 - 0.030 * exp(0.0 - Time * 4.5)";
+    }
+    | bloom
+    | blooms
+}
+
+-- the anchor: the trees. Nothing is said about light here, so a trunk
+-- takes every light in the piece — the moon on its shoulder, the canopy
+-- in its shadow, and the floor's own glow on the buttress at the water.
+bd = { Kick acoustic | Fm 2/3 | Gm 1
+    | #bd
+    | Color [#95b6cc, #46605e, #1e3128, #0f1c15, #080f0b, #040705]
+    | wgsl {
+        Sm 0.034; Smx 0.9; Smy 4.2;
+        Vm 0.0; Die 9;     -- the forest is the last nine seconds of playing
+        Bm "(0.60 + Rand(21) * 0.30) * (0.68 + 1.70 * exp(0.0 - Time * 4.5))";
+        Bm Slew(0.58, 2.2);
+        // a trunk does not blink out at Die — it goes back into the dark
+        Bm "0.16 + 0.84 * smoothstep(0.0, 0.22, life)";
+        Za "0.0 - 0.02 - Rand(22) * 0.10";
+    }
+    | trunk
+    | boles
+}
+
 bell = {
     Seq [
-        bl, x, x, bh,   x, x, bh, x,
-        x, x, bh, x,    bh, x, x, x
+        bl, x, x, bh, x, x, bh, x,
+        x, x, bh, x, bh, x, x, x
     ]
 }
 
 kaganu = {
     Seq [
-        x, ka, ka, x,   x, ka, ka, x,
-        x, ka, ka, x,   x, ka, ka, x
+        x, ka, ka, x, x, ka, ka, x,
+        x, ka, ka, x, x, ka, ka, x
     ]
 }
 
 axatse = {
     Seq [
-        ax, ag, ag, ax,   ag, ag, ax, ag,
-        ag, ag, ax, ag,   ax, ag, ag, ag
+        ax, ag, ag, ax, ag, ag, ax, ag,
+        ag, ag, ax, ag, ax, ag, ag, ag
     ]
 }
 
--- ── 12-pulse layer: four times around while the bell goes three ─────
 kidi = {
     Seq [
-        ki, x, ki, ki | Gm 0.7,   x, x, ki, x,
+        ki, x, ki, ki | Gm 0.7, x, x, ki, x,
         ki | Gm 0.5, x, x, x
     ]
 }
 
--- ── 24-pulse layers: twice around per 48 ────────────────────────────
 sogo = {
     Seq [
-        so, x, x, x,   x, x, x, so | Gm 0.7,
-        x, x, x, x,    so, x, x, x,
-        x, x, x, so | Gm 0.6,   x, x, x, x
+        so, x, x, x, x, x, x, so | Gm 0.7,
+        x, x, x, x, so, x, x, x,
+        x, x, x, so | Gm 0.6, x, x, x, x
     ]
 }
 
 anchor = {
     Seq [
-        bd, x, x, x,   x, x, x, x,
-        x, bd | Gm 0.7, x, x,   x, x, bd | Gm 0.8, x,
-        x, x, x, bd | Gm 0.6,   x, x, x, x
+        bd, x, x, x, x, x, x, x,
+        x, bd | Gm 0.7, x, x, x, x, bd | Gm 0.8, x,
+        x, x, x, bd | Gm 0.6, x, x, x, x
     ]
 }
 
--- ── the 48-pulse spiral ─────────────────────────────────────────────
+bass_tone = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, 1, 1/2, 0 },
+        { 1/2, 0, 1/2, 0 },
+        { 2/1, 0, 1/4, 0 },
+        { 3/1, 0, 1/10, 0 },
+    ]
+}
+
+fig_plain = {
+    bass_tone | Seq [Fm 1 | Lm 2, Fm 3/2 | Lm 2, Fm 2 | Lm 2, Fm 6/5 | Lm 2 ]
+}
+
+fig_rise = {
+    bass_tone | Seq [Fm 1 | Lm 2, Fm 6/5 | Lm 2, Fm 3/2 | Lm 2, Fm 1 | Lm 2 ]
+}
+
+fig_lean = {
+    bass_tone | Seq [Fm 1 | Lm 3, Fm 3/2 | Lm 1, Fm 6/5 | Lm 2, Fm 3/2 | Lm 2 ]
+}
+
+fig_walk = {
+    bass_tone | Seq [Fm 1 | Lm 1, Fm 3/2 | Lm 1, Fm 2 | Lm 2, Fm 6/5 | Lm 2, Fm 4/3 | Lm 2 ]
+}
+
+fig_fall = {
+    bass_tone | Seq [Fm 2 | Lm 2, Fm 3/2 | Lm 1, Fm 7/6 | Lm 1, Fm 1 | Lm 4 ]
+}
+
+cadence = {
+    bass_tone | Seq [Fm 3/2 | Lm 2, Fm 9/8 | Lm 2, Fm 1 | Lm 4 ]
+}
+
+cell_a = {
+    Seq [
+        fig_plain,
+        fig_rise | Fm 5/6,
+    ]
+}
+
+cell_b = {
+    Seq [
+        fig_lean | Fm 10/9,
+        fig_walk | Fm 40/27
+        | Overlay [
+            Fm 0,
+            { 1/1, 0, 1, 0 },
+            { 3/4, 1, 1, -1 },
+            { 9/16, 1, 1, 1 },
+        ]
+    ]
+}
+
+cell_c = {
+    Seq [
+        fig_fall | Fm 80/81
+        | Overlay [
+            { 2/1, 0, 1, 1 },
+            { 1/1, 1, 1, -1 },
+        ],
+        cadence | Fm 80/81 | Overlay [Fm 1, Fm 1/2],
+    ]
+}
+
+bass = {
+    Seq [cell_a, cell_b, cell_c]
+    | Fm 2
+    | Tanh(2.2, 0.6)
+    | Gm 0.55
+    -- the water is not one colour: moonlit where the gap in the canopy
+    -- lets the light down onto it, sinking to a cold slate as it runs out
+    -- under the trees. A ramp along the current, which `Gradient` in
+    -- `current` reads across each line.
+    | Color [#e8f4ff, #b4cfe4, #74a0bc, #3d6480, #1b3448, #07141e]
+    | wgsl {
+        -- THIN. `Smx` stretches these into lines and `Smy` is their
+        -- thickness, so thinning is Smy's job, not Sm's — dropping Sm
+        -- would shorten the line as well as narrow it, and the length is
+        -- the current.
+        Sm 0.19; Smx "2.6 + (0.0 - y) * 1.8"; Smy 0.30;
+        Vm 0.04; Die 3;
+        Za "0.0 - 0.02 - Rand(23) * 0.10";
+        Bm "(0.55 + Rand(24) * 1.15) * (0.80 + 0.70 * exp(0.0 - Time * 4.0))";
+        Bm "0.08 + 0.92 * smoothstep(0.0, 0.20, life)";
+        Seq [ Direction(0.018, 0, 0) | Lm 12; ];
+    }
+    | current
+    | water
+}
+
 spiral = {
     Overlay [
         bell | Repeat 3,
@@ -87,13 +913,90 @@ spiral = {
     ]
 }
 
-main = {
-    Seq [
-        Overlay [bell | Repeat 3, axatse | Repeat 3],
-        Overlay [bell | Repeat 3, kaganu | Repeat 3, axatse | Repeat 3, kidi | Repeat 4],
-        spiral,
-        spiral,
-        spiral | Fm 6/5,
-        Overlay [bell | Repeat 3, kidi | Repeat 4, anchor | Repeat 2]
+intro = { Overlay [bell | Repeat 3, axatse | Repeat 3] }
+
+build = {
+    Overlay [
+        bell | Repeat 3, kaganu | Repeat 3,
+        axatse | Repeat 3, kidi | Repeat 4
     ]
 }
+
+strip = {
+    Overlay [
+        bell | Repeat 3,
+        axatse | Repeat 3,
+        bass
+    ]
+}
+
+deep = {
+    Overlay [
+        spiral | Repeat 4,
+        Seq [
+            bass,
+            bass | Fm 80/81,
+            bass | Fm 6400/6561,
+            bass | Fm 512000/531441,
+        ]
+    ]
+}
+
+hollow = {
+    Overlay [
+        bell | Repeat 3,
+        kaganu | Repeat 3,
+        bass
+    ]
+}
+
+main = {
+    Seq [
+        strip,
+        deep,
+        hollow
+    ]
+    | Fm 3/2
+} -> [bd, so, ki, ka, ax, bl]
+
+-- ════════════════════════════════════════════════════════════════════════
+-- NOTES — known weaknesses, for the next pass
+--
+-- 1. THE SURFACES DON'T RIDE THEIR BODIES. Bark, dew and fungus are all
+--    screen-space grids masked by coverage. Vertical bark on a vertical
+--    trunk gets away with it; the dew on a petal does not, and swims when
+--    anything moves. The fix is surface as GEOMETRY — emits of the
+--    figure's own draw — which would also make it notes rather than
+--    texture.
+--
+-- 2. THREE PLACES KNOW THE BAR. Every draw computes `Note.t / 2.4` for
+--    itself, and 2.4 is the bell's sixteen strokes at l = 3/20 written out
+--    by hand. Change `l` and the ruler silently detaches from the music.
+--    It wants to be one named length.
+--
+-- 3. TWO PLACES KNOW THE WATERLINE. The draws seat the trees at y = 0.556
+--    and the stream's Raw hard-codes the same line as uv.y = 0.70.
+--
+-- 4. ONLY THE TRUNKS REFLECT. One reference slot per def, so the water
+--    taps `boles` only — the flowers and the fireflies cast nothing. The
+--    fireflies are the ones worth it: a lamp with no reflection reads as
+--    a scratch on the print. Fix by compositing both into an intermediate
+--    def and referencing that.
+--
+-- 5. THE BAR RULER HAS NO EDGE. Nothing in the frame marks x = 0, so the
+--    downbeat is only legible as the moment several voices light the same
+--    column. A very faint standing mark at the turn of the bar — one reed,
+--    one break in the water — would give the eye the barline it is
+--    already looking for.
+--
+-- 6. EVERY VOICE IS SAMPLED THIRTY TIMES. A 0.15 s note is 30 op4d events
+--    at 5 ms, and each one runs the whole draw again. `Note.t` is used as
+--    a sub-cell dither so the copies interleave instead of stacking, which
+--    turns the waste into fill — but it is still waste, and it is why the
+--    per-note emit counts here are a tenth of what they look like they
+--    should be.
+--
+-- 7. NOTHING MOVES IN DEPTH. Every plane sits at a fixed Za. The parallax
+--    that would sell the layering is available (Za is already randomised
+--    per mark) but nothing moves the camera.
+-- ════════════════════════════════════════════════════════════════════════
