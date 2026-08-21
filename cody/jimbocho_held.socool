@@ -1,0 +1,450 @@
+{ f: 311.127, l: 1, g: 1/8, p: 0, background_color: #000000 }
+
+-- JIMBOCHO / HELD — the multitrack as a deep space.
+--
+-- Same ten stems, same twelve bars (see make_stems.sh), same FromSound
+-- analysis. What changes is the MEDIUM.
+--
+-- jimbocho_impasto.socool is a polyptych: ten flat panels, one per stem, read
+-- left to right. This one is after AL HELD's late polychrome — Solar Wind,
+-- Vorces, the big acrylics of the eighties. Held's canvases are hard-edge
+-- geometric SOLIDS suspended in an impossible perspectival space: open cubes,
+-- receding frames, cones, tori, grids laid into depth, every edge crisp,
+-- every solid transparent. There is no atmosphere in a Held and nothing is
+-- blurred. What makes the space is not haze, it is OCCLUSION and SCALE — a
+-- near cube covers a far one, and you read the distance from the covering.
+--
+-- The colour is not Held's, though. It is eighties Japanese graphic — city
+-- pop sleeves, Eizin Suzuki, Hiroshi Nagai: flat saturated coral and
+-- turquoise and cream against a deep twilight blue, no black, no grit,
+-- everything clean. Held's structures in Suzuki's light.
+--
+-- BETWEEN THE POLYPTYCH AND THE SCATTER. The first cut of this piece threw
+-- every solid at a random point on the canvas, and ten stems each throwing
+-- solids anywhere is a heap — a heap has no parts, and you could not follow
+-- one instrument through it. Each stem now walks its OWN PATH: a vector, an
+-- arc, a helix, a circle, parameterised by `Time`, the note's composition
+-- time in seconds. The structures are beads on ten different wires. You can
+-- follow a part again, the way you could in the polyptych, and it is still
+-- one deep space rather than ten panels.
+
+-- ─── space: the far field, the only chain that remembers ─────────────────
+warp space = {
+    Prev
+    | Decay 0.55
+    | Add (Scene | Bloom { threshold: 0.72, strength: 0.05 })
+    | Knee 0.33
+    | Gamma 1.10
+}
+
+-- ─── middle: solids that occlude the far field ───────────────────────────
+warp middle over = {
+    Scene
+    | Opaque
+}
+
+-- ─── front: solids that occlude everything ───────────────────────────────
+warp front over = {
+    Scene
+    | Opaque
+}
+
+-- ════════════════════════════════════════════════════════════════════════
+-- THE SOLIDS.
+--
+-- Built from Lerp and Spawn, never Path. `Path` stamps its control points and
+-- NOTHING between them (compile.rs: one Emit per point), so a four-point
+-- square draws four dots; and `Smooth`, the op that would fill them in, is a
+-- Catmull-Rom resample, which rounds exactly the corners that make these
+-- shapes Held's. `Lerp { to: Direction(d), n }` interpolates LINEARLY from
+-- every emit toward a per-emit offset, so it draws a straight edge, and
+-- `Spawn { by: Rz(1/k) }` turns the accumulated set about the origin — an
+-- edge placed off-centre and turned four times IS a square.
+--
+-- Draw `Sm` scales the emit set's offsets as well as its stamps (scale_mul
+-- multiplies both), which is why `Overlay [ Sm 1, Sm 0.7 | Za(-0.12) ]` nests
+-- a smaller copy further back instead of merely drawing thinner.
+--
+-- ── WHERE THE COST IS, because it dominates everything else here ─────────
+--
+-- A sounding note re-runs its whole draw EVERY 5 ms. FromSound(8, 6) is 48
+-- events a second per stem and each lasts 1/6 s, so that is ~1600 draw-runs a
+-- second per stem, times ten stems. At 300 emits a solid that is three and a
+-- half MILLION emits a second: the brush spawn queue overflows, solids arrive
+-- in pieces, and the render runs at a third of the impasto version's speed.
+--
+-- So the thinning has to happen BEFORE the expansion, not after it.
+-- `Sometimes(p, <the whole construction>)` builds the solid on well under 1% of notes
+-- and leaves the other 98% as a single emit, parked off-canvas by the
+-- `Ya(-40)` above it. Average cost per note falls from 300 emits to about
+-- seven. The earlier `Sometimes(p, Ya(-40))` at the END of the pipeline looked
+-- equivalent and was worthless — it built all 300 emits and then moved them
+-- offscreen, which is why every attempt at thinning left the render time and
+-- the dropped-spawn counts exactly where they were.
+--
+-- Two consequences worth keeping in mind when tuning:
+--   · `p` is now nearly free, so it is the right knob for density. Raise it
+--     for a fuller canvas; the cost scales with p, not with the note rate.
+--   · Because so few notes build, each one can afford a RICH solid — the
+--     sampling below is dense enough that edges read as continuous rules
+--     rather than bead chains.
+--
+-- And every voice sets `Sa`, a constant added to the stamp scale after the
+-- gain multiply: without it line weight is proportional to loudness, and
+-- FromSound's gains span two orders of magnitude inside one stem, so quiet
+-- notes drew their edges out of specks. Held's line does not thin out when
+-- the music does.
+-- ════════════════════════════════════════════════════════════════════════
+
+-- KICKS — an open cube, walking the bottom-left cell left to right.
+draw cube = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(-0.20) | Ya(-0.20)
+        | Lerp { to: Direction(0.40, 0, 0), n: 21 }
+        | Spawn { n: 4, by: Rz(1/4) }
+        | Overlay [ Sm 1, Za(-0.34) ]
+        | Ry(0.5 * 0.18 - 0.09)
+        | Rx(0.5 * 0.14 - 0.07)
+        | Sm(0.21)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(-0.9454)
+        | Xa(sin(Note.t * 0.83) * 0.1057)
+        | Za(cos(Note.t * 0.57) * 0.400))
+}
+
+-- PERCUSSION 1 — a grid laid into perspective, climbing the far-left cell.
+draw grid = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(-0.26) | Ya(-0.13)
+        | Lerp { to: Direction(0.52, 0, 0), n: 23 }
+        | Spawn { n: 4, by: Ya(0.085) }
+        | Overlay [ Sm 1, Rz(1/4) ]
+        | Rx(1/4 + 0.5 * 0.12)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(-1.0037)
+        | Xa(sin(Note.t * 0.47) * 0.1257)
+        | Za(cos(Note.t * 0.73) * 0.550))
+}
+
+-- PERCUSSION 2 — an open plane seen nearly sideways, on a closed circle.
+draw plane = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(-0.30) | Ya(-0.30)
+        | Lerp { to: Direction(0.60, 0, 0), n: 21 }
+        | Spawn { n: 4, by: Rz(1/4) }
+        | Overlay [ Sm 1, Sm 0.55 ]
+        | Rx(2/5 + 0.5 * 0.2)
+        | Ry(Rand(20) * 0.4 - 0.2)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(-0.1643)
+        | Xa(sin(Note.t * 0.55) * 0.1029)
+        | Za(cos(Note.t * 0.66) * 0.450))
+}
+
+-- BASS SYNTH — a tunnel of frames on a diagonal that also walks away
+-- from the camera. The Held motif you look INTO, going.
+draw tunnel = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(-0.24) | Ya(-0.24)
+        | Lerp { to: Direction(0.48, 0, 0), n: 18 }
+        | Spawn { n: 4, by: Rz(1/4) }
+        | Overlay [ Sm 1, Sm 0.64 | Za(-0.22), Sm 0.38 | Za(-0.44) ]
+        | Ry(0.5 * 0.16 - 0.08)
+        | Sm(0.21)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(-1.4660)
+        | Za(0.0 - floor(Wrap(Note.t, 6.7133) / 0.41958) / 16 * 0.5))
+}
+
+-- PADS — a tilted torus on a shallow arc over the top-centre cell.
+draw torus = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(0.30)
+        | Spawn { n: 43, by: Rz(1/43) }
+        | Overlay [ Sm 1, Sm 0.72 ]
+        | Rx(1/5 + 0.5 * 0.1)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(0.2007)
+        | Xa(sin(Note.t * 0.38) * 0.1571)
+        | Za(cos(Note.t * 0.52) * 0.600))
+}
+
+-- BASS ARPS — a helix climbing the centre cell, turning in x and z as it
+-- goes: the one wire that is itself a solid's worth of geometry.
+draw coil = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(0.15)
+        | Spawn { n: 43, by: Rz(1/22) | Ya(0.0054) | Za(-0.0042) }
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(-0.6284)
+        | Za(sin(floor(Wrap(Note.t, 6.7133) / 0.41958) / 16 * 6.283) * 0.25))
+}
+
+-- ARP SYNTHS — a transparent cylinder on a rising diagonal.
+draw cylinder = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(0.17)
+        | Lerp { to: Direction(0, 0, -0.46), n: 15 }
+        | Spawn { n: 5, by: Rz(1/5) }
+        | Rx(0.5 * 0.16 - 0.08)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(0.8216)
+        | Xa(sin(Note.t * 0.69) * 0.1029)
+        | Za(cos(Note.t * 0.86) * 0.500))
+}
+
+-- CLARINET — a cone on an S curve. Built from the APEX outward, because
+-- Lerp's anchor is per-emit relative: spokes cannot converge on a point, but
+-- they can all start at one, and the rim is a chord laid at the spoke's far
+-- end and turned with it.
+draw cone = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Overlay [
+            Lerp { to: Direction(0.24, 0, -0.40), n: 15 },
+            Xa(0.24) | Za(-0.40) | Lerp { to: Direction(-0.0183, 0.0918, 0), n: 4 }
+          ]
+        | Spawn { n: 7, by: Rz(1/7) }
+        | Rx(0.5 * 0.12 - 0.20)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(0.4930)
+        | Xa(sin(Note.t * 0.77) * 0.1157)
+        | Za(cos(Note.t * 0.44) * 0.450))
+}
+
+-- MELODY SYNTH — a hard slab climbing the far-right cell.
+draw slab = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Xa(-0.19)
+        | Lerp { to: Direction(0.38, 0, 0), n: 27 }
+        | Overlay [ Sm 1, Ya(0.02), Ya(-0.02), Ya(0.04), Ya(-0.04) ]
+        | Rz(0.5 * 0.12 - 0.06)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(1.2155)
+        | Xa(sin(Note.t * 0.95) * 0.0740)
+        | Za(cos(Note.t * 0.48) * 0.350))
+}
+
+-- SAX — a twisting ribbon on the circle that closes the field.
+draw ribbon = {
+    Point
+    | Ya(-40)
+    | Every(8,
+        Ya(40)
+        | Lerp { to: Direction(0, 0.22, 0), n: 12 }
+        | Spawn { n: 14, by: Xa(0.0423) | Rz(1/48) | Za(-0.0229) }
+        | Xa(-0.30)
+        | Sm(0.30)
+        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
+        | Xa(0.9454)
+        | Xa(sin(Note.t * 0.50) * 0.0951)
+        | Za(cos(Note.t * 0.61) * 0.400))
+}
+
+-- ════════════════════════════════════════════════════════════════════════
+-- THE VOICES.
+--
+-- `Gm` is loudness; wgsl `Sm` is LINE WEIGHT — the draw geometry already
+-- fixes each solid's size, so this only decides how heavy the edge is drawn.
+-- No Slew, no Bm ramp, no drift: a shape appears whole, holds, and dies
+-- whole. `Vm 0` everywhere, because Held's solids do not move.
+--
+-- FitX is degenerate and has to be: the analysis is mono and the CSV shows
+-- pan identically 0 for all 97,570 notes, so x can only ever come from the
+-- layout. FitY is not degenerate — it is where PITCH lives. Each voice's own
+-- frequency range is mapped onto its cell's height, so a solid rides up and
+-- down inside its cell as the part plays, and the band is sized per depth
+-- layer because placement happens before projection.
+--
+-- Colour: three families, used twice each so the frame holds together —
+-- coral/salmon/peach, turquoise/aqua/mint, cream/butter/gold — plus one
+-- magenta and one cobalt to carry the low end. No black anywhere: on a
+-- twilight ground the darkest thing in the picture should still be blue.
+-- ════════════════════════════════════════════════════════════════════════
+
+-- ─── far field: routed to `space`, the chain with the feedback ───────────
+
+pads = {
+    FromSound(8, 6) ./jimbocho/pads.wav
+    | Gm 2
+    | Color [peach, apricot, coral]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.64; Sa 0.008; Vm 0.55; Bm 1; Die 1/2; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
+    | torus
+    | FitX 0 0
+    | FitY -0.628 0.628
+    | FitZ -2 -2
+    | space
+    | #pads
+}
+
+perc1 = {
+    FromSound(8, 6) ./jimbocho/perc1.wav
+    | Gm 2
+    | Color [cream, ivory, butter]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 3.81; Sa 0.008; Vm 0.36; Bm 1; Die 1/2; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
+    | grid
+    | FitX 0 0
+    | FitY -0.628 0.628
+    | FitZ -2 -2
+    | space
+    | #perc1
+}
+
+bass_arps = {
+    FromSound(8, 6) ./jimbocho/bass_arps.wav
+    | Gm 2
+    | Color [mint, seafoam, aqua]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.29; Sa 0.008; Vm 0.44; Bm 1; Die 1/2; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
+    | coil
+    | FitX 0 0
+    | FitY -0.628 0.628
+    | FitZ -2 -2
+    | space
+    | #bass_arps
+}
+
+-- ─── middle ground: occludes the far field ───────────────────────────────
+
+bass_synth = {
+    FromSound(8, 6) ./jimbocho/bass_synth.wav
+    | Gm 2
+    | Color [cobalt, periwinkle, skyblue]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.93; Sa 0.008; Vm 0.50; Bm 1; Die 1/2; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
+    | tunnel
+    | FitX 0 0
+    | FitY -0.514 0.514
+    | FitZ -1 -1
+    | middle
+    | #bass_synth
+}
+
+arps = {
+    FromSound(8, 6) ./jimbocho/arps.wav
+    | Gm 2
+    | Color [turquoise, aqua, mint]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.44; Sa 0.008; Vm 0.48; Bm 1; Die 1/2; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
+    | cylinder
+    | FitX 0 0
+    | FitY -0.514 0.514
+    | FitZ -1 -1
+    | middle
+    | #arps
+}
+
+clarinet = {
+    FromSound(8, 6) ./jimbocho/clarinet.wav
+    | Gm 2
+    | Color [cream, butter, gold]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.66; Sa 0.008; Vm 0.42; Bm 1; Die 1/2; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
+    | cone
+    | FitX 0 0
+    | FitY -0.514 0.514
+    | FitZ -1 -1
+    | middle
+    | #clarinet
+}
+
+perc2 = {
+    FromSound(8, 6) ./jimbocho/perc2.wav
+    | Gm 2
+    | Color [skyblue, powderblue, aqua]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 5.54; Sa 0.008; Vm 0.38; Bm 1; Die 1/2; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
+    | plane
+    | FitX 0 0
+    | FitY -0.514 0.514
+    | FitZ -1 -1
+    | middle
+    | #perc2
+}
+
+-- ─── front: occludes everything ──────────────────────────────────────────
+
+kicks = {
+    FromSound(8, 6) ./jimbocho/kicks.wav
+    | Gm 2
+    | Color [coral, salmon, tangerine]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 5.24; Sa 0.008; Vm 0.45; Bm 1; Die 1/2; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
+    | cube
+    | FitX 0 0
+    | FitY -0.423 0.423
+    | FitZ -1/5 -1/5
+    | front
+    | #kicks
+}
+
+sax = {
+    FromSound(8, 6) ./jimbocho/sax.wav
+    | Gm 2
+    | Color [magenta, hotpink, coral]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.44; Sa 0.008; Vm 0.40; Bm 1; Die 1/2; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
+    | ribbon
+    | FitX 0 0
+    | FitY -0.423 0.423
+    | FitZ -1/5 -1/5
+    | front
+    | #sax
+}
+
+melody = {
+    FromSound(8, 6) ./jimbocho/melody.wav
+    | Gm 2
+    | Color [gold, butter, cream]
+    | Gradient(0, 1, 0)
+    | wgsl { Sm 4.93; Sa 0.008; Vm 0.35; Bm 1; Die 1/2; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
+    | slab
+    | FitX 0 0
+    | FitY -0.423 0.423
+    | FitZ -1/5 -1/5
+    | front
+    | #melody
+}
+
+main = {
+    Overlay [
+        pads, perc1, bass_arps,
+        bass_synth, arps, clarinet, perc2,
+        kicks, sax, melody,
+    ]
+} -> [kicks, perc1, perc2, bass_synth, bass_arps, pads, arps, clarinet, melody, sax]
