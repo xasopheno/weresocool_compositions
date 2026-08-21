@@ -43,8 +43,8 @@
 --
 -- y is which voice, and it is the forest's own order — fireflies in the
 -- air, flowers under them, fiddleheads uncurling below those, trees
--- rooted in the water, reeds on the bank, and the arrowheads and lilies
--- standing in and lying on the stream itself. So the picture is a jungle read
+-- rooted in the water, reeds on the bank, and the mushrooms and lilies
+-- at the waterline and on the stream itself. So the picture is a jungle read
 -- top to bottom and a bar read left to right at the same time.
 --
 --   anchor (kick) → the TRUNKS. Each kick raises one, out of the stream,
@@ -55,11 +55,11 @@
 --                   only spiral in the piece and findable at any size.
 --   kaganu (high) → REEDS: four bright stems standing off the bank on
 --                   every stroke — straight where the flower is round.
---   axatse (shk)  → THE SHALLOWS, and it plays two species: the loud
---                   stroke stands an ARROWHEAD out of the water with its
---                   three-petal spike, the ghost floats a LILY PAD with
---                   its bloom beside it. The one voice on every stroke,
---                   so its accent pattern is which plant, not how bright.
+--   axatse (shk)  → THE WATER'S EDGE, and it plays two species: the loud
+--                   stroke stands MUSHROOMS on the wet ground, the ghost
+--                   floats a LILY PAD with its bloom beside it. The one
+--                   voice on every stroke, so its accent pattern is which
+--                   thing is growing, not how bright anything is.
 --   bell   (gank) → FIREFLIES. The bell is the clock the whole ensemble
 --                   hears; the fireflies are the only marks that drift.
 --   bass          → THE STREAM in the foreground. Its pitch is how far
@@ -82,7 +82,7 @@
 --           reaches the near plane and nothing else, which is what makes
 --           it read as ground and not as a second moon.
 --
--- The far planes say so by name: reeds, fiddleheads, flowers and lilies
+-- The far planes say so by name: reeds, fiddleheads, flowers, mushrooms
 -- `Shade moon` — at that distance nothing else gets to them. The trunks
 -- and the stream say nothing and so take every light, the floor among them.
 light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 1.45 }
@@ -309,9 +309,9 @@ warp water over = {
     }
 }
 
--- THE SHALLOWS: the arrowheads and the lilies, standing in and lying on
--- the water in front of everything. `Opaque`, because they are bodies —
--- a pad is a leaf on a surface and it hides what is under it.
+-- THE WATER'S EDGE: the mushrooms and the lilies, in front of
+-- everything. Opaque, because they are bodies — a cap is solid and a pad
+-- is a leaf on a surface, and both hide what is under them.
 warp shallows over = {
     Scene
     | Gain 1.05
@@ -657,23 +657,38 @@ draw crozier = {
     | Tint(1.0, 0.88, 0.72, 0.88)
 }
 
--- AXATSE, ACCENT → arrowhead. Sagittaria, standing out of the shallows:
--- a thin stem and a blade that comes to a point with two barbs swept back
--- past the stalk. The rings that used to be here were the one thing in
--- the frame that was not a plant, and they read as rain on a puddle.
+-- AXATSE, ACCENT → mushrooms, standing on the wet ground at the water's
+-- edge. They were arrowheads and they kept reading as little parasols,
+-- which is a fair thing for a shape to tell you about itself — a dome on
+-- a stalk IS a mushroom, so it may as well be one.
 --
--- Three to a stroke, low, in cold teal — the loud stroke of the shaker,
--- so the blades are its accents.
-draw arrowhead = {
+-- Three to a stroke on the axatse's own bar column. Each is built in
+-- three parts, and every one of them varies:
+--
+--   the CAP is a dome sampled over its half-turn: `sin(a)^e` is the
+--   profile, and `e` is the whole character of the species — under 1 it
+--   is a flat parasol, at 1 a button, over 1 a little conical bell. The
+--   rim HANGS BELOW the top of the stalk, which is the one detail that
+--   stops a dome reading as a bead on a stick.
+--
+--   the GILLS are the underside, radiating from the stalk to the rim,
+--   and they are what makes it read as fungus rather than as a lamp.
+--
+--   the STALK tapers upward and swells at the foot.
+--
+-- Cool bone-white going to a bioluminous green in the deep tones, since
+-- the floor's own light is the only thing under there with them.
+draw mushroom = {
     let dth = Note.t * 61.7 - floor(Note.t * 61.7)
     let cph = Note.t / 2.4 - floor(Note.t / 2.4)
+    let siz = 0.45 + Note.z * 1.60
 
-    -- ── blades: 3 x 18 along x 6 across = 324 emits
-    let bidx = floor(Stroke * 323.0 + 0.5)
-    let bi   = floor(bidx / 108.0)
-    let brem = bidx - bi * 108.0
-    let bu   = (floor(brem / 6.0) + dth) / 18.0
-    let bv   = (brem - floor(brem / 6.0) * 6.0 + dth) / 6.0
+    -- ── caps: 3 x 28 over the dome x 8 deep = 672 emits
+    let bidx = floor(Stroke * 671.0 + 0.5)
+    let bi   = floor(bidx / 224.0)
+    let brem = bidx - bi * 224.0
+    let ba   = (floor(brem / 8.0) + dth) / 28.0
+    let br   = (brem - floor(brem / 8.0) * 8.0 + dth) / 8.0
 
     let bs   = Count * 0.61803 + bi * 0.38197
     let b1   = bs - floor(bs)
@@ -682,78 +697,77 @@ draw arrowhead = {
     let bs3  = bs * 7.7177
     let b3   = bs3 - floor(bs3)
 
-    let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * 0.125 + (b1 - 0.5) * 0.05
-    let bpy  = 0.22 + b2 * 0.24
-    let bst  = (0.05 + b2 * 0.22) * (0.45 + Note.z * 1.60)
-    let bln  = (0.045 + b2 * 0.130) * (0.45 + Note.z * 1.60)
-    let bwd  = (0.016 + b3 * 0.058) * (0.45 + Note.z * 1.60)
-    let blea = b3 * 0.05 - 0.025
-    -- widest just above the notch, straight to a point at the tip: the
-    -- barbs are the part below 0, which is why bu starts negative
-    -- how far the barbs sweep back past the stalk, hashed per blade:
-    -- 0.12 is a spearhead, 0.55 is a full arrow
-    let barb = 0.12 + b1 * 0.43
-    let bt   = bu * (1.0 + barb) - barb
-    let bhw  = bwd * pow(max(1.0 - bt, 0.0), 0.55 + b1 * 0.90) * (0.25 + 0.75 * clamp((bt + barb) / (barb * 0.9), 0.0, 1.0))
+    let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * 0.125 + (b1 - 0.5) * 0.06
+    let bpy  = 0.20 + b2 * 0.26
+    let bst  = (0.028 + b2 * 0.080) * siz
+    let bcw  = (0.020 + b3 * 0.048) * siz
+    let bch  = bcw * (0.42 + b1 * 1.15)
+    let bang = ba * 3.14159
+    -- under 1 a parasol, over 1 a bell: the species, in one number
+    let bex  = 0.40 + b1 * 1.20
+    let bdrp = bch * (0.16 + b3 * 0.34)
+    let blo  = bpy + bst - bdrp * (1.0 - pow(sin(bang), 0.5))
+    let bhi  = bpy + bst + pow(sin(bang), bex) * bch * 1.28
 
-    -- ── stems: 3 x 16 = 48 emits
-    let tidx = floor(Stroke * 47.0 + 0.5)
-    let ti   = floor(tidx / 16.0)
-    let tq   = (tidx - ti * 16.0 + dth) / 16.0
+    -- ── gills: 3 x 20 out x 3 deep = 180 emits
+    let gidx = floor(Stroke * 179.0 + 0.5)
+    let gi   = floor(gidx / 60.0)
+    let grem = gidx - gi * 60.0
+    let ga   = (floor(grem / 3.0) + dth) / 20.0
+    let gr   = (grem - floor(grem / 3.0) * 3.0 + dth) / 3.0
 
-    let ts   = Count * 0.61803 + ti * 0.38197
-    let t1   = ts - floor(ts)
-    let ts2  = ts * 3.3301
-    let t2   = ts2 - floor(ts2)
-    let ts3  = ts * 7.7177
-    let t3   = ts3 - floor(ts3)
+    let gs   = Count * 0.61803 + gi * 0.38197
+    let g1   = gs - floor(gs)
+    let gs2  = gs * 3.3301
+    let g2   = gs2 - floor(gs2)
+    let gs3  = gs * 7.7177
+    let g3   = gs3 - floor(gs3)
 
-    let tpx  = cph * 2.70 - 1.35 + (ti - 1.0) * 0.125 + (t1 - 0.5) * 0.05
-    let tpy  = 0.22 + t2 * 0.24
-    let tst  = (0.05 + t2 * 0.22) * (0.45 + Note.z * 1.60)
-    let tlea = t3 * 0.05 - 0.025
+    let gpx  = cph * 2.70 - 1.35 + (gi - 1.0) * 0.125 + (g1 - 0.5) * 0.06
+    let gpy  = 0.20 + g2 * 0.26
+    let gst  = (0.028 + g2 * 0.080) * siz
+    let gcw  = (0.020 + g3 * 0.048) * siz
+    let gch  = gcw * (0.42 + g1 * 1.15)
+    let gang = ga * 3.14159
+    let gdrp = gch * (0.16 + g3 * 0.34)
 
-    -- ── blooms: 3 stems x 3 flowers x 22 round = 198 emits. Three
-    --    petals, stepping up a spike beside the blade.
-    let widx = floor(Stroke * 197.0 + 0.5)
-    let wi   = floor(widx / 66.0)
-    let wrem = widx - wi * 66.0
-    let wf   = floor(wrem / 22.0)
-    let wth  = ((wrem - wf * 22.0) + dth) / 22.0 * 6.28318
+    -- ── stalks: 3 x 18 up x 3 across = 162 emits
+    let sidx = floor(Stroke * 161.0 + 0.5)
+    let si   = floor(sidx / 54.0)
+    let srem = sidx - si * 54.0
+    let su   = (floor(srem / 3.0) + dth) / 18.0
+    let sv   = (srem - floor(srem / 3.0) * 3.0 + dth) / 3.0
 
-    let ws   = Count * 0.61803 + wi * 0.38197
-    let w1   = ws - floor(ws)
-    let ws2  = ws * 3.3301
-    let w2   = ws2 - floor(ws2)
-    let ws3  = ws * 7.7177
-    let w3   = ws3 - floor(ws3)
+    let ss   = Count * 0.61803 + si * 0.38197
+    let s1   = ss - floor(ss)
+    let ss2  = ss * 3.3301
+    let s2   = ss2 - floor(ss2)
+    let ss3  = ss * 7.7177
+    let s3   = ss3 - floor(ss3)
 
-    let wpx  = cph * 2.70 - 1.35 + (wi - 1.0) * 0.125 + (w1 - 0.5) * 0.05
-    let wpy  = 0.22 + w2 * 0.24
-    let wst  = (0.05 + w2 * 0.22) * (0.45 + Note.z * 1.60)
-    let wsid = 0.0 - 1.0 + 2.0 * floor(w3 * 2.0)
-    let wsz  = (0.006 + w1 * 0.017) * (0.45 + Note.z * 1.60)
-    -- |cos(3θ/2)| is the three-petal rose
-    -- three petals or four, and how far up the spike they sit
-    let wnp  = 1.5 + floor(w3 * 2.0) * 0.5
-    let wrr  = wsz * (0.30 + 0.70 * pow(abs(cos(wth * wnp)), 0.45 + w2 * 0.45))
+    let spx  = cph * 2.70 - 1.35 + (si - 1.0) * 0.125 + (s1 - 0.5) * 0.06
+    let spy  = 0.20 + s2 * 0.26
+    let sst  = (0.028 + s2 * 0.080) * siz
+    let slea = (s3 - 0.5) * 0.030 * siz
+    -- narrows as it climbs, and swells at the foot
+    let swd  = (0.0045 + s3 * 0.0055) * siz * (1.0 - 0.34 * su) * (1.0 + 0.85 / (1.0 + su * 14.0))
 
     Point
     | Overlay [
-        Spawn { n: 324, by: Sm(1.0) }
-            | Xa(bpx + blea + (bv - 0.5) * 2.0 * bhw)
-            | Ya(bpy + bst + bt * bln * 1.28),
-        Spawn { n: 48, by: Sm(1.0) }
-            | Xa(tpx + tlea * tq * tq)
-            | Ya(tpy + tq * tst),
-        Spawn { n: 198, by: Sm(1.0) }
-            | Xa(wpx + wsid * (0.012 + w2 * 0.038 + wf * (0.002 + w1 * 0.014)) + sin(wth) * wrr)
-            | Ya(wpy + wst * (0.34 + w1 * 0.42 + wf * (0.14 + w3 * 0.26)) + cos(wth) * wrr * 1.28),
+        Spawn { n: 672, by: Sm(1.0) }
+            | Xa(bpx + cos(bang) * bcw)
+            | Ya(blo + br * (bhi - blo)),
+        Spawn { n: 180, by: Sm(1.0) }
+            | Xa(gpx + cos(gang) * gcw * gr)
+            | Ya(gpy + gst - gdrp * (1.0 - pow(sin(gang), 0.5)) * gr - 0.0035 * siz),
+        Spawn { n: 162, by: Sm(1.0) }
+            | Xa(spx + slea * su * su + (sv - 0.5) * 2.0 * swd)
+            | Ya(spy + su * sst),
       ]
-    | Jitter(0.0006)
+    | Jitter(0.0005)
     | Pin
     | Gradient(moon)
-    | Tint(0.84, 0.96, 1.0, 0.80)
+    | Tint(0.94, 1.0, 0.96, 0.85)
 }
 
 -- AXATSE, GHOST → lily pads, lying flat on the stream. The quiet stroke
@@ -938,7 +952,7 @@ bh = { Cowbell acoustic | Gm 0.48
 -- blades. Neither moves once it is down — this is ground.
 ax = { Shaker wsc | Gm 0.42 | Pa 1/4
     | #ax
-    | Color [#f0fbff, #bfe8f4, #78c0cc, #3f8590, #204c56, #0a2026]
+    | Color [#ffffff, #eafff2, #c4f0d8, #8fc9ac, #4f7d68, #1c2f28]
     | wgsl {
         Sm 0.030; Smx 1.0; Smy 1.8;
         Shade moon;
@@ -948,7 +962,7 @@ ax = { Shaker wsc | Gm 0.42 | Pa 1/4
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.02 - Rand(12) * 0.10";
     }
-    | arrowhead
+    | mushroom
     | shallows
 }
 
