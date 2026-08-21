@@ -1,0 +1,342 @@
+{ f: 311.127, l: 1, g: 1/8, p: 0, background_color: #16141c }
+
+-- JIMBOCHO / IMPASTO — a POLYPTYCH of the multitrack.
+--
+-- Ten stems from "Jimbocho" (BPM 143), each trimmed to the same twelve bars
+-- (bar 59 → bar 71 of the master, t = 99.021s .. 119.161s) and peak-normalised
+-- so the quiet parts are as legible as the loud ones. Each stem is analysed by
+-- `FromSound(voices, fps)` — spectral tracking into a normal form — so the
+-- notes you see and the notes you hear are the SAME notes: the picture is not
+-- a reaction to the audio, it IS the audio.
+--
+-- THE LAYOUT IS THE POINT. Every stem gets its own vertical panel, 6/25 world
+-- units wide, marching left to right across the frame in score order: drums,
+-- bass, harmony, melody. `FitX c c` parks a voice at an exact column (the
+-- analysis is mono, so its pan extent is degenerate and the fit becomes pure
+-- placement); `FitY` rescales that stem's OWN pitch range onto the panel's
+-- full height, so a bass part and a sax part each use the whole column instead
+-- of one hugging the floor and the other the ceiling.
+--
+--   -27/25  kicks       -9/25  bass synth   9/25  arp synths  21/25  melody
+--   -21/25  percussion  -3/25  bass arps     3/5  clarinet    27/25  sax
+--     -3/5  percussion   3/25  pad synths
+--
+-- Every brush is drawn inside ±0.09, and the outermost panel sits at 1.08
+-- against a frame edge at 1.28 — the margin is what keeps a polyptych from
+-- becoming one painting. A brush that reaches past it (the arp spiral's
+-- `Rz "Time * 0.08"`, which turned about the WORLD origin and threw arcs two
+-- panels wide) is the failure mode to watch for.
+--
+-- MEDIUM: IMPASTO, unchanged from jdbeck_impasto.socool. Oil paint with real
+-- THICKNESS: every stroke deposits pigment (rgb) and paint mass (height, sx).
+-- Fresh paint levels slightly, then holds its ridges nearly forever. The cloth
+-- stage is a FINISHING PASS over the simulation: it lights the pigment by the
+-- height field's normals without ever writing into the paint itself.
+warp wet = {
+    Prev
+    | Bulge kicks { radius: 0.16, amount: 0.03, mirror: 1 }
+    | Diffuse Sx { rate: 0.06 }
+    | Decay Sx 0.995
+    | Diffuse RGB gated Sx { rate: 0.05 }
+    | Decay RGB 0.985
+    | Deposit RGB { gain: 0.10, grain: 0.18, cap: 0.9 }
+    | Deposit Sx { gain: 0.3 }
+    | Opaque
+}
+
+light studio = { from: (0.35, 0.55, 0.75), color: #fff4e2, gain: 0.85 }
+light room   = { ambient, color: #6a7590, gain: 0.55 }
+
+warp cloth = {
+    Scene
+    | Raking { from: Sx, light: studio, depth: 9.0 }
+}
+
+-- ════════════════════════════════════════════════════════════════════════
+-- BRUSHES. Every form is drawn inside ±0.11 world units so no panel can
+-- reach into its neighbour — the frame is a polyptych, and a polyptych with
+-- paint crossing the join is one painting, which is exactly what we are not
+-- making here.
+-- ════════════════════════════════════════════════════════════════════════
+
+-- KICKS: concentric circles, a ring overlaid with its shrunken twin.
+draw rings = {
+    Point | Spawn { n: 12, by: Rz(1/12) | Xa(0.045) }
+        | Overlay [ Sm 1, Sm 0.55 ]
+}
+
+-- PERCUSSION 1: a diagonal dash and its mirror, turned by its count.
+draw dash = {
+    Point | Lerp { to: Direction(0.03, 0.03, 0), n: 3 }
+        | Mirror(X)
+        | Rz(Count / 16)
+}
+
+-- PERCUSSION 2: a four-armed spark — a hit, not a stroke.
+draw spark = {
+    Point | Spawn { n: 4, by: Rz(1/4) }
+        | Each(Point | Lerp { to: Direction(0.04, 0, 0), n: 2 })
+        | Rz(Count / 8)
+}
+
+-- BASS SYNTH: a standing column. A sustained low note is a wall, not a dot.
+draw column = {
+    Point | Lerp { to: Direction(0, 0.07, 0), n: 6 }
+        | Mirror(Y)
+        | Modulate(Flow { scale: 3 }, 0.004)
+}
+
+-- BASS ARPS: a short bead chain — the arpeggio's own stepping, drawn.
+draw beads = {
+    Point | Spawn { n: 4, by: Ya(0.016) | Sm(0.9) }
+        | Jitter(0.004)
+}
+
+-- PAD SYNTHS: a wide soft cloud. Pads have no edges, so neither does this.
+draw wash = {
+    Point | Spawn { n: 10, by: Rz(1/10) | Xa(0.035) }
+        | Modulate(Noise { scale: 5 }, 0.02)
+        | Tint(1 - Stroke*0.2, 1 - Stroke*0.1, 1)
+}
+
+-- ARP SYNTHS: a shrinking spiral — the figure that keeps turning.
+draw spiral = {
+    Point | Spawn { n: 12, by: Rz(1/14) | Xa(-0.003) | Sm(0.94) }
+        | Xa(0.045)
+}
+
+-- CLARINET: a smooth arc. A reed line bends; it does not tick.
+draw reed = {
+    Path [ (-0.06, -0.015), (0, 0.03 + Note.y * 0.04), (0.06, -0.015) ]
+        | Smooth(12)
+        | Tint(1 - Stroke*0.25, 1 - Stroke*0.1, 1)
+}
+
+-- MELODY SYNTH: a nib. One mark per note, placed and then left alone, so
+-- consecutive notes land adjacent and the contour draws itself.
+draw nib = {
+    Point | Spawn { n: 1, by: Sm(1) }
+        | Jitter(0.003)
+}
+
+-- SAX: a straight run whose angle comes from pitch. Everything else in the
+-- frame is rotational or vertical; the reed cuts.
+draw run = {
+    Point | Lerp { to: Direction(0.055, 0.055, 0), n: 5 }
+        | Rz(Note.y * 1/4 - 1/8)
+}
+
+-- ════════════════════════════════════════════════════════════════════════
+-- THE TEN PANELS. `FromSound(16, 15)`: up to 16 simultaneous tracked voices,
+-- resampled to 15 analysis frames a second. THAT PAIR IS THE MASTER DIAL —
+-- it sets the audio's resynthesis fidelity AND the number of stamps on screen
+-- at once. (30, 20) is richer to listen to and paints ten saturated bars you
+-- cannot read; (8, 8) is legible and thin. 16/15 is where both are still
+-- worth having. Raise it once the layout is settled, not before.
+--
+-- Note that `Gm` here is LOUDNESS ONLY and `Sm` is SIZE. They are not
+-- independent in the engine — stamp size is note gain × BASE_SCALE × Sm — so
+-- the first cut of this piece, which used jdbeck_yin's `Gm 9`, drew quarter-
+-- frame stamps. The stems are peak-normalised, so analysis gains run to 1.0
+-- here where an un-normalised recording tops out near 0.075. Same op, two
+-- orders of magnitude apart: `Gm` is not portable between sources.
+-- ════════════════════════════════════════════════════════════════════════
+
+kicks = {
+    FromSound(16, 15) ./jimbocho/kicks.wav
+    | Gm 2
+    | Color [crimson, orangered, gold, black]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm "0.4 * (1.0 - exp(-Time * 14.0))";
+        Vm 0.5;
+        Bm "0.55 * exp(-Time * 3.0) + 0.10";
+        Die 3/2;
+        Seq [ Direction(0, 0, -1) | Lm 1; ];
+    }
+    | rings
+    | FitX -27/25 -27/25
+    | FitY -3/5 3/5
+    | #kicks
+}
+
+perc1 = {
+    FromSound(16, 15) ./jimbocho/perc1.wav
+    | Gm 2
+    | Color [white, lightcyan, silver, cornflowerblue]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm "0.22 + 0.2 * exp(-Time * 5.0)";
+        Vm 0.35;
+        Bm "0.35 * exp(-Time * 6.0) + 0.04";
+        Die 3/4;
+        Seq [ Direction(0, 1, 0) | Lm 2; ];
+    }
+    | dash
+    | FitX -21/25 -21/25
+    | FitY -3/5 3/5
+    | #perc1
+}
+
+perc2 = {
+    FromSound(16, 15) ./jimbocho/perc2.wav
+    | Gm 2
+    | Color [lavender, plum, silver, indigo]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm "0.275 + 0.33 * exp(-Time * 7.0)";
+        Vm 0.3;
+        Bm "0.55 * exp(-Time * 6.0) + 0.06";
+        Die 1;
+        Seq [ Direction(0, -1, 0) | Lm 2; ];
+    }
+    | spark
+    | FitX -3/5 -3/5
+    | FitY -3/5 3/5
+    | #perc2
+}
+
+bass_synth = {
+    FromSound(16, 15) ./jimbocho/bass_synth.wav
+    | Gm 2
+    | Color [royalblue, mediumblue, indigo, black]
+    | Gradient(0.4, 1, 0)
+    | wgsl {
+        Sm 0.413; Smy 1.5;
+        Vm 0.2;
+        Am 0.6;
+        Bm Slew(0.14, 4);
+        Die 2;
+        Seq [ Direction(0, 0, -1) | Lm 8; ];
+    }
+    | column
+    | FitX -9/25 -9/25
+    | FitY -3/5 3/5
+    | #bass_synth
+}
+
+bass_arps = {
+    FromSound(16, 15) ./jimbocho/bass_arps.wav
+    | Gm 2
+    | Color [teal, seafoam, slateblue, black]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm "0.358 + 0.193 * exp(-Time * 6.0)";
+        Vm 0.4;
+        Bm Slew(0.12, 5);
+        Die 3/2;
+        Seq [ Direction(0, 0.3, -1) | Lm 4; ];
+    }
+    | beads
+    | FitX -3/25 -3/25
+    | FitY -3/5 3/5
+    | #bass_arps
+}
+
+pads = {
+    FromSound(16, 15) ./jimbocho/pads.wav
+    | Gm 2
+    | Color [magenta, plum, deeppink, indigo]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm 0.605;
+        Vm 0.15;
+        Bm Slew(0.10, 3);
+        Am 0.28;
+        Die 5/2;
+        Seq [ Direction(0, 0, -1) | Lm 8; ];
+    }
+    | wash
+    | FitX 3/25 3/25
+    | FitY -3/5 3/5
+    | #pads
+}
+
+arps = {
+    FromSound(16, 15) ./jimbocho/arps.wav
+    | Gm 2
+    | Color [gold, amber, ochre, orangered]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm "0.358 + 0.22 * exp(-Time * 8.0)";
+        Vm 0.35;
+        Bm Slew(0.12, 5);
+        Die 3/2;
+        Seq [ Direction(0, 0, -1) | Lm 4; ];
+    }
+    | spiral
+    | FitX 9/25 9/25
+    | FitY -3/5 3/5
+    | #arps
+}
+
+clarinet = {
+    FromSound(16, 15) ./jimbocho/clarinet.wav
+    | Gm 2
+    | Color [coral, salmon, rust, black]
+    | Gradient(0.4, 1, 0)
+    | wgsl {
+        Sm 0.44;
+        Vm 0.25;
+        Am 0.6;
+        Bm Slew(0.14, 4);
+        Die 2;
+        Seq [ Direction(0, 0, -1) | Lm 8; ];
+    }
+    | reed
+    | FitX 3/5 3/5
+    | FitY -3/5 3/5
+    | #clarinet
+}
+
+melody = {
+    FromSound(16, 15) ./jimbocho/melody.wav
+    | Gm 2
+    | Color [chartreuse, ivory, seafoam, black]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm 0.55;
+        Vm 0;
+        Bm Slew(0.18, 4);
+        Die 4;
+    }
+    | nib
+    | FitX 21/25 21/25
+    | FitY -3/5 3/5
+    | #melody
+}
+
+sax = {
+    FromSound(16, 15) ./jimbocho/sax.wav
+    | Gm 2
+    | Color [ivory, gold, ochre, black]
+    | Gradient(0, 1, 0)
+    | wgsl {
+        Sm 0.44;
+        Vm 0.3;
+        Bm Slew(0.15, 4);
+        Die 2;
+        Seq [ Direction(1, 0.15, -0.4) | Lm 6; ];
+    }
+    | run
+    | FitX 27/25 27/25
+    | FitY -3/5 3/5
+    | #sax
+}
+
+main = {
+    Overlay [
+        kicks,
+        perc1,
+        perc2,
+        bass_synth,
+        bass_arps,
+        pads,
+        arps,
+        clarinet,
+        melody,
+        sax,
+    ]
+    | wet
+    | cloth
+} -> [kicks, perc1, perc2, bass_synth, bass_arps, pads, arps, clarinet, melody, sax]
