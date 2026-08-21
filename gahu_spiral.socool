@@ -697,7 +697,7 @@ draw mushroom = {
     let bs3  = bs * 7.7177
     let b3   = bs3 - floor(bs3)
 
-    let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * 0.125 + (b1 - 0.5) * 0.06
+    let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * (0.040 + b1 * 0.155) + (b1 - 0.5) * 0.06
     let bpy  = 0.20 + b2 * 0.26
     let bst  = (0.028 + b2 * 0.080) * siz
     let bcw  = (0.020 + b3 * 0.048) * siz
@@ -708,6 +708,11 @@ draw mushroom = {
     let bdrp = bch * (0.16 + b3 * 0.34)
     let blo  = bpy + bst - bdrp * (1.0 - pow(sin(bang), 0.5))
     let bhi  = bpy + bst + pow(sin(bang), bex) * bch * 1.28
+    -- spots: a hash per cell of the cap, only on the surface, and only on
+    -- the caps whose own hash says this is a spotted kind
+    let bhs  = sin(floor(ba * 28.0) * 12.9898 + floor(br * 8.0) * 78.233) * 43758.5453
+    let bspt = bhs - floor(bhs)
+    let bspot = clamp((bspt - 0.86) / 0.14, 0.0, 1.0) * br * clamp((b3 - 0.52) / 0.18, 0.0, 1.0)
 
     -- ── gills: 3 x 20 out x 3 deep = 180 emits
     let gidx = floor(Stroke * 179.0 + 0.5)
@@ -723,13 +728,14 @@ draw mushroom = {
     let gs3  = gs * 7.7177
     let g3   = gs3 - floor(gs3)
 
-    let gpx  = cph * 2.70 - 1.35 + (gi - 1.0) * 0.125 + (g1 - 0.5) * 0.06
+    let gpx  = cph * 2.70 - 1.35 + (gi - 1.0) * (0.040 + g1 * 0.155) + (g1 - 0.5) * 0.06
     let gpy  = 0.20 + g2 * 0.26
     let gst  = (0.028 + g2 * 0.080) * siz
     let gcw  = (0.020 + g3 * 0.048) * siz
     let gch  = gcw * (0.42 + g1 * 1.15)
     let gang = ga * 3.14159
     let gdrp = gch * (0.16 + g3 * 0.34)
+    let gstripe = Wrap(floor(ga * 20.0), 2.0)
 
     -- ── stalks: 3 x 18 up x 3 across = 162 emits
     let sidx = floor(Stroke * 161.0 + 0.5)
@@ -745,29 +751,72 @@ draw mushroom = {
     let ss3  = ss * 7.7177
     let s3   = ss3 - floor(ss3)
 
-    let spx  = cph * 2.70 - 1.35 + (si - 1.0) * 0.125 + (s1 - 0.5) * 0.06
+    let spx  = cph * 2.70 - 1.35 + (si - 1.0) * (0.040 + s1 * 0.155) + (s1 - 0.5) * 0.06
     let spy  = 0.20 + s2 * 0.26
     let sst  = (0.028 + s2 * 0.080) * siz
     let slea = (s3 - 0.5) * 0.030 * siz
     -- narrows as it climbs, and swells at the foot
     let swd  = (0.0045 + s3 * 0.0055) * siz * (1.0 - 0.34 * su) * (1.0 + 0.85 / (1.0 + su * 14.0))
 
+    -- ── skirts: 3 x 2 sides x 16 out = 96 emits
+    let kidx = floor(Stroke * 95.0 + 0.5)
+    let ki   = floor(kidx / 32.0)
+    let krem = kidx - ki * 32.0
+    let kd   = floor(krem / 16.0)
+    let kq   = (krem - kd * 16.0 + dth) / 16.0
+
+    let ks   = Count * 0.61803 + ki * 0.38197
+    let k1   = ks - floor(ks)
+    let ks2  = ks * 3.3301
+    let k2   = ks2 - floor(ks2)
+    let ks3  = ks * 7.7177
+    let k3   = ks3 - floor(ks3)
+
+    let kpx  = cph * 2.70 - 1.35 + (ki - 1.0) * (0.040 + k1 * 0.155) + (k1 - 0.5) * 0.06
+    let kpy  = 0.20 + k2 * 0.26
+    let kst  = (0.028 + k2 * 0.080) * siz
+    let klea = (k3 - 0.5) * 0.030 * siz
+    let kdir = 0.0 - 1.0 + 2.0 * kd
+    let kv   = 0.52 + k1 * 0.22
+    let kw   = (0.008 + k3 * 0.016) * siz
+    -- only the ones past the threshold have torn a veil yet
+    let kon  = clamp((k3 - 0.42) / 0.16, 0.0, 1.0)
+
     Point
     | Overlay [
+        -- THE CAP: ochre, darker over the crown the way a real one is,
+        -- and on the ones whose hash calls for it, spotted.
         Spawn { n: 672, by: Sm(1.0) }
             | Xa(bpx + cos(bang) * bcw)
-            | Ya(blo + br * (bhi - blo)),
+            | Ya(blo + br * (bhi - blo))
+            | Tint(1.02 - 0.26 * sin(bang) + bspot * 0.60,
+                   (0.84 - 0.22 * sin(bang) + bspot * 0.90) * (0.86 + b3 * 0.22),
+                   (0.52 - 0.20 * sin(bang) + bspot * 1.10) * (0.74 + b1 * 0.40),
+                   0.92),
+        -- THE GILLS: darker than the cap and alternating, because gills
+        -- are a comb and a comb is read by its stripes
         Spawn { n: 180, by: Sm(1.0) }
             | Xa(gpx + cos(gang) * gcw * gr)
-            | Ya(gpy + gst - gdrp * (1.0 - pow(sin(gang), 0.5)) * gr - 0.0035 * siz),
+            | Ya(gpy + gst - gdrp * (1.0 - pow(sin(gang), 0.5)) * gr - 0.0035 * siz)
+            | Tint(0.86 - gstripe * 0.26,
+                   0.66 - gstripe * 0.24,
+                   0.48 - gstripe * 0.18,
+                   0.88),
+        -- THE STALK: the palest thing on the mushroom
         Spawn { n: 162, by: Sm(1.0) }
             | Xa(spx + slea * su * su + (sv - 0.5) * 2.0 * swd)
-            | Ya(spy + su * sst),
+            | Ya(spy + su * sst)
+            | Tint(1.04, 1.00, 0.92, 0.90),
+        -- THE SKIRT: the torn ring left where the veil broke, on the
+        -- mushrooms old enough to have one
+        Spawn { n: 96, by: Sm(1.0) }
+            | Xa(kpx + klea * kv * kv + kdir * kq * kw)
+            | Ya(kpy + kv * kst - kq * kq * kw * 1.10)
+            | Tint(1.00, 0.94, 0.84, 0.72 * kon),
       ]
     | Jitter(0.0005)
     | Pin
     | Gradient(moon)
-    | Tint(0.94, 1.0, 0.96, 0.85)
 }
 
 -- AXATSE, GHOST → lily pads, lying flat on the stream. The quiet stroke
@@ -952,7 +1001,7 @@ bh = { Cowbell acoustic | Gm 0.48
 -- blades. Neither moves once it is down — this is ground.
 ax = { Shaker wsc | Gm 0.42 | Pa 1/4
     | #ax
-    | Color [#ffffff, #eafff2, #c4f0d8, #8fc9ac, #4f7d68, #1c2f28]
+    | Color [#fff4ea, #f6d9bd, #e0a87c, #b26a44, #6f3a26, #2a150f]
     | wgsl {
         Sm 0.030; Smx 1.0; Smy 1.8;
         Shade moon;
