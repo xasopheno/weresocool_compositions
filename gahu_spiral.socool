@@ -85,8 +85,8 @@
 -- The far planes say so by name: reeds, fiddleheads, flowers and lilies
 -- `Shade moon` — at that distance nothing else gets to them. The trunks
 -- and the stream say nothing and so take every light, the floor among them.
-light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 0.94 }
-light canopy = { ambient, color: #16402c, gain: 0.86 }
+light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 1.45 }
+light canopy = { ambient, color: #16402c, gain: 0.72 }
 light floor  = { from: (0.0, -1, 0.55), color: #46ffb4, gain: 0.32 }
 
 -- ── THE SKY UNDER THE CANOPY ────────────────────────────────────────────
@@ -100,7 +100,7 @@ layer {
         // the moon, high and to the right
         let a = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
         let dm = length(a);
-        let flare = 1.0 + hit(0u) * 0.30 + hit(5u) * 0.10;
+        let flare = 1.0;
         let disc = exp(0.0 - dm * dm * 820.0);
         let halo = exp(0.0 - dm * 3.10) * flare;
 
@@ -139,20 +139,6 @@ layer {
         c = c + vec3<f32>(0.014, 0.058, 0.034) * fl * fl
               * (0.70 + 0.30 * sin(Time * 0.23 + uv.x * 5.0));
 
-        // THE KICK IN THE GROUND. A thump of the floor's own light comes
-        // up out of the litter on every anchor stroke and is gone before
-        // the next — the lowest thing in the picture answering the lowest
-        // thing in the drums.
-        c = c + vec3<f32>(0.024, 0.092, 0.058) * hit(0u) * hit(0u)
-              * smoothstep(0.30, 1.00, uv.y);
-        // THE BELL IN THE AIR. The gankogui is the clock the whole
-        // ensemble hears, so it gets the whole frame — a cold lift, very
-        // small, on every stroke of the timeline.
-        c = c + vec3<f32>(0.013, 0.019, 0.028) * hit(5u);
-        // and the kaganu/kidi interlock, read as a breath in the canopy
-        c = c + vec3<f32>(0.006, 0.013, 0.010) * (hit(3u) * 0.6 + hit(2u))
-              * smoothstep(0.85, 0.10, uv.y);
-
         // the night deepens across the piece. The clock is the music's.
         let deep = smoothstep(3.0, 30.0, Time);
         c = c * mix(vec3<f32>(1.0), vec3<f32>(0.62, 0.80, 0.92), deep);
@@ -177,7 +163,17 @@ warp thicket over = {
     | Raw {
         let low = smoothstep(0.30, 0.88, uv.y);
         let fog = vec3<f32>(0.12, 0.14, 0.22);
-        color = vec4<f32>(mix(color.rgb, fog * 0.80, 0.18 * (1.0 - low) + 0.05), color.a);
+        let _fogged = mix(color.rgb, fog * 0.80, 0.18 * (1.0 - low) + 0.05);
+        // MOONSHINE: the broad turn toward the light, and the glint the
+        // wet surface makes on top of it. The alpha is this plane's own
+        // coverage, so the shine lands on the plant and never on the
+        // night between them.
+        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _face = exp(0.0 - length(_mp) * 0.80);
+        let _gl = k_vnoise(uv * 210.0);
+        let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
+        let _sh = vec3<f32>(0.62, 0.76, 1.00) * (_face * 0.10 + _spec * _face * 0.30) * color.a;
+        color = vec4<f32>(_fogged + _sh, color.a);
     }
 }
 
@@ -201,11 +197,20 @@ warp blooms over = {
         let g = fract(cell) - vec2<f32>(0.5);
         let n = k_vnoise(id);
         let dew = (1.0 - smoothstep(0.06, 0.20, length(g))) * step(0.90, n);
-        let twk = (0.45 + 0.35 * sin(Time * 2.3 + n * 40.0)) + 0.45 * hit(1u);
+        let twk = 0.55 + 0.45 * sin(Time * 2.3 + n * 40.0);
         var c = color.rgb;
         c = c + vec3<f32>(0.30, 0.44, 0.52) * band * 0.30 * color.a;
         c = c + vec3<f32>(0.75, 0.92, 1.00) * dew * twk * band * 1.40 * color.a;
-        color = vec4<f32>(c, color.a);
+        // MOONSHINE: the broad turn toward the light, and the glint the
+        // wet surface makes on top of it. The alpha is this plane's own
+        // coverage, so the shine lands on the plant and never on the
+        // night between them.
+        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _face = exp(0.0 - length(_mp) * 0.80);
+        let _gl = k_vnoise(uv * 300.0);
+        let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
+        let _sh = vec3<f32>(0.62, 0.76, 1.00) * (_face * 0.22 + _spec * _face * 0.80) * color.a;
+        color = vec4<f32>(c + _sh, color.a);
     }
 }
 
@@ -224,15 +229,23 @@ warp boles over = {
 
         let pid = floor(uv * vec2<f32>(46.0, 26.0));
         let pn = k_vnoise(pid);
-        let ring = sin(k_hit_dist(0u, uv) * 21.0 - hit_age(0u) * 7.0) * hit(0u);
-        let live = step(0.88 - max(ring, 0.0) * 0.24, pn);
+        let live = step(0.88, pn);
         let pf = fract(uv * vec2<f32>(46.0, 26.0)) - vec2<f32>(0.5);
         let blot = (1.0 - smoothstep(0.10, 0.42, length(pf))) * live;
         let puls = 0.45 + 0.55 * sin(Time * 1.4 + pn * 61.0);
 
         var c = color.rgb * bark;
-        c = c + vec3<f32>(0.14, 0.62, 0.40) * blot * puls * (0.50 + 0.45 * hit(0u)) * color.a;
-        color = vec4<f32>(c, color.a);
+        c = c + vec3<f32>(0.14, 0.62, 0.40) * blot * puls * 0.55 * color.a;
+        // MOONSHINE: the broad turn toward the light, and the glint the
+        // wet surface makes on top of it. The alpha is this plane's own
+        // coverage, so the shine lands on the plant and never on the
+        // night between them.
+        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _face = exp(0.0 - length(_mp) * 0.80);
+        let _gl = k_vnoise(uv * 260.0);
+        let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
+        let _sh = vec3<f32>(0.62, 0.76, 1.00) * (_face * 0.030 + _spec * _face * 0.15) * color.a;
+        color = vec4<f32>(c + _sh, color.a);
     }
 }
 
@@ -251,8 +264,15 @@ warp bank over = {
     | Gain 0.85
     | Opaque
     | Raw {
-        // the kaganu is fast, and the reeds answer every stroke of it
-        color = vec4<f32>(color.rgb * (0.92 + 0.30 * hit(3u)), color.a);
+        // MOONSHINE: the broad turn toward the light, and the glint the
+        // wet surface makes on top of it. The alpha is this plane's own
+        // coverage, so it lands on the plant and not on the night.
+        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _face = exp(0.0 - length(_mp) * 0.80);
+        let _gl = k_vnoise(uv * 280.0);
+        let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
+        let _sh = vec3<f32>(0.62, 0.76, 1.00) * (_face * 0.20 + _spec * _face * 0.75) * color.a;
+        color = vec4<f32>(color.rgb + _sh, color.a);
     }
 }
 
@@ -296,6 +316,17 @@ warp shallows over = {
     Scene
     | Gain 1.05
     | Opaque
+    | Raw {
+        // MOONSHINE: the broad turn toward the light, and the glint the
+        // wet surface makes on top of it. The alpha is this plane's own
+        // coverage, so it lands on the plant and not on the night.
+        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _face = exp(0.0 - length(_mp) * 0.80);
+        let _gl = k_vnoise(uv * 320.0);
+        let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
+        let _sh = vec3<f32>(0.62, 0.76, 1.00) * (_face * 0.26 + _spec * _face * 1.00) * color.a;
+        color = vec4<f32>(color.rgb + _sh, color.a);
+    }
 }
 
 -- ── THE FIGURES ─────────────────────────────────────────────────────────
@@ -422,7 +453,8 @@ draw trunk = {
 -- SOGO → a night flower. A corolla of five petals opening from the heart
 -- outward: the index runs round the rim, and `Stagger` lays it in that
 -- order, so the flower does not appear — it SWEEPS open like a second
--- hand, once per sogo stroke. Five of them, hung at five heights.
+-- hand, once per sogo stroke. Five of them, and no two alike: petal
+-- count, openness, size, height and hue are all hashed per flower.
 --
 -- The petal outline is the polar rose |cos(n·θ/2)|, lifted off zero so
 -- the lobes stay joined at the heart instead of pinching to points, and
@@ -446,13 +478,20 @@ draw bloom = {
     let fs3  = fs * 7.7177
     let f3   = fs3 - floor(fs3)
 
-    let px   = fph * 2.70 - 1.35 + (fi - 2.0) * 0.155 + (f1 - 0.5) * 0.07
-    let py   = 0.92 + f2 * 1.00
-    let siz  = (0.085 + f2 * 0.065) * (0.72 + Note.z * 0.46)
+    let px   = fph * 2.70 - 1.35 + (fi - 2.0) * 0.115 + (f1 - 0.5) * 0.62
+    let py   = 0.46 + f2 * 1.62
+    -- four to eight petals, hashed per flower: |cos(n·θ/2)| is the
+    -- n-petal polar rose, and n is the one number that changes what a
+    -- flower IS rather than how big it is
+    let np   = 4.0 + floor(f3 * 5.0)
+    let siz  = (0.040 + f2 * 0.165) * (0.60 + Note.z * 0.80)
     let spin = f3 * 6.28318
     let tha  = (ai + dth * 0.7) / na * 6.28318
-    let lobe = abs(cos(tha * 2.5))
-    let rr   = siz * (0.26 + 0.74 * pow(lobe, 0.62))
+    let lobe = abs(cos(tha * np * 0.5))
+    -- and how far the petals are cut back toward the heart: 0.10 is a
+    -- star, 0.55 is a cup
+    let cutb = 0.10 + f1 * 0.45
+    let rr   = siz * (cutb + (1.0 - cutb) * pow(lobe, 0.40 + f1 * 0.55))
     let qf   = (qi + dth) / nr
     let rad  = rr * qf
     let th   = tha + spin
@@ -468,7 +507,12 @@ draw bloom = {
     | Pin
     | Gradient(moon)
     -- gold at the heart, moon-white at the rim
-    | Tint(1.0, 0.78 + 0.22 * qf, 0.34 + 0.66 * qf, 0.85)
+    -- and its own colour: the heart stays gold, the rim wanders from
+    -- cream through rose to lilac depending on the flower's hash
+    | Tint(1.0,
+           (0.72 + 0.28 * qf) * (0.74 + f3 * 0.26),
+           (0.30 + 0.70 * qf) * (0.52 + f1 * 0.48),
+           0.85)
 }
 
 -- KAGANU → reeds. The blossom had to go: it was the sogo's flower at a
@@ -499,8 +543,8 @@ draw reed = {
 
     let spx  = nph * 2.70 - 1.35 + (si - 1.5) * 0.085
     let spy  = 0.40 + s2 * 0.13
-    let sh   = (0.26 + s2 * 0.30) * (0.60 + Note.z * 1.05)
-    let sln  = s3 * 0.13 - 0.065
+    let sh   = (0.16 + s2 * 0.52) * (0.60 + Note.z * 1.05)
+    let sln  = (s3 - 0.5) * (0.06 + s1 * 0.26)
     let swd  = 0.0055 * (1.0 - 0.75 * st)
 
     -- ── blades: 4 reeds x 2 blades x 14 along = 112 emits
@@ -519,10 +563,10 @@ draw reed = {
 
     let bpx  = nph * 2.70 - 1.35 + (bi - 1.5) * 0.085
     let bpy  = 0.40 + b2 * 0.13
-    let bh   = (0.26 + b2 * 0.30) * (0.60 + Note.z * 1.05)
-    let bln  = b3 * 0.13 - 0.065
+    let bh   = (0.16 + b2 * 0.52) * (0.60 + Note.z * 1.05)
+    let bln  = (b3 - 0.5) * (0.06 + b1 * 0.26)
     let bdir = 0.0 - 1.0 + 2.0 * bd2
-    let bv   = 0.34 + bd2 * 0.24
+    let bv   = 0.20 + bd2 * (0.18 + b1 * 0.42)
 
     Point
     | Overlay [
@@ -530,8 +574,8 @@ draw reed = {
             | Xa(spx + sln * st * st + (sc - 0.5) * 2.0 * swd)
             | Ya(spy + st * sh),
         Spawn { n: 112, by: Sm(1.0) }
-            | Xa(bpx + bln * bv * bv + bdir * bq * (0.055 + b3 * 0.045))
-            | Ya(bpy + bv * bh + bq * bh * 0.34 - bq * bq * bh * 0.40),
+            | Xa(bpx + bln * bv * bv + bdir * bq * (0.028 + b3 * 0.095))
+            | Ya(bpy + bv * bh + bq * bh * (0.18 + b1 * 0.34) - bq * bq * bh * (0.24 + b3 * 0.40)),
       ]
     | Jitter(0.0008)
     | Pin
@@ -567,9 +611,9 @@ draw crozier = {
 
     let spx  = vph * 2.70 - 1.35 + (si - 1.5) * 0.105 + (s1 - 0.5) * 0.035
     let spy  = 0.50 + s2 * 0.12
-    let sh   = (0.42 + s2 * 0.34) * (0.60 + Note.z * 0.95)
+    let sh   = (0.26 + s2 * 0.62) * (0.60 + Note.z * 0.95)
     let sdir = 0.0 - 1.0 + 2.0 * floor(s3 * 2.0)
-    let sln  = sdir * (0.055 + s3 * 0.055)
+    let sln  = sdir * (0.020 + s3 * 0.140)
     let swd  = 0.0055 * (1.0 - 0.45 * su)
 
     -- ── coils: 4 x 64 round = 256 emits. Two and a bit turns, closing
@@ -587,14 +631,16 @@ draw crozier = {
 
     let cpx  = vph * 2.70 - 1.35 + (ci - 1.5) * 0.105 + (c1 - 0.5) * 0.035
     let cpy  = 0.50 + c2 * 0.12
-    let ch   = (0.42 + c2 * 0.34) * (0.60 + Note.z * 0.95)
+    let ch   = (0.26 + c2 * 0.62) * (0.60 + Note.z * 0.95)
     let cdir = 0.0 - 1.0 + 2.0 * floor(c3 * 2.0)
-    let crad = (0.030 + c2 * 0.028) * (0.60 + Note.z * 0.95)
+    let crad = (0.016 + c2 * 0.050) * (0.60 + Note.z * 0.95)
     -- the coil sits off the top of the stalk, on the side it leans to
-    let ccx  = cpx + cdir * (0.055 + c3 * 0.055) + cdir * crad
+    let ccx  = cpx + cdir * (0.020 + c3 * 0.140) + cdir * crad
     let ccy  = cpy + ch + crad * 1.28
-    let cang = 3.14159 + cdir * cw * 14.0
-    let crr  = crad * (1.0 - 0.86 * cw)
+    -- one and a half turns to three and a half, and closing anywhere
+    -- from a loose curl to a tight button
+    let cang = 3.14159 + cdir * cw * (9.0 + c1 * 13.0)
+    let crr  = crad * (1.0 - (0.62 + c3 * 0.34) * cw)
 
     Point
     | Overlay [
@@ -638,14 +684,17 @@ draw arrowhead = {
 
     let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * 0.125 + (b1 - 0.5) * 0.05
     let bpy  = 0.22 + b2 * 0.24
-    let bst  = (0.10 + b2 * 0.10) * (0.45 + Note.z * 1.60)
-    let bln  = (0.075 + b2 * 0.060) * (0.45 + Note.z * 1.60)
-    let bwd  = (0.036 + b2 * 0.026) * (0.45 + Note.z * 1.60)
+    let bst  = (0.05 + b2 * 0.22) * (0.45 + Note.z * 1.60)
+    let bln  = (0.045 + b2 * 0.130) * (0.45 + Note.z * 1.60)
+    let bwd  = (0.016 + b3 * 0.058) * (0.45 + Note.z * 1.60)
     let blea = b3 * 0.05 - 0.025
     -- widest just above the notch, straight to a point at the tip: the
     -- barbs are the part below 0, which is why bu starts negative
-    let bt   = bu * 1.34 - 0.34
-    let bhw  = bwd * max(1.0 - bt, 0.0) * (0.25 + 0.75 * clamp((bt + 0.34) / 0.30, 0.0, 1.0))
+    -- how far the barbs sweep back past the stalk, hashed per blade:
+    -- 0.12 is a spearhead, 0.55 is a full arrow
+    let barb = 0.12 + b1 * 0.43
+    let bt   = bu * (1.0 + barb) - barb
+    let bhw  = bwd * pow(max(1.0 - bt, 0.0), 0.55 + b1 * 0.90) * (0.25 + 0.75 * clamp((bt + barb) / (barb * 0.9), 0.0, 1.0))
 
     -- ── stems: 3 x 16 = 48 emits
     let tidx = floor(Stroke * 47.0 + 0.5)
@@ -661,7 +710,7 @@ draw arrowhead = {
 
     let tpx  = cph * 2.70 - 1.35 + (ti - 1.0) * 0.125 + (t1 - 0.5) * 0.05
     let tpy  = 0.22 + t2 * 0.24
-    let tst  = (0.10 + t2 * 0.10) * (0.45 + Note.z * 1.60)
+    let tst  = (0.05 + t2 * 0.22) * (0.45 + Note.z * 1.60)
     let tlea = t3 * 0.05 - 0.025
 
     -- ── blooms: 3 stems x 3 flowers x 22 round = 198 emits. Three
@@ -681,11 +730,13 @@ draw arrowhead = {
 
     let wpx  = cph * 2.70 - 1.35 + (wi - 1.0) * 0.125 + (w1 - 0.5) * 0.05
     let wpy  = 0.22 + w2 * 0.24
-    let wst  = (0.10 + w2 * 0.10) * (0.45 + Note.z * 1.60)
+    let wst  = (0.05 + w2 * 0.22) * (0.45 + Note.z * 1.60)
     let wsid = 0.0 - 1.0 + 2.0 * floor(w3 * 2.0)
-    let wsz  = (0.011 + w2 * 0.008) * (0.45 + Note.z * 1.60)
+    let wsz  = (0.006 + w1 * 0.017) * (0.45 + Note.z * 1.60)
     -- |cos(3θ/2)| is the three-petal rose
-    let wrr  = wsz * (0.30 + 0.70 * pow(abs(cos(wth * 1.5)), 0.6))
+    -- three petals or four, and how far up the spike they sit
+    let wnp  = 1.5 + floor(w3 * 2.0) * 0.5
+    let wrr  = wsz * (0.30 + 0.70 * pow(abs(cos(wth * wnp)), 0.45 + w2 * 0.45))
 
     Point
     | Overlay [
@@ -696,8 +747,8 @@ draw arrowhead = {
             | Xa(tpx + tlea * tq * tq)
             | Ya(tpy + tq * tst),
         Spawn { n: 198, by: Sm(1.0) }
-            | Xa(wpx + wsid * (0.030 + wf * 0.006) + sin(wth) * wrr)
-            | Ya(wpy + wst * (0.62 + wf * 0.26) + cos(wth) * wrr * 1.28),
+            | Xa(wpx + wsid * (0.012 + w2 * 0.038 + wf * (0.002 + w1 * 0.014)) + sin(wth) * wrr)
+            | Ya(wpy + wst * (0.34 + w1 * 0.42 + wf * (0.14 + w3 * 0.26)) + cos(wth) * wrr * 1.28),
       ]
     | Jitter(0.0006)
     | Pin
@@ -734,8 +785,8 @@ draw pad = {
     let spin = g3 * 6.28318
     -- the notch: inside a narrow wedge the radius collapses to nothing
     let off = abs(th - 3.14159)
-    let cut = clamp(off / 0.42, 0.0, 1.0)
-    let rr  = (0.038 + g2 * 0.030) * (0.55 + Note.z * 1.40) * (0.12 + 0.88 * cut)
+    let cut = clamp(off / (0.18 + g1 * 0.60), 0.0, 1.0)
+    let rr  = (0.018 + g2 * 0.062) * (0.55 + Note.z * 1.40) * (0.12 + 0.88 * cut)
     let rad = rr * (qi + dth) / 4.0
 
     -- ── lilies: 3 x 30 round x 3 out = 270 emits, sitting just off the
@@ -755,16 +806,18 @@ draw pad = {
 
     let lpx  = gph * 2.70 - 1.35 + (li - 1.0) * 0.135 + (l1 - 0.5) * 0.06
     let lpy  = 0.06 + l2 * 0.30
-    let lsz  = (0.017 + l2 * 0.013) * (0.55 + Note.z * 1.40)
+    let lsz  = (0.009 + l2 * 0.026) * (0.55 + Note.z * 1.40)
     let lsid = 0.0 - 1.0 + 2.0 * floor(l3 * 2.0)
-    let lrr  = lsz * (0.24 + 0.76 * pow(abs(cos(lth * 4.0)), 0.55)) * lq
+    -- six, eight or ten petals on the lily, and how deeply they are cut
+    let lnp  = 3.0 + floor(l1 * 3.0)
+    let lrr  = lsz * (0.20 + 0.80 * pow(abs(cos(lth * lnp)), 0.40 + l2 * 0.50)) * lq
 
     Point
     | Overlay [
         Spawn { n: 312, by: Sm(1.0) }
             | Xa(px + sin(th + spin) * rad)
             -- lying flat: a circle on the water is this squashed
-            | Ya(py + cos(th + spin) * rad * 0.34),
+            | Ya(py + cos(th + spin) * rad * (0.22 + g3 * 0.26)),
         Spawn { n: 270, by: Sm(1.0) }
             | Xa(lpx + lsid * (0.048 + l3 * 0.024) + sin(lth + l3 * 6.2831) * lrr)
             | Ya(lpy + 0.020 + cos(lth + l3 * 6.2831) * lrr * 1.28),
@@ -849,7 +902,8 @@ bl = { Cowbell acoustic | Fm 2/3 | Gm 0.6
         Vm 0.0; Die 16;    -- the bell's sixteen strokes: the timeline, whole
         // it blinks. Each fly on its own phase, and the blink is what a
         // firefly IS — a steady dot would be a star.
-        Bm "(2.60 + Rand(2) * 1.40) * (0.55 + 1.20 * exp(0.0 - Time * 5.0))";
+        Bm "2.60 + Rand(2) * 1.40";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.55, life)";
         Za "0.02 - Rand(5) * 0.18";
         // ONE drifting field, read at each fly's own position: neighbours
@@ -868,7 +922,8 @@ bh = { Cowbell acoustic | Gm 0.48
     | wgsl {
         Sm 0.024; Smx 1.1; Smy 1.1;
         Vm 0.0; Die 16;    -- the same sixteen
-        Bm "(2.10 + Rand(6) * 1.20) * (0.55 + 1.20 * exp(0.0 - Time * 6.0))";
+        Bm "2.10 + Rand(6) * 1.20";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.55, life)";
         Za "0.02 - Rand(9) * 0.18";
         Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48)";
@@ -888,7 +943,8 @@ ax = { Shaker wsc | Gm 0.42 | Pa 1/4
         Sm 0.030; Smx 1.0; Smy 1.8;
         Shade moon;
         Vm 0.0; Die 16;    -- the axatse's sixteen: one full turn
-        Bm "(1.20 + Rand(11) * 0.50) * (0.62 + 1.10 * exp(0.0 - Time * 6.0))";
+        Bm "1.20 + Rand(11) * 0.50";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.02 - Rand(12) * 0.10";
     }
@@ -903,7 +959,8 @@ ag = { Shaker wsc | Gm 0.18 | Pa 1/4
         Sm 0.024; Smx 1.0; Smy 1.6;
         Shade moon;
         Vm 0.0; Die 16;    -- the same sixteen, ghosted
-        Bm "(0.75 + Rand(13) * 0.35) * (0.62 + 0.90 * exp(0.0 - Time * 7.0))";
+        Bm "0.75 + Rand(13) * 0.35";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.02 - Rand(15) * 0.10";
     }
@@ -920,11 +977,11 @@ ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3
         Sm 0.036; Smx 1.0; Smy 2.4;
         Shade moon;
         Vm 0.0; Die 16;    -- kaganu's sixteen: one full turn
-        Bm "(1.15 + Rand(13) * 0.50) * (0.60 + 1.30 * exp(0.0 - Time * 6.0))";
+        Bm "1.15 + Rand(13) * 0.50";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.40, life)";
         Za "0.0 - 0.26 - Rand(14) * 0.22";
         // a reed in a draught: it stiffens a little on the strike
-        Smy "1.4 * (1.0 + 0.35 * exp(0.0 - Time * 7.0))";
     }
     | reed
     | bank
@@ -939,11 +996,11 @@ ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6
         Sm 0.040; Smx 1.0; Smy 3.6;
         Shade moon;
         Vm 0.0; Die 12;    -- kidi's twelve: one full turn
-        Bm "(1.45 + Rand(16) * 0.60) * (0.55 + 1.40 * exp(0.0 - Time * 5.0))";
+        Bm "1.45 + Rand(16) * 0.60";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.08 + 0.92 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.10 - Rand(17) * 0.18";
         // the whole vine leans, very slowly, all of it together
-        Ya "0.0 - 0.030 * exp(0.0 - Time * 6.0)";
     }
     | crozier
     | thicket
@@ -956,16 +1013,15 @@ so = { Tom acoustic | Fm 5/6 | Gm 0.8 | Pa -1/6
     | #so
     | Color [#ffffff, #fff2d6, #ffd9a0, #f0a8c8, #b06a9c, #40204a]
     | wgsl {
-        Sm "0.038 * (1.0 + 0.45 * exp(0.0 - Time * 5.0))";
+        Sm 0.040;
         Smx 1.0; Smy 2.4;
         Shade moon;
         Vm 0.0; Die 24;    -- sogo's twenty-four: one full turn
-        Bm "(1.05 + Rand(19) * 0.45) * (0.72 + 1.30 * exp(0.0 - Time * 5.0))";
-        Bm Slew(0.55, 2.6);
+        Bm "1.05 + Rand(19) * 0.45";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.10 + 0.90 * smoothstep(0.0, 0.28, life)";
         Za "0.0 - 0.05 - Rand(20) * 0.14";
         // it dips on the strike and comes back up
-        Ya "0.0 - 0.030 * exp(0.0 - Time * 4.5)";
     }
     | bloom
     | blooms
@@ -980,8 +1036,8 @@ bd = { Kick acoustic | Fm 2/3 | Gm 1
     | wgsl {
         Sm 0.034; Smx 0.9; Smy 4.2;
         Vm 0.0; Die 24;    -- the anchor's twenty-four: one full turn
-        Bm "(0.62 + Rand(21) * 0.28) * (0.62 + 2.40 * exp(0.0 - Time * 7.0))";
-        Bm Slew(0.60, 5.5);
+        Bm "0.62 + Rand(21) * 0.28";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         // a trunk does not blink out at Die — it goes back into the dark
         Bm "0.16 + 0.84 * smoothstep(0.0, 0.22, life)";
         Za "0.0 - 0.02 - Rand(22) * 0.10";
@@ -1117,7 +1173,8 @@ bass = {
         Sm 0.19; Smx "2.6 + (0.0 - y) * 1.8"; Smy 0.30;
         Vm 0.04; Die 13;   -- 2.0 s
         Za "0.0 - 0.02 - Rand(23) * 0.10";
-        Bm "(0.55 + Rand(24) * 1.15) * (0.80 + 0.70 * exp(0.0 - Time * 4.0))";
+        Bm "0.55 + Rand(24) * 1.15";
+        Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.08 + 0.92 * smoothstep(0.0, 0.20, life)";
         Seq [ Direction(0.018, 0, 0) | Lm 12; ];
     }
