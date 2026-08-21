@@ -305,7 +305,7 @@ warp bank over = {
 warp sand over = {
     Scene
     | Blur 0.50
-    | Tint(0.34, 0.29, 0.22)
+    | Tint(0.38, 0.33, 0.25)
     | Opaque
     | Raw {
         let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
@@ -326,17 +326,26 @@ warp sand over = {
             let lit = clamp(0.52 + 0.34 * dr + 0.16 * dr2, 0.0, 1.2);
             // grain: fine near your feet, finer as the bed runs away
             let gr = k_vnoise(uv * (620.0 + 900.0 * d));
-            // and a dry sheen — sand does have one, but it is broad and
-            // weak, nothing like the specular the water carried
-            let sh = exp(0.0 - length(vec2<f32>((uv.x - 0.72 - _wind * 0.02) * 1.78, uv.y - 0.13)) * 0.55);
+            // AND IT GLOWS. Matte is not the same as dark: pale sand under
+            // a moon holds light and hands it back diffusely, which is the
+            // whole reason a beach at night is the brightest thing on it.
+            // The sheen is broad and soft where the water's was tight and
+            // hard — but it is not weak.
+            let sh = exp(0.0 - length(vec2<f32>((uv.x - 0.72 - _wind * 0.02) * 1.78, uv.y - 0.13)) * 0.40);
             var c = color.rgb * (0.34 + 1.45 * lit);
             c = c * (0.84 + 0.32 * gr);
-            c = c + vec3<f32>(0.30, 0.26, 0.20) * sh * 0.16 * color.a;
+            c = c + vec3<f32>(0.44, 0.38, 0.29) * sh * 0.44 * color.a;
+            // and the bed's own light, following the same ripple term, so
+            // the crests carry the glow and the troughs stay dark
+            c = c + vec3<f32>(0.115, 0.098, 0.072) * color.a * (0.30 + 0.70 * lit);
             // the bed darkens into the near corner, out of the moon
             c = c * (1.0 - 0.18 * clamp(d * 1.5 - 0.14, 0.0, 1.0));
             color = vec4<f32>(c, color.a);
         }
     }
+    -- and a little bloom, so the lit crests bleed the way a bright
+    -- diffuse surface does
+    | Bloom(0.34, 0.50)
 }
 
 -- THE EDGE OF THE BED: the mushrooms and the rosettes, in front of
