@@ -55,15 +55,16 @@
 --                   only spiral in the piece and findable at any size.
 --   kaganu (high) → REEDS: four bright stems standing off the bank on
 --                   every stroke — straight where the flower is round.
---   axatse (shk)  → THE WATER'S EDGE, and it plays two species: the loud
---                   stroke stands MUSHROOMS on the wet ground, the ghost
---                   floats a LILY PAD with its bloom beside it. The one
---                   voice on every stroke, so its accent pattern is which
---                   thing is growing, not how bright anything is.
+--   axatse (shk)  → THE EDGE OF THE BED, and it plays two species: the
+--                   loud stroke stands MUSHROOMS on the damp ground, the
+--                   ghost presses a ROSETTE flat to the sand with its
+--                   flower beside it. The one voice on every stroke, so
+--                   its accent pattern is which thing is growing, not how
+--                   bright anything is.
 --   bell   (gank) → FIREFLIES. The bell is the clock the whole ensemble
 --                   hears; the fireflies are the only marks that drift.
---   bass          → THE STREAM in the foreground. Its pitch is how far
---                   out the water lies, so the bassline is the current.
+--   bass          → THE SAND BED in the foreground. Its pitch is how far
+--                   out each drift line lies, so the bassline is the bed.
 --
 -- Gain is the only other thing that varies (`Gm 0.5`…`Gm 1`), so gain is
 -- weight everywhere: how tall the tree, how wide the flower, how much
@@ -78,16 +79,17 @@
 --           only thing in the frame that is far away.
 --   canopy  the ambient: filtered green. A shadow in a jungle is not a
 --           darkness, it is the colour of the leaf that made it.
---   floor   from BELOW — rotting wood and fungus, faint, green-cyan. It
---           reaches the near plane and nothing else, which is what makes
---           it read as ground and not as a second moon.
+--   floor   from BELOW — the moon coming back up off the pale sand of
+--           the bed, faint and warm. It reaches the near plane and
+--           nothing else, which is what makes it read as ground and not
+--           as a second moon.
 --
 -- The far planes say so by name: reeds, fiddleheads, flowers, mushrooms
 -- `Shade moon` — at that distance nothing else gets to them. The trunks
 -- and the stream say nothing and so take every light, the floor among them.
 light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 1.45 }
 light canopy = { ambient, color: #16402c, gain: 0.72 }
-light floor  = { from: (0.0, -1, 0.55), color: #46ffb4, gain: 0.32 }
+light floor  = { from: (0.0, -1, 0.55), color: #ffddab, gain: 0.30 }
 
 -- ── THE SKY UNDER THE CANOPY ────────────────────────────────────────────
 -- The only emitter in the piece. It is a sky you can barely see: the moon
@@ -137,9 +139,9 @@ layer {
         c = c + vec3<f32>(0.013, 0.024, 0.030) * exp(0.0 - mp * mp)
               * (0.55 + 0.45 * sin(Time * 0.09 + uv.x * 3.1));
 
-        // and the floor's own light, thrown back up out of the leaf litter
+        // and the light the sand throws back up out of the bed
         let fl = clamp((uv.y - 0.80) * 4.4, 0.0, 1.0);
-        c = c + vec3<f32>(0.014, 0.058, 0.034) * fl * fl
+        c = c + vec3<f32>(0.052, 0.040, 0.026) * fl * fl
               * (0.70 + 0.30 * sin(Time * 0.23 + uv.x * 5.0));
 
         // the night deepens across the piece. The clock is the music's.
@@ -284,42 +286,62 @@ warp bank over = {
     }
 }
 
--- FOREGROUND: the stream. Defined last, so it lies in front of everything
--- — you are standing on the near bank. `Mix(boles, 0.0)` changes nothing
--- on its own; it is there to REGISTER the reference, which binds the
--- trunks' live image so the Raw below can sample it mirrored.
-warp water over = {
+-- FOREGROUND: THE SAND. Defined last, so it lies in front of everything
+-- — you are standing on the near bank of a dry bed.
+--
+-- It used to be a stream, and the difference between the two is entirely
+-- in how they take the light. Water REFLECTS: it borrowed the trunks'
+-- own image, mirrored about the waterline, and broke the moon into
+-- caustics on top of it. Sand does the opposite — it is matte, it gives
+-- nothing back, and the only thing you see is its own RELIEF: the ripples
+-- the wind leaves lying across the bed, lit on the faces that turn to the
+-- moon and shadowed on the ones that turn away.
+--
+-- So the reflection is gone, the caustics are gone, and what is left is a
+-- lambert term against the slope of the ripple field plus the grain of
+-- the grains themselves. The bass still draws the bed — its pitch is
+-- still how far out each drift line lies — but the marks are now dry
+-- drift rather than current.
+warp sand over = {
     Scene
-    | Blur 0.25
-    | Tint(0.06, 0.12, 0.17)
+    | Blur 0.50
+    | Tint(0.34, 0.29, 0.22)
     | Opaque
-    | Mix(boles, 0.0)
     | Raw {
-        // The forest, upside down, in the water — mirrored about the
-        // waterline and dragged by the current, times color.a, which
-        // Opaque set from the BASS's coverage. So the reflection exists
-        // only where the bass has laid water.
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
         let h = 0.70;
         if (uv.y > h) {
             let d = uv.y - h;
-            let wob = sin(uv.y * 130.0 + Time * 1.05) * 0.0046
-                    + sin(uv.y * 47.0 - Time * 0.63) * 0.0033;
-            let src = clamp(vec2<f32>(uv.x + wob, h - d * 0.95), vec2<f32>(0.0), vec2<f32>(1.0));
-            let refl = textureSample(ref_tex, ref_samp, src).rgb;
-            let fade = exp(0.0 - d * 1.70);
-            // and the moon, broken on the surface
-            let cn = k_vnoise(vec2<f32>(uv.x * 34.0 + Time * 0.12, uv.y * 90.0 - Time * 0.28));
-            let cau = pow(clamp(cn, 0.0, 1.0), 6.0);
-            var c = color.rgb + refl * fade * 1.90 * color.a;
-            c = c + vec3<f32>(0.34, 0.52, 0.66) * cau * color.a * 0.90;
+            // THE RIPPLES. They run ACROSS the bed, and their line is bent
+            // by a slow function of x, which is what stops a ripple field
+            // reading as a barcode. The phase creeps with the wind.
+            let ph = uv.y * 190.0 + sin(uv.x * 2.7 + _wind * 0.45) * 2.4
+                   + sin(uv.x * 7.3) * 0.7;
+            // the derivative IS the slope, so the lit face falls out of
+            // the same expression that drew the ripple — no second field,
+            // and the light can never disagree with the shape
+            let dr = cos(ph);
+            let ph2 = uv.y * 61.0 - uv.x * 1.9 + _wind * 0.30;
+            let dr2 = cos(ph2);
+            let lit = clamp(0.52 + 0.34 * dr + 0.16 * dr2, 0.0, 1.2);
+            // grain: fine near your feet, finer as the bed runs away
+            let gr = k_vnoise(uv * (620.0 + 900.0 * d));
+            // and a dry sheen — sand does have one, but it is broad and
+            // weak, nothing like the specular the water carried
+            let sh = exp(0.0 - length(vec2<f32>((uv.x - 0.72 - _wind * 0.02) * 1.78, uv.y - 0.13)) * 0.55);
+            var c = color.rgb * (0.34 + 1.45 * lit);
+            c = c * (0.84 + 0.32 * gr);
+            c = c + vec3<f32>(0.30, 0.26, 0.20) * sh * 0.16 * color.a;
+            // the bed darkens into the near corner, out of the moon
+            c = c * (1.0 - 0.18 * clamp(d * 1.5 - 0.14, 0.0, 1.0));
             color = vec4<f32>(c, color.a);
         }
     }
 }
 
--- THE WATER'S EDGE: the mushrooms and the lilies, in front of
--- everything. Opaque, because they are bodies — a cap is solid and a pad
--- is a leaf on a surface, and both hide what is under them.
+-- THE EDGE OF THE BED: the mushrooms and the rosettes, in front of
+-- everything. Opaque, because they are bodies — a cap is solid and a
+-- rosette is a leaf on the ground, and both hide what is under them.
 warp shallows over = {
     Scene
     | Gain 1.05
@@ -327,7 +349,8 @@ warp shallows over = {
     | Raw {
         // MOONSHINE: the broad turn toward the light, and the glint the
         // wet surface makes on top of it. The alpha is this plane's own
-        // coverage, so it lands on the plant and not on the night.
+        // coverage, so the shine lands on the plant and never on the
+        // night between them.
         let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
         let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
@@ -930,14 +953,14 @@ draw firefly = {
     | Tint(1.0, 1.0, 0.92, 0.85)
 }
 
--- BASS → the stream. One streak of water per note lying flat in front of
--- the forest, between the waterline and your feet. Its PITCH is how far
--- out it lies — high notes ride up by the far bank, low notes come toward
--- you — and it is the one voice in the piece whose pitch actually moves,
--- so it is the one place pitch is allowed to place anything. The span is
--- the note's gain, not its length: `Note.l` here is 0.005, because a
+-- BASS → the bed. One drift line per note lying flat in front of the
+-- forest, between the far bank and your feet. Its PITCH is how far out it
+-- lies — high notes ride up by the far bank, low notes come toward you —
+-- and it is the one voice in the piece whose pitch actually moves, so it
+-- is the one place pitch is allowed to place anything. The span is the
+-- note's gain, not its length: `Note.l` here is 0.005, because a
 -- sustained voice is sampled every 5 ms and its length is a tick.
-draw current = {
+draw drift = {
     let ws  = Count * 0.61803
     let w1  = ws - floor(ws)
     let wy  = 0.520 - (Note.y - 0.18) * 0.72
@@ -949,13 +972,13 @@ draw current = {
     | Lerp { to: Direction(0.60 + Note.z * 1.38, 0, 0), n: 10 }
     | Modulate(Flow { scale: 2.2 }, 0.004)
     | Pin
-    -- along the current: silver where the moon reaches it, black as it
-    -- runs under the trees. Named, so the water's ramp and the light on
-    -- every other body in the piece are the same fact.
+    -- along the drift: pale where the moon reaches it, sinking to a dark
+    -- earth as it runs under the trees. Named, so the sand's ramp and the
+    -- light on every other body in the piece are the same fact.
     | Gradient(moon)
-    -- and THINNER as it runs: full at the head of the streak, trailing
-    -- off at the tail, so the current has a direction in substance and
-    -- not only in hue.
+    -- and THINNER as it runs: full at the head of the line, trailing off
+    -- at the tail, so a drift has a direction in substance and not only
+    -- in tone.
     | Tint(1, 1, 1, 0.40 + 0.60 * (1.0 - Stroke))
 }
 
@@ -1250,17 +1273,17 @@ bass = {
     | Fm 2
     | Tanh(2.2, 0.6)
     | Gm 0.55
-    -- the water is not one colour: moonlit where the gap in the canopy
-    -- lets the light down onto it, sinking to a cold slate as it runs out
-    -- under the trees. A ramp along the current, which `Gradient` in
-    -- `current` reads across each line.
-    | Color [#e8f4ff, #b4cfe4, #74a0bc, #3d6480, #1b3448, #07141e]
+    -- sand is not one colour either: bleached where the gap in the canopy
+    -- lets the moon down onto it, sinking to a damp earth as it runs out
+    -- under the trees. A ramp along the drift, which `Gradient` in `drift`
+    -- reads across each line.
+    | Color [#f6ecda, #ddc9a8, #b6a07c, #877457, #574a37, #221c15]
     | wgsl {
         -- THIN. `Smx` stretches these into lines and `Smy` is their
         -- thickness, so thinning is Smy's job, not Sm's — dropping Sm
         -- would shorten the line as well as narrow it, and the length is
         -- the current.
-        Sm 0.19; Smx "2.6 + (0.0 - y) * 1.8"; Smy 0.30;
+        Sm 0.19; Smx "2.6 + (0.0 - y) * 1.8"; Smy 0.62;
         Vm 0.04; Die 13;   -- 2.0 s
         Za "0.0 - 0.02 - Rand(23) * 0.10";
         Bm "0.55 + Rand(24) * 1.15";
@@ -1268,8 +1291,8 @@ bass = {
         Bm "0.08 + 0.92 * smoothstep(0.0, 0.20, life)";
         Seq [ Direction(0.018, 0, 0) | Lm 12; ];
     }
-    | current
-    | water
+    | drift
+    | sand
 }
 
 spiral = {
