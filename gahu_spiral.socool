@@ -104,16 +104,19 @@ layer {
         let disc = exp(0.0 - dm * dm * 820.0);
         let halo = exp(0.0 - dm * 3.10) * flare;
 
+        // THE WIND, and everything below reads it
+        let _w = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+
         // THE CANOPY. Not drawn — a mask. It thins toward the bottom of
         // the frame because below the branches there is nothing to block.
-        let d1 = k_vnoise(uv * vec2<f32>(9.0, 5.0) + vec2<f32>(Time * 0.013, Time * 0.007));
-        let d2 = k_vnoise(uv * vec2<f32>(23.0, 13.0) + vec2<f32>(Time * 0.021, 0.0 - Time * 0.011));
+        let d1 = k_vnoise(uv * vec2<f32>(9.0, 5.0) + vec2<f32>(Time * 0.013 + _w * 0.016, Time * 0.007));
+        let d2 = k_vnoise(uv * vec2<f32>(23.0, 13.0) + vec2<f32>(Time * 0.021 + _w * 0.024, 0.0 - Time * 0.011));
         let leafy = clamp(d1 * 0.66 + d2 * 0.34, 0.0, 1.0);
         let cover = mix(1.0, smoothstep(0.16, 0.74, leafy), smoothstep(0.66, 0.14, uv.y));
 
         // SHAFTS — the same noise, so the light moves when the leaves do
         let ang = atan2(a.y, a.x);
-        let ray = 0.5 + 0.5 * sin(ang * 17.0 + Time * 0.05 + leafy * 3.4);
+        let ray = 0.5 + 0.5 * sin(ang * 17.0 + Time * 0.05 + leafy * 3.4 + _w * 0.62);
         let shaft = pow(ray, 5.0) * exp(0.0 - dm * 1.35) * smoothstep(0.02, 0.58, uv.y);
 
         let silver = vec3<f32>(0.80, 0.88, 1.00);
@@ -168,7 +171,8 @@ warp thicket over = {
         // wet surface makes on top of it. The alpha is this plane's own
         // coverage, so the shine lands on the plant and never on the
         // night between them.
-        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
         let _gl = k_vnoise(uv * 210.0);
         let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
@@ -189,7 +193,8 @@ warp blooms over = {
     | Opaque
     | Raw {
         // a slow sheen crawling across the petals
-        let sheen = 0.5 + 0.5 * sin(uv.x * 5.4 + uv.y * 3.1 + Time * 0.24);
+        let _wsh = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let sheen = 0.5 + 0.5 * sin(uv.x * 5.4 + uv.y * 3.1 + Time * 0.24 + _wsh * 1.10);
         let band = pow(sheen, 6.0);
         // and dew, which only glints where the sheen is on it
         let cell = uv * vec2<f32>(150.0, 84.0);
@@ -205,7 +210,8 @@ warp blooms over = {
         // wet surface makes on top of it. The alpha is this plane's own
         // coverage, so the shine lands on the plant and never on the
         // night between them.
-        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
         let _gl = k_vnoise(uv * 300.0);
         let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
@@ -240,7 +246,8 @@ warp boles over = {
         // wet surface makes on top of it. The alpha is this plane's own
         // coverage, so the shine lands on the plant and never on the
         // night between them.
-        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
         let _gl = k_vnoise(uv * 260.0);
         let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
@@ -267,7 +274,8 @@ warp bank over = {
         // MOONSHINE: the broad turn toward the light, and the glint the
         // wet surface makes on top of it. The alpha is this plane's own
         // coverage, so it lands on the plant and not on the night.
-        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
         let _gl = k_vnoise(uv * 280.0);
         let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
@@ -320,7 +328,8 @@ warp shallows over = {
         // MOONSHINE: the broad turn toward the light, and the glint the
         // wet surface makes on top of it. The alpha is this plane's own
         // coverage, so it lands on the plant and not on the night.
-        let _mp = vec2<f32>((uv.x - 0.72) * 1.78, uv.y - 0.13);
+        let _wind = 0.62 * sin(Time * 0.113) + 0.38 * sin(Time * 0.071 + 1.7);
+        let _mp = vec2<f32>((uv.x - 0.72 - _wind * 0.020) * 1.78, uv.y - 0.13 + _wind * 0.008);
         let _face = exp(0.0 - length(_mp) * 0.80);
         let _gl = k_vnoise(uv * 320.0);
         let _spec = pow(clamp(_gl, 0.0, 1.0), 4.0);
@@ -971,7 +980,7 @@ bl = { Cowbell acoustic | Fm 2/3 | Gm 0.6
         Za "0.02 - Rand(5) * 0.18";
         // ONE drifting field, read at each fly's own position: neighbours
         // get nearly the same answer and move as a body, far ones peel off
-        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48)";
+        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48) + (0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.030";
         Ya "0.030 * cos(x * 3.8 - Clock * 0.62) + 0.018 * cos(x * 8.7 + Clock * 0.91)";
         Seq [ Direction(0, 0, 0) | Lm 6; ];
     }
@@ -989,7 +998,7 @@ bh = { Cowbell acoustic | Gm 0.48
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.55, life)";
         Za "0.02 - Rand(9) * 0.18";
-        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48)";
+        Xa "0.055 * sin(y * 4.6 + Clock * 0.70) + 0.026 * sin(y * 10.5 - Clock * 0.48) + (0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.030";
         Ya "0.030 * cos(x * 3.8 - Clock * 0.62) + 0.018 * cos(x * 8.7 + Clock * 0.91)";
         Seq [ Direction(0, 0, 0) | Lm 6; ];
     }
@@ -1006,6 +1015,9 @@ ax = { Shaker wsc | Gm 0.42 | Pa 1/4
         Sm 0.030; Smx 1.0; Smy 1.8;
         Shade moon;
         Vm 0.0; Die 16;    -- the axatse's sixteen: one full turn
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: a mushroom is low and barely feels it
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.004 * max(y - 0.30, 0.0)";
         Bm "1.20 + Rand(11) * 0.50";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
@@ -1022,6 +1034,9 @@ ag = { Shaker wsc | Gm 0.18 | Pa 1/4
         Sm 0.024; Smx 1.0; Smy 1.6;
         Shade moon;
         Vm 0.0; Die 16;    -- the same sixteen, ghosted
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: a pad on the water feels it least of all
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.003 * max(y - 0.30, 0.0)";
         Bm "0.75 + Rand(13) * 0.35";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
@@ -1040,6 +1055,9 @@ ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3
         Sm 0.036; Smx 1.0; Smy 2.4;
         Shade moon;
         Vm 0.0; Die 16;    -- kaganu's sixteen: one full turn
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: reeds bend most of anything on the bank
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.015 * max(y - 0.30, 0.0)";
         Bm "1.15 + Rand(13) * 0.50";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.40, life)";
@@ -1059,6 +1077,9 @@ ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6
         Sm 0.040; Smx 1.0; Smy 3.6;
         Shade moon;
         Vm 0.0; Die 12;    -- kidi's twelve: one full turn
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: a fern on a long stalk is the most flexible thing here
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.020 * max(y - 0.30, 0.0)";
         Bm "1.45 + Rand(16) * 0.60";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.08 + 0.92 * smoothstep(0.0, 0.30, life)";
@@ -1080,6 +1101,9 @@ so = { Tom acoustic | Fm 5/6 | Gm 0.8 | Pa -1/6
         Smx 1.0; Smy 2.4;
         Shade moon;
         Vm 0.0; Die 24;    -- sogo's twenty-four: one full turn
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: the canopy rides it
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.016 * max(y - 0.30, 0.0)";
         Bm "1.05 + Rand(19) * 0.45";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         Bm "0.10 + 0.90 * smoothstep(0.0, 0.28, life)";
@@ -1099,6 +1123,9 @@ bd = { Kick acoustic | Fm 2/3 | Gm 1
     | wgsl {
         Sm 0.034; Smx 0.9; Smy 4.2;
         Vm 0.0; Die 24;    -- the anchor's twenty-four: one full turn
+        -- THE WIND, the same field the shafts swing on, scaled by how
+        -- far this mark stands above the ground: a trunk hardly bends, but its crown does
+        Xa "(0.62 * sin(Clock * 0.113) + 0.38 * sin(Clock * 0.071 + 1.7)) * 0.008 * max(y - 0.30, 0.0)";
         Bm "0.62 + Rand(21) * 0.28";
         Bm "0.62 + 0.38 * (1.0 - exp(0.0 - Time * 5.0))";
         // a trunk does not blink out at Die — it goes back into the dark
