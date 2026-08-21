@@ -42,22 +42,24 @@
 -- title is named for, now with a whole cycle on screen to see it against.
 --
 -- y is which voice, and it is the forest's own order — fireflies in the
--- air, flowers under them, vines hanging through, trees rooted in the
--- water, reeds on the bank and the shaker's rings on the water itself. So the picture is a jungle read
+-- air, flowers under them, fiddleheads uncurling below those, trees
+-- rooted in the water, reeds on the bank, and the arrowheads and lilies
+-- standing in and lying on the stream itself. So the picture is a jungle read
 -- top to bottom and a bar read left to right at the same time.
 --
 --   anchor (kick) → the TRUNKS. Each kick raises one, out of the stream,
 --                   tapered, leaning, buttressed, forking near the top.
 --   sogo   (low)  → FLOWERS: a five-petal night bloom that sweeps open
 --                   from its heart on every stroke of the low drum.
---   kidi   (mid)  → SEED PODS hanging in clusters under the canopy —
---                   the only closed shape and the only violet.
+--   kidi   (mid)  → FIDDLEHEADS: young ferns still furled, copper, the
+--                   only spiral in the piece and findable at any size.
 --   kaganu (high) → REEDS: four bright stems standing off the bank on
 --                   every stroke — straight where the flower is round.
---   axatse (shk)  → RINGS ON THE WATER. It is the only voice on every
---                   stroke, so it gets the bottom of the frame to itself:
---                   flattened circles dropped at its column and gone
---                   before the next one. Its accents are the ring sizes.
+--   axatse (shk)  → THE SHALLOWS, and it plays two species: the loud
+--                   stroke stands an ARROWHEAD out of the water with its
+--                   three-petal spike, the ghost floats a LILY PAD with
+--                   its bloom beside it. The one voice on every stroke,
+--                   so its accent pattern is which plant, not how bright.
 --   bell   (gank) → FIREFLIES. The bell is the clock the whole ensemble
 --                   hears; the fireflies are the only marks that drift.
 --   bass          → THE STREAM in the foreground. Its pitch is how far
@@ -80,7 +82,7 @@
 --           reaches the near plane and nothing else, which is what makes
 --           it read as ground and not as a second moon.
 --
--- The far planes say so by name: reeds, vines, flowers and rings take
+-- The far planes say so by name: reeds, fiddleheads, flowers and lilies
 -- `Shade moon` — at that distance nothing else gets to them. The trunks
 -- and the stream say nothing and so take every light, the floor among them.
 light moon   = { from: (0.42, 0.92, 0.34), color: #cfe2ff, gain: 0.94 }
@@ -287,11 +289,13 @@ warp water over = {
     }
 }
 
--- The rings the shaker drops on the water. Light on a surface, not a
--- body standing in front of one, so no `Opaque` — they add.
-warp rings over = {
+-- THE SHALLOWS: the arrowheads and the lilies, standing in and lying on
+-- the water in front of everything. `Opaque`, because they are bodies —
+-- a pad is a leaf on a surface and it hides what is under it.
+warp shallows over = {
     Scene
-    | Gain 1.15
+    | Gain 1.05
+    | Opaque
 }
 
 -- ── THE FIGURES ─────────────────────────────────────────────────────────
@@ -418,7 +422,7 @@ draw trunk = {
 -- SOGO → a night flower. A corolla of five petals opening from the heart
 -- outward: the index runs round the rim, and `Stagger` lays it in that
 -- order, so the flower does not appear — it SWEEPS open like a second
--- hand, once per sogo stroke. Three of them, hung at three heights.
+-- hand, once per sogo stroke. Five of them, hung at five heights.
 --
 -- The petal outline is the polar rose |cos(n·θ/2)|, lifted off zero so
 -- the lobes stay joined at the heart instead of pinching to points, and
@@ -427,11 +431,11 @@ draw bloom = {
     let dth  = Note.t * 61.7 - floor(Note.t * 61.7)
     let fph  = Note.t / 2.4 - floor(Note.t / 2.4)
 
-    let na   = 40.0
-    let nr   = 9.0
-    let idx  = floor(Stroke * 1079.0 + 0.5)
-    let fi   = floor(idx / 360.0)
-    let rem  = idx - fi * 360.0
+    let na   = 36.0
+    let nr   = 8.0
+    let idx  = floor(Stroke * 1439.0 + 0.5)
+    let fi   = floor(idx / 288.0)
+    let rem  = idx - fi * 288.0
     let ai   = floor(rem / nr)
     let qi   = rem - ai * nr
 
@@ -442,7 +446,7 @@ draw bloom = {
     let fs3  = fs * 7.7177
     let f3   = fs3 - floor(fs3)
 
-    let px   = fph * 3.40 - 1.70 + (fi - 1.0) * 0.26 + (f1 - 0.5) * 0.10
+    let px   = fph * 2.70 - 1.35 + (fi - 2.0) * 0.155 + (f1 - 0.5) * 0.07
     let py   = 0.92 + f2 * 1.00
     let siz  = (0.085 + f2 * 0.065) * (0.72 + Note.z * 0.46)
     let spin = f3 * 6.28318
@@ -454,7 +458,7 @@ draw bloom = {
     let th   = tha + spin
 
     Point
-    | Spawn { n: 1080, by: Sm(1.0) }
+    | Spawn { n: 1440, by: Sm(1.0) }
         | Xa(px + sin(th) * rad)
         -- 1.28 is the aspect: one x unit covers more of the frame than
         -- one y unit, so a circle needs the taller radius
@@ -535,46 +539,118 @@ draw reed = {
     | Tint(0.80, 1.0, 0.86, 0.90)
 }
 
--- KIDI → seed pods, hanging in clusters under the canopy. The vine that
--- was here ran the whole height of the frame as a thin broken line, and
--- next to the trunks and the reeds it read as a lightning strike, not as
--- anything growing. A pod is short where the vine was long and round
--- where every other figure in the piece is straight, so kidi is now
--- findable at a glance — the only violet, and the only closed shape
--- hanging in the air.
+-- KIDI → fiddleheads. A young fern before it opens: a stalk that leans
+-- out and then rolls its tip into a tight coil. It is the only SPIRAL in
+-- the piece, which is the reason it is here — a spiral is findable at any
+-- size, at any brightness, next to anything else, and kidi needed to stop
+-- being confused with the reeds standing under it.
 --
--- Four to a stroke on kidi's own bar column: a thread, and a body that
--- swells below it and comes to a point.
-draw pod = {
+-- Four to a stroke on kidi's own bar column, in copper, standing in the
+-- middle ground between the reeds on the bank and the flowers above.
+draw crozier = {
     let dth = Note.t * 61.7 - floor(Note.t * 61.7)
     let vph = Note.t / 2.4 - floor(Note.t / 2.4)
 
-    -- ── bodies: 4 pods x 22 down x 6 across = 528 emits
-    let bidx = floor(Stroke * 527.0 + 0.5)
-    let pi   = floor(bidx / 132.0)
-    let brem = bidx - pi * 132.0
-    let bu   = (floor(brem / 6.0) + dth) / 22.0
+    -- ── stalks: 4 x 26 along x 2 across = 208 emits
+    let sidx = floor(Stroke * 207.0 + 0.5)
+    let si   = floor(sidx / 52.0)
+    let srem = sidx - si * 52.0
+    let su   = (floor(srem / 2.0) + dth) / 26.0
+    let sc   = srem - floor(srem / 2.0) * 2.0
+
+    let ss   = Count * 0.61803 + si * 0.38197
+    let s1   = ss - floor(ss)
+    let ss2  = ss * 3.3301
+    let s2   = ss2 - floor(ss2)
+    let ss3  = ss * 7.7177
+    let s3   = ss3 - floor(ss3)
+
+    let spx  = vph * 2.70 - 1.35 + (si - 1.5) * 0.105 + (s1 - 0.5) * 0.035
+    let spy  = 0.50 + s2 * 0.12
+    let sh   = (0.42 + s2 * 0.34) * (0.60 + Note.z * 0.95)
+    let sdir = 0.0 - 1.0 + 2.0 * floor(s3 * 2.0)
+    let sln  = sdir * (0.055 + s3 * 0.055)
+    let swd  = 0.0055 * (1.0 - 0.45 * su)
+
+    -- ── coils: 4 x 64 round = 256 emits. Two and a bit turns, closing
+    --    on the centre — the head of the fern, still furled.
+    let cidx = floor(Stroke * 255.0 + 0.5)
+    let ci   = floor(cidx / 64.0)
+    let cw   = ((cidx - ci * 64.0) + dth) / 64.0
+
+    let cs   = Count * 0.61803 + ci * 0.38197
+    let c1   = cs - floor(cs)
+    let cs2  = cs * 3.3301
+    let c2   = cs2 - floor(cs2)
+    let cs3  = cs * 7.7177
+    let c3   = cs3 - floor(cs3)
+
+    let cpx  = vph * 2.70 - 1.35 + (ci - 1.5) * 0.105 + (c1 - 0.5) * 0.035
+    let cpy  = 0.50 + c2 * 0.12
+    let ch   = (0.42 + c2 * 0.34) * (0.60 + Note.z * 0.95)
+    let cdir = 0.0 - 1.0 + 2.0 * floor(c3 * 2.0)
+    let crad = (0.030 + c2 * 0.028) * (0.60 + Note.z * 0.95)
+    -- the coil sits off the top of the stalk, on the side it leans to
+    let ccx  = cpx + cdir * (0.055 + c3 * 0.055) + cdir * crad
+    let ccy  = cpy + ch + crad * 1.28
+    let cang = 3.14159 + cdir * cw * 14.0
+    let crr  = crad * (1.0 - 0.86 * cw)
+
+    Point
+    | Overlay [
+        Spawn { n: 208, by: Sm(1.0) }
+            | Xa(spx + sln * su * su + (sc - 0.5) * 2.0 * swd)
+            | Ya(spy + su * sh),
+        Spawn { n: 256, by: Sm(1.0) }
+            | Xa(ccx + sin(cang) * crr)
+            | Ya(ccy + cos(cang) * crr * 1.28),
+      ]
+    | Jitter(0.0007)
+    | Pin
+    | Gradient(moon)
+    | Tint(1.0, 0.88, 0.72, 0.88)
+}
+
+-- AXATSE, ACCENT → arrowhead. Sagittaria, standing out of the shallows:
+-- a thin stem and a blade that comes to a point with two barbs swept back
+-- past the stalk. The rings that used to be here were the one thing in
+-- the frame that was not a plant, and they read as rain on a puddle.
+--
+-- Three to a stroke, low, in cold teal — the loud stroke of the shaker,
+-- so the blades are its accents.
+draw arrowhead = {
+    let dth = Note.t * 61.7 - floor(Note.t * 61.7)
+    let cph = Note.t / 2.4 - floor(Note.t / 2.4)
+
+    -- ── blades: 3 x 18 along x 6 across = 324 emits
+    let bidx = floor(Stroke * 323.0 + 0.5)
+    let bi   = floor(bidx / 108.0)
+    let brem = bidx - bi * 108.0
+    let bu   = (floor(brem / 6.0) + dth) / 18.0
     let bv   = (brem - floor(brem / 6.0) * 6.0 + dth) / 6.0
 
-    let ps   = Count * 0.61803 + pi * 0.38197
-    let p1   = ps - floor(ps)
-    let ps2  = ps * 3.3301
-    let p2   = ps2 - floor(ps2)
-    let ps3  = ps * 7.7177
-    let p3   = ps3 - floor(ps3)
+    let bs   = Count * 0.61803 + bi * 0.38197
+    let b1   = bs - floor(bs)
+    let bs2  = bs * 3.3301
+    let b2   = bs2 - floor(bs2)
+    let bs3  = bs * 7.7177
+    let b3   = bs3 - floor(bs3)
 
-    let ppx  = vph * 2.70 - 1.35 + (pi - 1.5) * 0.095 + (p1 - 0.5) * 0.03
-    let pty  = 1.42 + p2 * 0.62
-    let thr  = 0.055 + p3 * 0.070
-    let blen = (0.085 + p2 * 0.075) * (0.60 + Note.z * 0.90)
-    let bwid = (0.020 + p2 * 0.016) * (0.60 + Note.z * 0.90)
-    -- fat below the middle and pointed at the tip, the way a pod hangs
-    let hw   = bwid * pow(sin(bu * 3.14159), 0.55) * (0.55 + 0.65 * bu)
+    let bpx  = cph * 2.70 - 1.35 + (bi - 1.0) * 0.125 + (b1 - 0.5) * 0.05
+    let bpy  = 0.22 + b2 * 0.24
+    let bst  = (0.10 + b2 * 0.10) * (0.45 + Note.z * 1.60)
+    let bln  = (0.075 + b2 * 0.060) * (0.45 + Note.z * 1.60)
+    let bwd  = (0.036 + b2 * 0.026) * (0.45 + Note.z * 1.60)
+    let blea = b3 * 0.05 - 0.025
+    -- widest just above the notch, straight to a point at the tip: the
+    -- barbs are the part below 0, which is why bu starts negative
+    let bt   = bu * 1.34 - 0.34
+    let bhw  = bwd * max(1.0 - bt, 0.0) * (0.25 + 0.75 * clamp((bt + 0.34) / 0.30, 0.0, 1.0))
 
-    -- ── threads: 4 pods x 10 down = 40 emits
-    let tidx = floor(Stroke * 39.0 + 0.5)
-    let ti   = floor(tidx / 10.0)
-    let tq   = (tidx - ti * 10.0 + dth) / 10.0
+    -- ── stems: 3 x 16 = 48 emits
+    let tidx = floor(Stroke * 47.0 + 0.5)
+    let ti   = floor(tidx / 16.0)
+    let tq   = (tidx - ti * 16.0 + dth) / 16.0
 
     let ts   = Count * 0.61803 + ti * 0.38197
     let t1   = ts - floor(ts)
@@ -583,68 +659,120 @@ draw pod = {
     let ts3  = ts * 7.7177
     let t3   = ts3 - floor(ts3)
 
-    let tpx  = vph * 2.70 - 1.35 + (ti - 1.5) * 0.095 + (t1 - 0.5) * 0.03
-    let tty  = 1.42 + t2 * 0.62
-    let tthr = 0.055 + t3 * 0.070
+    let tpx  = cph * 2.70 - 1.35 + (ti - 1.0) * 0.125 + (t1 - 0.5) * 0.05
+    let tpy  = 0.22 + t2 * 0.24
+    let tst  = (0.10 + t2 * 0.10) * (0.45 + Note.z * 1.60)
+    let tlea = t3 * 0.05 - 0.025
+
+    -- ── blooms: 3 stems x 3 flowers x 22 round = 198 emits. Three
+    --    petals, stepping up a spike beside the blade.
+    let widx = floor(Stroke * 197.0 + 0.5)
+    let wi   = floor(widx / 66.0)
+    let wrem = widx - wi * 66.0
+    let wf   = floor(wrem / 22.0)
+    let wth  = ((wrem - wf * 22.0) + dth) / 22.0 * 6.28318
+
+    let ws   = Count * 0.61803 + wi * 0.38197
+    let w1   = ws - floor(ws)
+    let ws2  = ws * 3.3301
+    let w2   = ws2 - floor(ws2)
+    let ws3  = ws * 7.7177
+    let w3   = ws3 - floor(ws3)
+
+    let wpx  = cph * 2.70 - 1.35 + (wi - 1.0) * 0.125 + (w1 - 0.5) * 0.05
+    let wpy  = 0.22 + w2 * 0.24
+    let wst  = (0.10 + w2 * 0.10) * (0.45 + Note.z * 1.60)
+    let wsid = 0.0 - 1.0 + 2.0 * floor(w3 * 2.0)
+    let wsz  = (0.011 + w2 * 0.008) * (0.45 + Note.z * 1.60)
+    -- |cos(3θ/2)| is the three-petal rose
+    let wrr  = wsz * (0.30 + 0.70 * pow(abs(cos(wth * 1.5)), 0.6))
 
     Point
     | Overlay [
-        Spawn { n: 528, by: Sm(1.0) }
-            | Xa(ppx + (bv - 0.5) * 2.0 * hw)
-            | Ya(pty - thr - bu * blen),
-        Spawn { n: 40, by: Sm(1.0) }
-            | Xa(tpx)
-            | Ya(tty - tq * tthr),
+        Spawn { n: 324, by: Sm(1.0) }
+            | Xa(bpx + blea + (bv - 0.5) * 2.0 * bhw)
+            | Ya(bpy + bst + bt * bln * 1.28),
+        Spawn { n: 48, by: Sm(1.0) }
+            | Xa(tpx + tlea * tq * tq)
+            | Ya(tpy + tq * tst),
+        Spawn { n: 198, by: Sm(1.0) }
+            | Xa(wpx + wsid * (0.030 + wf * 0.006) + sin(wth) * wrr)
+            | Ya(wpy + wst * (0.62 + wf * 0.26) + cos(wth) * wrr * 1.28),
       ]
-    | Jitter(0.0007)
-    | Pin
-    | Gradient(moon)
-    | Tint(0.92, 0.84, 1.0, 0.85)
-}
-
--- AXATSE → rings on the water. The litter was a scratch on the bank and
--- it read as dirt on the lens, which is a poor showing for the one voice
--- that plays on every stroke. The shaker is now the WATER'S SURFACE: two
--- or three concentric rings dropped at its bar column, flattened the way
--- a circle on a horizontal plane is flattened, and gone before the next
--- stroke. They have the bottom of the frame to themselves, so the fastest
--- part in the ensemble is also the easiest one to find.
---
--- The loud stroke drops wide rings and the ghost drops small ones — the
--- axatse's accent pattern is the ring size, which is the one thing that
--- voice actually varies.
-draw ripple = {
-    let dth = Note.t * 61.7 - floor(Note.t * 61.7)
-    let cph = Note.t / 2.4 - floor(Note.t / 2.4)
-
-    -- 2 drops x 3 rings x 34 round = 204 emits
-    let idx = floor(Stroke * 203.0 + 0.5)
-    let ci  = floor(idx / 102.0)
-    let rem = idx - ci * 102.0
-    let ri  = floor(rem / 34.0)
-    let th  = ((rem - ri * 34.0) + dth) / 34.0 * 6.28318
-
-    let cs  = Count * 0.61803 + ci * 0.38197
-    let c1  = cs - floor(cs)
-    let cs2 = cs * 3.3301
-    let c2  = cs2 - floor(cs2)
-
-    let px  = cph * 2.70 - 1.35 + (ci - 0.5) * 0.14 + (c1 - 0.5) * 0.06
-    -- below the waterline at y = 0.556, out in front of the trees
-    let py  = 0.08 + c2 * 0.34
-    let rad = (0.035 + ri * 0.042) * (0.45 + Note.z * 2.10)
-
-    Point
-    | Spawn { n: 204, by: Sm(1.0) }
-        | Xa(px + sin(th) * rad)
-        -- 0.30 is the water lying flat: a circle on that plane is an
-        -- ellipse this squashed, and getting it wrong is what makes a
-        -- ripple read as a bubble in the air instead
-        | Ya(py + cos(th) * rad * 0.30)
     | Jitter(0.0006)
     | Pin
     | Gradient(moon)
-    | Tint(0.88, 0.96, 1.0, 0.75)
+    | Tint(0.84, 0.96, 1.0, 0.80)
+}
+
+-- AXATSE, GHOST → lily pads, lying flat on the stream. The quiet stroke
+-- of the same voice gets a different species, low and horizontal, so the
+-- shaker's accent pattern is legible as TWO PLANTS rather than as two
+-- brightnesses. The notch is what stops a pad reading as a circle: the
+-- wedge collapses to the centre, the way a real pad is cut to its stem.
+draw pad = {
+    let dth = Note.t * 61.7 - floor(Note.t * 61.7)
+    let gph = Note.t / 2.4 - floor(Note.t / 2.4)
+
+    -- 3 pads x 26 round x 4 out = 312 emits
+    let idx = floor(Stroke * 311.0 + 0.5)
+    let gi  = floor(idx / 104.0)
+    let rem = idx - gi * 104.0
+    let ai  = floor(rem / 4.0)
+    let qi  = rem - ai * 4.0
+    let th  = (ai + dth) / 26.0 * 6.28318
+
+    let gs  = Count * 0.61803 + gi * 0.38197
+    let g1  = gs - floor(gs)
+    let gs2 = gs * 3.3301
+    let g2  = gs2 - floor(gs2)
+    let gs3 = gs * 7.7177
+    let g3  = gs3 - floor(gs3)
+
+    let px  = gph * 2.70 - 1.35 + (gi - 1.0) * 0.135 + (g1 - 0.5) * 0.06
+    let py  = 0.06 + g2 * 0.30
+    let spin = g3 * 6.28318
+    -- the notch: inside a narrow wedge the radius collapses to nothing
+    let off = abs(th - 3.14159)
+    let cut = clamp(off / 0.42, 0.0, 1.0)
+    let rr  = (0.038 + g2 * 0.030) * (0.55 + Note.z * 1.40) * (0.12 + 0.88 * cut)
+    let rad = rr * (qi + dth) / 4.0
+
+    -- ── lilies: 3 x 30 round x 3 out = 270 emits, sitting just off the
+    --    pad and standing a little proud of the surface
+    let lidx = floor(Stroke * 269.0 + 0.5)
+    let li   = floor(lidx / 90.0)
+    let lrem = lidx - li * 90.0
+    let lth  = (floor(lrem / 3.0) + dth) / 30.0 * 6.28318
+    let lq   = (lrem - floor(lrem / 3.0) * 3.0 + dth) / 3.0
+
+    let ls   = Count * 0.61803 + li * 0.38197
+    let l1   = ls - floor(ls)
+    let ls2  = ls * 3.3301
+    let l2   = ls2 - floor(ls2)
+    let ls3  = ls * 7.7177
+    let l3   = ls3 - floor(ls3)
+
+    let lpx  = gph * 2.70 - 1.35 + (li - 1.0) * 0.135 + (l1 - 0.5) * 0.06
+    let lpy  = 0.06 + l2 * 0.30
+    let lsz  = (0.017 + l2 * 0.013) * (0.55 + Note.z * 1.40)
+    let lsid = 0.0 - 1.0 + 2.0 * floor(l3 * 2.0)
+    let lrr  = lsz * (0.24 + 0.76 * pow(abs(cos(lth * 4.0)), 0.55)) * lq
+
+    Point
+    | Overlay [
+        Spawn { n: 312, by: Sm(1.0) }
+            | Xa(px + sin(th + spin) * rad)
+            -- lying flat: a circle on the water is this squashed
+            | Ya(py + cos(th + spin) * rad * 0.34),
+        Spawn { n: 270, by: Sm(1.0) }
+            | Xa(lpx + lsid * (0.048 + l3 * 0.024) + sin(lth + l3 * 6.2831) * lrr)
+            | Ya(lpy + 0.020 + cos(lth + l3 * 6.2831) * lrr * 1.28),
+      ]
+    | Jitter(0.0005)
+    | Pin
+    | Gradient(moon)
+    | Tint(0.86, 1.0, 0.88, 0.75)
 }
 
 -- BELL → fireflies. Three a stroke, each a small lozenge. Everything else
@@ -755,7 +883,7 @@ bh = { Cowbell acoustic | Gm 0.48
 -- blades. Neither moves once it is down — this is ground.
 ax = { Shaker wsc | Gm 0.42 | Pa 1/4
     | #ax
-    | Color [#ffffff, #e4f2ff, #b6dcf6, #74acd4, #3a6a88, #14293c]
+    | Color [#f0fbff, #bfe8f4, #78c0cc, #3f8590, #204c56, #0a2026]
     | wgsl {
         Sm 0.030; Smx 1.0; Smy 1.8;
         Shade moon;
@@ -764,13 +892,13 @@ ax = { Shaker wsc | Gm 0.42 | Pa 1/4
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.02 - Rand(12) * 0.10";
     }
-    | ripple
-    | rings
+    | arrowhead
+    | shallows
 }
 
 ag = { Shaker wsc | Gm 0.18 | Pa 1/4
     | #ax
-    | Color [#ffffff, #dcedfb, #a8cfec, #6699bf, #325d78, #112232]
+    | Color [#f2fff2, #c4ecc8, #8cbf94, #56895f, #2f5236, #101f14]
     | wgsl {
         Sm 0.024; Smx 1.0; Smy 1.6;
         Shade moon;
@@ -779,8 +907,8 @@ ag = { Shaker wsc | Gm 0.18 | Pa 1/4
         Bm "0.05 + 0.95 * smoothstep(0.0, 0.30, life)";
         Za "0.0 - 0.02 - Rand(15) * 0.10";
     }
-    | ripple
-    | rings
+    | pad
+    | shallows
 }
 
 -- kaganu: the understory. Cheapest figure, shortest life, furthest back —
@@ -806,7 +934,7 @@ ka = { Tom conga | Fm 7/4 | Gm 0.38 | Pa -1/3
 -- — a liana that swayed on every stroke would be a rope in a gale.
 ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6
     | #ki
-    | Color [#f6eeff, #dcc4f2, #b490dc, #8259b4, #4e3078, #1e123a]
+    | Color [#fff4e4, #ffdcb0, #eeae74, #bd7842, #7d4a26, #2e1a0e]
     | wgsl {
         Sm 0.040; Smx 1.0; Smy 3.6;
         Shade moon;
@@ -817,7 +945,7 @@ ki = { Tom conga | Fm 5/4 | Gm 0.7 | Pa 1/6
         // the whole vine leans, very slowly, all of it together
         Ya "0.0 - 0.030 * exp(0.0 - Time * 6.0)";
     }
-    | pod
+    | crozier
     | thicket
 }
 
