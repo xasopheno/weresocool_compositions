@@ -1,4 +1,4 @@
-{ f: 311.127, l: 1, g: 1/8, p: 0, background_color: #000000 }
+{ f: 311.127, l: 1, g: 1/8, p: 0, background_color: #05060c }
 
 -- JIMBOCHO / HELD — the multitrack as a deep space.
 --
@@ -29,24 +29,54 @@
 -- one deep space rather than ten panels.
 
 -- ─── space: the far field, the only chain that remembers ─────────────────
-warp space = {
+-- ── THE GROUND ──────────────────────────────────────────────────────────
+-- The void, written as a SURFACE rather than as an absence. A canvas def is
+-- authorable in the piece, so this is not one of the library papers with the
+-- lights turned down — it is a ground built to be nothing and still be
+-- something: near-black, but with a weave four times finer than linen's and a
+-- tooth that breaks a fill just enough that a flat passage is never flat.
+--
+-- Two things make it read as depth rather than as paper painted black. On a
+-- dark ground absorption has almost nothing left to take, so `density` drops
+-- to 2.6 and the marks read by what they RETURN instead of what they stop.
+-- And `absorb.black: 1.0` — coverage as an independent witness that pigment
+-- is present — is what lets a dark mark be a dark mark here at all, since on
+-- a subtractive surface "how much paint" is max(r,g,b) and #000000 has none.
+--
+-- `sheen.knee` is the one number that must not be guessed: it is in the same
+-- units as `Lay`'s `cap`, and the library's knees assume a cap near 5. This
+-- piece caps at 1.7, so a knee copied from linen would sit three times above
+-- anything the paint can reach and no passage would ever catch the light.
+canvas void = {
+    ground: #05060c,
+    weave: { scale: 900, depth: 0.014, slub: 150 },
+    tooth: 0.04,
+    absorb: { density: 3.0, chroma: 2.15, black: 1.0 },
+    sheen: { knee: 3.2, gain: 0.46, tint: 0.38 },
+    edge: 0.06,
+    relief: { depth: 3.0 },
+    reflect: { gain: 0.5, sharp: 22 },
+}
+
+light key = { from: (-1.2, 1.1, 0.6), color: #ffd9a0, gain: 1.30 }
+light rim = { from: (0.9, -0.3, -1.5), color: #8fb8ff, gain: 0.90 }
+light air = { ambient, color: #1e2740, gain: 0.22 }
+
+-- ── THE WET LAYER ───────────────────────────────────────────────────────
+-- Marks accumulate here and only here, which is what keeps the picture from
+-- flashing: it is held in this buffer rather than rebuilt each frame out of
+-- whichever stamps happen to be alive.
+warp wet = {
     Prev
-    | Decay 0.55
-    | Add (Scene | Bloom { threshold: 0.72, strength: 0.05 })
-    | Knee 0.33
-    | Gamma 1.10
+    | Lay { keep: 0.9880, gain: 1.0, cap: 6.0 }
+    | Diffuse Sxyz { rate: 0.022 }
+    | Diffuse Sw { rate: 0.022 }
 }
 
--- ─── middle: solids that occlude the far field ───────────────────────────
-warp middle over = {
+warp canvas = {
     Scene
-    | Opaque
-}
-
--- ─── front: solids that occlude everything ───────────────────────────────
-warp front over = {
-    Scene
-    | Opaque
+    | Paint(void)
+    | Raking { from: Sw, light: key, depth: 14.0 }
 }
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -108,11 +138,15 @@ draw cube = {
         | Overlay [ Sm 1, Za(-0.34) ]
         | Ry(0.5 * 0.18 - 0.09)
         | Rx(0.5 * 0.14 - 0.07)
-        | Sm(0.21)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(-0.9454)
-        | Xa(sin(Note.t * 0.83) * 0.1057)
-        | Za(cos(Note.t * 0.57) * 0.400))
+        | Ry(Note.t * 0.043)
+        | Rz(Note.t * 0.017)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(1.25, 0.34, -0.90), n: 30 } ]
+        | Sm(0.29)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.00) * 6.2832) * 1.72)
+        | Ya(-0.0095 + 0.01 - sin((Note.t * 0.012 + 0.00) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.00) * 6.2832) * 1.72))
 }
 
 -- PERCUSSION 1 — a grid laid into perspective, climbing the far-left cell.
@@ -126,11 +160,14 @@ draw grid = {
         | Spawn { n: 4, by: Ya(0.085) }
         | Overlay [ Sm 1, Rz(1/4) ]
         | Rx(1/4 + 0.5 * 0.12)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(-1.0037)
-        | Xa(sin(Note.t * 0.47) * 0.1257)
-        | Za(cos(Note.t * 0.73) * 0.550))
+        | Ry(Note.t * 0.024)
+        | Rz(Note.t * 0.010)
+        | Overlay [ Sm 1, Sm 0.07 ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.50) * 6.2832) * 1.72)
+        | Ya(0.0040 + 0.01 - sin((Note.t * 0.012 + 0.50) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.50) * 6.2832) * 1.72))
 }
 
 -- PERCUSSION 2 — an open plane seen nearly sideways, on a closed circle.
@@ -145,11 +182,14 @@ draw plane = {
         | Overlay [ Sm 1, Sm 0.55 ]
         | Rx(2/5 + 0.5 * 0.2)
         | Ry(Rand(20) * 0.4 - 0.2)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(-0.1643)
-        | Xa(sin(Note.t * 0.55) * 0.1029)
-        | Za(cos(Note.t * 0.66) * 0.450))
+        | Ry(Note.t * 0.038)
+        | Rz(Note.t * 0.015)
+        | Overlay [ Sm 1, Sm 0.07 ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.70) * 6.2832) * 1.72)
+        | Ya(0.0061 + 0.01 - sin((Note.t * 0.012 + 0.70) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.70) * 6.2832) * 1.72))
 }
 
 -- BASS SYNTH — a tunnel of frames on a diagonal that also walks away
@@ -164,10 +204,15 @@ draw tunnel = {
         | Spawn { n: 4, by: Rz(1/4) }
         | Overlay [ Sm 1, Sm 0.64 | Za(-0.22), Sm 0.38 | Za(-0.44) ]
         | Ry(0.5 * 0.16 - 0.08)
-        | Sm(0.21)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(-1.4660)
-        | Za(0.0 - floor(Wrap(Note.t, 6.7133) / 0.41958) / 16 * 0.5))
+        | Ry(Note.t * 0.031)
+        | Rz(Note.t * 0.012)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(1.15, -0.40, -1.00), n: 30 } ]
+        | Sm(0.29)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.10) * 6.2832) * 1.72)
+        | Ya(-0.0074 + 0.01 - sin((Note.t * 0.012 + 0.10) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.10) * 6.2832) * 1.72))
 }
 
 -- PADS — a tilted torus on a shallow arc over the top-centre cell.
@@ -176,15 +221,19 @@ draw torus = {
     | Ya(-40)
     | Every(8,
         Ya(40)
-        | Xa(0.30)
+        | Xa(0.3)
         | Spawn { n: 43, by: Rz(1/43) }
         | Overlay [ Sm 1, Sm 0.72 ]
         | Rx(1/5 + 0.5 * 0.1)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(0.2007)
-        | Xa(sin(Note.t * 0.38) * 0.1571)
-        | Za(cos(Note.t * 0.52) * 0.600))
+        | Ry(Note.t * 0.019)
+        | Rz(Note.t * 0.008)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(-1.05, -0.46, -0.72), n: 30 } ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.30) * 6.2832) * 1.72)
+        | Ya(-0.0007 + 0.01 - sin((Note.t * 0.012 + 0.30) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.30) * 6.2832) * 1.72))
 }
 
 -- BASS ARPS — a helix climbing the centre cell, turning in x and z as it
@@ -196,10 +245,15 @@ draw coil = {
         Ya(40)
         | Xa(0.15)
         | Spawn { n: 43, by: Rz(1/22) | Ya(0.0054) | Za(-0.0042) }
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(-0.6284)
-        | Za(sin(floor(Wrap(Note.t, 6.7133) / 0.41958) / 16 * 6.283) * 0.25))
+        | Ry(Note.t * 0.057)
+        | Rz(Note.t * 0.023)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(1.05, 0.55, -0.95), n: 30 } ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.20) * 6.2832) * 1.72)
+        | Ya(-0.0047 + 0.01 - sin((Note.t * 0.012 + 0.20) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.20) * 6.2832) * 1.72))
 }
 
 -- ARP SYNTHS — a transparent cylinder on a rising diagonal.
@@ -212,11 +266,15 @@ draw cylinder = {
         | Lerp { to: Direction(0, 0, -0.46), n: 15 }
         | Spawn { n: 5, by: Rz(1/5) }
         | Rx(0.5 * 0.16 - 0.08)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(0.8216)
-        | Xa(sin(Note.t * 0.69) * 0.1029)
-        | Za(cos(Note.t * 0.86) * 0.500))
+        | Ry(Note.t * 0.034)
+        | Rz(Note.t * 0.014)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(-1.20, 0.42, -0.75), n: 30 } ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.80) * 6.2832) * 1.72)
+        | Ya(0.0081 + 0.01 - sin((Note.t * 0.012 + 0.80) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.80) * 6.2832) * 1.72))
 }
 
 -- CLARINET — a cone on an S curve. Built from the APEX outward, because
@@ -234,11 +292,15 @@ draw cone = {
           ]
         | Spawn { n: 7, by: Rz(1/7) }
         | Rx(0.5 * 0.12 - 0.20)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(0.4930)
-        | Xa(sin(Note.t * 0.77) * 0.1157)
-        | Za(cos(Note.t * 0.44) * 0.450))
+        | Ry(Note.t * 0.049)
+        | Rz(Note.t * 0.020)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(0.92, -0.52, -1.15), n: 30 } ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.40) * 6.2832) * 1.72)
+        | Ya(0.0013 + 0.01 - sin((Note.t * 0.012 + 0.40) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.40) * 6.2832) * 1.72))
 }
 
 -- MELODY SYNTH — a hard slab climbing the far-right cell.
@@ -251,11 +313,15 @@ draw slab = {
         | Lerp { to: Direction(0.38, 0, 0), n: 27 }
         | Overlay [ Sm 1, Ya(0.02), Ya(-0.02), Ya(0.04), Ya(-0.04) ]
         | Rz(0.5 * 0.12 - 0.06)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(1.2155)
-        | Xa(sin(Note.t * 0.95) * 0.0740)
-        | Za(cos(Note.t * 0.48) * 0.350))
+        | Ry(Note.t * 0.027)
+        | Rz(Note.t * 0.011)
+        | Overlay [ Sm 1, Sm 0.07,
+                    Pick(0.5) | Lerp { to: Direction(-1.35, 0.30, -0.85), n: 30 } ]
+        | Sm(0.40)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.90) * 6.2832) * 1.72)
+        | Ya(0.0095 + 0.01 - sin((Note.t * 0.012 + 0.90) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.90) * 6.2832) * 1.72))
 }
 
 -- SAX — a twisting ribbon on the circle that closes the field.
@@ -266,12 +332,15 @@ draw ribbon = {
         Ya(40)
         | Lerp { to: Direction(0, 0.22, 0), n: 12 }
         | Spawn { n: 14, by: Xa(0.0423) | Rz(1/48) | Za(-0.0229) }
-        | Xa(-0.30)
-        | Sm(0.30)
-        | Tint(0.82 + Note.y * 0.22, 0.82 + Note.y * 0.11, 1.08 - Note.y * 0.18)
-        | Xa(0.9454)
-        | Xa(sin(Note.t * 0.50) * 0.0951)
-        | Za(cos(Note.t * 0.61) * 0.400))
+        | Xa(-0.3)
+        | Ry(Note.t * 0.062)
+        | Rz(Note.t * 0.025)
+        | Overlay [ Sm 1, Sm 0.07 ]
+        | Sm(0.94)
+        | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
+        | Xa(cos((Note.t * 0.012 + 0.60) * 6.2832) * 1.72)
+        | Ya(0.0027 + 0.01 - sin((Note.t * 0.012 + 0.60) * 6.2832) * 0.06)
+        | Za(-2.10 + sin((Note.t * 0.012 + 0.60) * 6.2832) * 1.72))
 }
 
 -- ════════════════════════════════════════════════════════════════════════
@@ -300,42 +369,39 @@ draw ribbon = {
 pads = {
     FromSound(8, 6) ./jimbocho/pads.wav
     | Gm 2
-    | Color [peach, apricot, coral]
+    | Color [mauve, dustyrose, plum]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.64; Sa 0.008; Vm 0.55; Bm 1; Die 1/2; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
+    | wgsl { Sm "6.73 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.55; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
     | torus
     | FitX 0 0
-    | FitY -0.628 0.628
-    | FitZ -2 -2
-    | space
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #pads
 }
 
 perc1 = {
     FromSound(8, 6) ./jimbocho/perc1.wav
     | Gm 2
-    | Color [cream, ivory, butter]
+    | Color [taupe, warmgrey, umber]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 3.81; Sa 0.008; Vm 0.36; Bm 1; Die 1/2; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
+    | wgsl { Sm "5.52 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.36; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
     | grid
     | FitX 0 0
-    | FitY -0.628 0.628
-    | FitZ -2 -2
-    | space
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #perc1
 }
 
 bass_arps = {
     FromSound(8, 6) ./jimbocho/bass_arps.wav
     | Gm 2
-    | Color [mint, seafoam, aqua]
+    | Color [darkteal, teal, viridian]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.29; Sa 0.008; Vm 0.44; Bm 1; Die 1/2; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
+    | wgsl { Sm "6.22 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.44; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
     | coil
     | FitX 0 0
-    | FitY -0.628 0.628
-    | FitZ -2 -2
-    | space
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #bass_arps
 }
 
@@ -344,56 +410,52 @@ bass_arps = {
 bass_synth = {
     FromSound(8, 6) ./jimbocho/bass_synth.wav
     | Gm 2
-    | Color [cobalt, periwinkle, skyblue]
+    | Color [prussianblue, indigo, navyblue]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.93; Sa 0.008; Vm 0.50; Bm 1; Die 1/2; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
+    | wgsl { Sm "7.15 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.50; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
     | tunnel
     | FitX 0 0
-    | FitY -0.514 0.514
-    | FitZ -1 -1
-    | middle
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #bass_synth
 }
 
 arps = {
     FromSound(8, 6) ./jimbocho/arps.wav
     | Gm 2
-    | Color [turquoise, aqua, mint]
+    | Color [viridian, sage, darkteal]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.44; Sa 0.008; Vm 0.48; Bm 1; Die 1/2; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
+    | wgsl { Sm "6.44 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.48; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
     | cylinder
     | FitX 0 0
-    | FitY -0.514 0.514
-    | FitZ -1 -1
-    | middle
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #arps
 }
 
 clarinet = {
     FromSound(8, 6) ./jimbocho/clarinet.wav
     | Gm 2
-    | Color [cream, butter, gold]
+    | Color [ochre, mustard, sienna]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.66; Sa 0.008; Vm 0.42; Bm 1; Die 1/2; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
+    | wgsl { Sm "6.76 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.42; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
     | cone
     | FitX 0 0
-    | FitY -0.514 0.514
-    | FitZ -1 -1
-    | middle
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #clarinet
 }
 
 perc2 = {
     FromSound(8, 6) ./jimbocho/perc2.wav
     | Gm 2
-    | Color [skyblue, powderblue, aqua]
+    | Color [steelblue, slate, prussianblue]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 5.54; Sa 0.008; Vm 0.38; Bm 1; Die 1/2; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
+    | wgsl { Sm "8.03 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.38; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
     | plane
     | FitX 0 0
-    | FitY -0.514 0.514
-    | FitZ -1 -1
-    | middle
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #perc2
 }
 
@@ -402,42 +464,39 @@ perc2 = {
 kicks = {
     FromSound(8, 6) ./jimbocho/kicks.wav
     | Gm 2
-    | Color [coral, salmon, tangerine]
+    | Color [terracotta, burntorange, sienna]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 5.24; Sa 0.008; Vm 0.45; Bm 1; Die 1/2; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
+    | wgsl { Sm "7.6 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.45; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
     | cube
     | FitX 0 0
-    | FitY -0.423 0.423
-    | FitZ -1/5 -1/5
-    | front
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #kicks
 }
 
 sax = {
     FromSound(8, 6) ./jimbocho/sax.wav
     | Gm 2
-    | Color [magenta, hotpink, coral]
+    | Color [crimson, brickred, claret]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.44; Sa 0.008; Vm 0.40; Bm 1; Die 1/2; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
+    | wgsl { Sm "6.44 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.40; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
     | ribbon
     | FitX 0 0
-    | FitY -0.423 0.423
-    | FitZ -1/5 -1/5
-    | front
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #sax
 }
 
 melody = {
     FromSound(8, 6) ./jimbocho/melody.wav
     | Gm 2
-    | Color [gold, butter, cream]
+    | Color [olive, darkkhaki, ochre]
     | Gradient(0, 1, 0)
-    | wgsl { Sm 4.93; Sa 0.008; Vm 0.35; Bm 1; Die 1/2; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
+    | wgsl { Sm "7.15 * (1.0 - exp(-Time * 16.0))"; Sa 0; Vm 0.35; Bm "1.0 - exp(-Time * 16.0)"; Die 3/4; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
     | slab
     | FitX 0 0
-    | FitY -0.423 0.423
-    | FitZ -1/5 -1/5
-    | front
+    | FitY -0.40 0.40
+    | FitZ 0 0
     | #melody
 }
 
@@ -447,4 +506,6 @@ main = {
         bass_synth, arps, clarinet, perc2,
         kicks, sax, melody,
     ]
+    | wet
+    | canvas
 } -> [kicks, perc1, perc2, bass_synth, bass_arps, pads, arps, clarinet, melody, sax]
