@@ -491,7 +491,7 @@ draw ribbon = {
 -- ─── far field: routed to `space`, the chain with the feedback ───────────
 
 pads = {
-    FromSound(8, 6) ./jimbocho/pads.wav
+    FromSound(8, 6) ./jimbocho_full/pads.wav
     | Gm 2
     | Color [brightpurple, violet, darkpurple]
     | Gradient(0, 1, 0)
@@ -504,7 +504,7 @@ pads = {
 }
 
 perc1 = {
-    FromSound(8, 6) ./jimbocho/perc1.wav
+    FromSound(8, 6) ./jimbocho_full/perc1.wav
     | Gm 2
     | Color [white, silver, lightgrey]
     | Gradient(0, 1, 0)
@@ -517,7 +517,7 @@ perc1 = {
 }
 
 bass_arps = {
-    FromSound(8, 6) ./jimbocho/bass_arps.wav
+    FromSound(8, 6) ./jimbocho_full/bass_arps.wav
     | Gm 2
     | Color [brightgreen, kellygreen, forestgreen]
     | Gradient(0, 1, 0)
@@ -532,7 +532,7 @@ bass_arps = {
 -- ─── middle ground: occludes the far field ───────────────────────────────
 
 bass_synth = {
-    FromSound(8, 6) ./jimbocho/bass_synth.wav
+    FromSound(8, 6) ./jimbocho_full/bass_synth.wav
     | Gm 2
     | Color [royalblue, ultramarine, darkblue]
     | Gradient(0, 1, 0)
@@ -545,7 +545,7 @@ bass_synth = {
 }
 
 arps = {
-    FromSound(8, 6) ./jimbocho/arps.wav
+    FromSound(8, 6) ./jimbocho_full/arps.wav
     | Gm 2
     | Color [brightyellow, yellow, gold]
     | Gradient(0, 1, 0)
@@ -558,7 +558,7 @@ arps = {
 }
 
 clarinet = {
-    FromSound(8, 6) ./jimbocho/clarinet.wav
+    FromSound(8, 6) ./jimbocho_full/clarinet.wav
     | Gm 2
     | Color [tangerine, orange, pumpkin]
     | Gradient(0, 1, 0)
@@ -571,7 +571,7 @@ clarinet = {
 }
 
 perc2 = {
-    FromSound(8, 6) ./jimbocho/perc2.wav
+    FromSound(8, 6) ./jimbocho_full/perc2.wav
     | Gm 2
     | Color [cyan, turquoise, darkturquoise]
     | Gradient(0, 1, 0)
@@ -586,7 +586,7 @@ perc2 = {
 -- ─── front: occludes everything ──────────────────────────────────────────
 
 kicks = {
-    FromSound(8, 6) ./jimbocho/kicks.wav
+    FromSound(8, 6) ./jimbocho_full/kicks.wav
     | Gm 2
     | Color [scarlet, vermillion, darkred]
     | Gradient(0, 1, 0)
@@ -599,7 +599,7 @@ kicks = {
 }
 
 sax = {
-    FromSound(8, 6) ./jimbocho/sax.wav
+    FromSound(8, 6) ./jimbocho_full/sax.wav
     | Gm 2
     | Color [neonpink, magenta, darkmagenta]
     | Gradient(0, 1, 0)
@@ -612,7 +612,7 @@ sax = {
 }
 
 melody = {
-    FromSound(8, 6) ./jimbocho/melody.wav
+    FromSound(8, 6) ./jimbocho_full/melody.wav
     | Gm 2
     | Color [chartreuse, lime, olivegreen]
     | Gradient(0, 1, 0)
