@@ -69,7 +69,7 @@ light air = { ambient, color: #1e2740, gain: 0.22 }
 warp wet = {
     Prev
     | Lay { keep: 0.9950, gain: 1.0, cap: 20.0 }
-    | Scroll(0, -0.00004)
+    | Scroll(0, -0.00002)
     | Diffuse Sxyz { rate: 0.009 }
     | Diffuse Sw { rate: 0.009 }
 }
@@ -184,12 +184,15 @@ draw cube = {
         | Rz(Note.t * 0.017)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.25, 0.34, -0.90), n: 30 } ]
-        | Sm(0.249 - Note.y * 0.122 + clamp(Note.z, 0.0, 0.3) * 0.435)
+        | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)))
-        | Xa(cube_x2 / cube_d * 1.05 + 0.05)
-        | Ya(cube_x1 / cube_d * 0.30)
-        | Za(-2.10 + cube_x3 / cube_d * 0.55))
+        | Xa(cube_x2 / cube_d * 0.64 + 0.03)
+        | Ya(cube_x1 / cube_d * 0.26)
+        | Za(cube_x3 / cube_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- PERCUSSION 1 — a grid laid into perspective, climbing the far-left cell.
@@ -214,12 +217,15 @@ draw grid = {
         | Ry(Note.t * 0.024)
         | Rz(Note.t * 0.010)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)))
-        | Xa(grid_x2 / grid_d * 1.05 + 0.05)
-        | Ya(grid_x1 / grid_d * 0.30)
-        | Za(-2.10 + grid_x3 / grid_d * 0.55))
+        | Xa(grid_x2 / grid_d * 0.64 + 0.03)
+        | Ya(grid_x1 / grid_d * 0.26)
+        | Za(grid_x3 / grid_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- PERCUSSION 2 — an open plane seen nearly sideways, on a closed circle.
@@ -245,12 +251,15 @@ draw plane = {
         | Ry(Note.t * 0.038)
         | Rz(Note.t * 0.015)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)))
-        | Xa(plane_x2 / plane_d * 1.05 + 0.05)
-        | Ya(plane_x1 / plane_d * 0.30)
-        | Za(-2.10 + plane_x3 / plane_d * 0.55))
+        | Xa(plane_x2 / plane_d * 0.64 + 0.03)
+        | Ya(plane_x1 / plane_d * 0.26)
+        | Za(plane_x3 / plane_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- BASS SYNTH — a tunnel of frames on a diagonal that also walks away
@@ -277,12 +286,15 @@ draw tunnel = {
         | Rz(Note.t * 0.012)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.15, -0.40, -1.00), n: 30 } ]
-        | Sm(0.249 - Note.y * 0.122 + clamp(Note.z, 0.0, 0.3) * 0.435)
+        | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)))
-        | Xa(tunnel_x2 / tunnel_d * 1.05 + 0.05)
-        | Ya(tunnel_x1 / tunnel_d * 0.30)
-        | Za(-2.10 + tunnel_x3 / tunnel_d * 0.55))
+        | Xa(tunnel_x2 / tunnel_d * 0.64 + 0.03)
+        | Ya(tunnel_x1 / tunnel_d * 0.26)
+        | Za(tunnel_x3 / tunnel_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- PADS — a tilted torus on a shallow arc over the top-centre cell.
@@ -307,12 +319,15 @@ draw torus = {
         | Rz(Note.t * 0.008)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.05, -0.46, -0.72), n: 30 } ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)))
-        | Xa(torus_x2 / torus_d * 1.05 + 0.05)
-        | Ya(torus_x1 / torus_d * 0.30)
-        | Za(-2.10 + torus_x3 / torus_d * 0.55))
+        | Xa(torus_x2 / torus_d * 0.64 + 0.03)
+        | Ya(torus_x1 / torus_d * 0.26)
+        | Za(torus_x3 / torus_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- BASS ARPS — a helix climbing the centre cell, turning in x and z as it
@@ -336,12 +351,15 @@ draw coil = {
         | Rz(Note.t * 0.023)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.05, 0.55, -0.95), n: 30 } ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)))
-        | Xa(coil_x2 / coil_d * 1.05 + 0.05)
-        | Ya(coil_x1 / coil_d * 0.30)
-        | Za(-2.10 + coil_x3 / coil_d * 0.55))
+        | Xa(coil_x2 / coil_d * 0.64 + 0.03)
+        | Ya(coil_x1 / coil_d * 0.26)
+        | Za(coil_x3 / coil_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- ARP SYNTHS — a transparent cylinder on a rising diagonal.
@@ -366,12 +384,15 @@ draw cylinder = {
         | Rz(Note.t * 0.014)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.20, 0.42, -0.75), n: 30 } ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)))
-        | Xa(cylinder_x2 / cylinder_d * 1.05 + 0.05)
-        | Ya(cylinder_x1 / cylinder_d * 0.30)
-        | Za(-2.10 + cylinder_x3 / cylinder_d * 0.55))
+        | Xa(cylinder_x2 / cylinder_d * 0.64 + 0.03)
+        | Ya(cylinder_x1 / cylinder_d * 0.26)
+        | Za(cylinder_x3 / cylinder_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- CLARINET — a cone on an S curve. Built from the APEX outward, because
@@ -401,12 +422,15 @@ draw cone = {
         | Rz(Note.t * 0.020)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(0.92, -0.52, -1.15), n: 30 } ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)))
-        | Xa(cone_x2 / cone_d * 1.05 + 0.05)
-        | Ya(cone_x1 / cone_d * 0.30)
-        | Za(-2.10 + cone_x3 / cone_d * 0.55))
+        | Xa(cone_x2 / cone_d * 0.64 + 0.03)
+        | Ya(cone_x1 / cone_d * 0.26)
+        | Za(cone_x3 / cone_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- MELODY SYNTH — a hard slab climbing the far-right cell.
@@ -431,12 +455,15 @@ draw slab = {
         | Rz(Note.t * 0.011)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.35, 0.30, -0.85), n: 30 } ]
-        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
+        | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)))
-        | Xa(slab_x2 / slab_d * 1.05 + 0.05)
-        | Ya(slab_x1 / slab_d * 0.30)
-        | Za(-2.10 + slab_x3 / slab_d * 0.55))
+        | Xa(slab_x2 / slab_d * 0.64 + 0.03)
+        | Ya(slab_x1 / slab_d * 0.26)
+        | Za(slab_x3 / slab_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- SAX — a twisting ribbon on the circle that closes the field.
@@ -459,12 +486,15 @@ draw ribbon = {
         | Ry(Note.t * 0.062)
         | Rz(Note.t * 0.025)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.808 - Note.y * 0.395 + clamp(Note.z, 0.0, 0.3) * 1.41)
+        | Sm(0.728 - Note.y * 0.474 + clamp(Note.z, 0.0, 0.3) * 1.06)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)))
-        | Xa(ribbon_x2 / ribbon_d * 1.05 + 0.05)
-        | Ya(ribbon_x1 / ribbon_d * 0.30)
-        | Za(-2.10 + ribbon_x3 / ribbon_d * 0.55))
+        | Xa(ribbon_x2 / ribbon_d * 0.64 + 0.03)
+        | Ya(ribbon_x1 / ribbon_d * 0.26)
+        | Za(ribbon_x3 / ribbon_d * 0.62)
+        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
+        | Ry(Note.t * 0.028)
+        | Za(-2.10))
 }
 
 -- ════════════════════════════════════════════════════════════════════════
