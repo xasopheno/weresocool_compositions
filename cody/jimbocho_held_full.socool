@@ -184,7 +184,7 @@ draw cube = {
         | Rz(Note.t * 0.017)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.25, 0.34, -0.90), n: 30 } ]
-        | Sm(0.29)
+        | Sm(0.249 - Note.y * 0.122 + clamp(Note.z, 0.0, 0.3) * 0.435)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)))
         | Xa(cube_x2 / cube_d * 1.05 + 0.05)
@@ -214,7 +214,7 @@ draw grid = {
         | Ry(Note.t * 0.024)
         | Rz(Note.t * 0.010)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)))
         | Xa(grid_x2 / grid_d * 1.05 + 0.05)
@@ -245,7 +245,7 @@ draw plane = {
         | Ry(Note.t * 0.038)
         | Rz(Note.t * 0.015)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)))
         | Xa(plane_x2 / plane_d * 1.05 + 0.05)
@@ -277,7 +277,7 @@ draw tunnel = {
         | Rz(Note.t * 0.012)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.15, -0.40, -1.00), n: 30 } ]
-        | Sm(0.29)
+        | Sm(0.249 - Note.y * 0.122 + clamp(Note.z, 0.0, 0.3) * 0.435)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)))
         | Xa(tunnel_x2 / tunnel_d * 1.05 + 0.05)
@@ -307,7 +307,7 @@ draw torus = {
         | Rz(Note.t * 0.008)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.05, -0.46, -0.72), n: 30 } ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)))
         | Xa(torus_x2 / torus_d * 1.05 + 0.05)
@@ -336,7 +336,7 @@ draw coil = {
         | Rz(Note.t * 0.023)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(1.05, 0.55, -0.95), n: 30 } ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)))
         | Xa(coil_x2 / coil_d * 1.05 + 0.05)
@@ -366,7 +366,7 @@ draw cylinder = {
         | Rz(Note.t * 0.014)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.20, 0.42, -0.75), n: 30 } ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)))
         | Xa(cylinder_x2 / cylinder_d * 1.05 + 0.05)
@@ -401,7 +401,7 @@ draw cone = {
         | Rz(Note.t * 0.020)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(0.92, -0.52, -1.15), n: 30 } ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)))
         | Xa(cone_x2 / cone_d * 1.05 + 0.05)
@@ -431,7 +431,7 @@ draw slab = {
         | Rz(Note.t * 0.011)
         | Overlay [ Sm 1, Sm 0.07,
                     Pick(0.5) | Lerp { to: Direction(-1.35, 0.30, -0.85), n: 30 } ]
-        | Sm(0.40)
+        | Sm(0.344 - Note.y * 0.168 + clamp(Note.z, 0.0, 0.3) * 0.6)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)))
         | Xa(slab_x2 / slab_d * 1.05 + 0.05)
@@ -459,7 +459,7 @@ draw ribbon = {
         | Ry(Note.t * 0.062)
         | Rz(Note.t * 0.025)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.94)
+        | Sm(0.808 - Note.y * 0.395 + clamp(Note.z, 0.0, 0.3) * 1.41)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)))
         | Xa(ribbon_x2 / ribbon_d * 1.05 + 0.05)
@@ -495,7 +495,7 @@ pads = {
     | Gm 2
     | Color [brightpurple, violet, darkpurple]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "3.7 * (1.0 - exp(-Time * 3.2))"; Sa 0; Vm 0.55; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 2.8) * 0.68; green = green + exp(0.0 - time * 2.8) * 0.44; blue = blue + exp(0.0 - time * 2.8) * 0.26; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
+    | wgsl { Sm "3.7 * (1.0 - exp(-Time * 3.2)) * (1.0 + 0.55 * exp(-Time * 9.0))"; Sa 0; Vm 0.55; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 4.5) * 0.92; green = green + exp(0.0 - time * 4.5) * 0.59; blue = blue + exp(0.0 - time * 4.5) * 0.35; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
     | torus
     | FitX 0 0
     | FitY -0.40 0.40
@@ -508,7 +508,7 @@ perc1 = {
     | Gm 2
     | Color [white, silver, lightgrey]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "9.66 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.75 * exp(-Time * 15.0))"; Sa 0; Vm 0.36; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 12.1) * 1.44; green = green + exp(0.0 - time * 12.1) * 0.95; blue = blue + exp(0.0 - time * 12.1) * 0.54; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
+    | wgsl { Sm "9.66 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.36; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 1.94; green = green + exp(0.0 - time * 19.4) * 1.28; blue = blue + exp(0.0 - time * 19.4) * 0.73; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
     | grid
     | FitX 0 0
     | FitY -0.40 0.40
@@ -521,7 +521,7 @@ bass_arps = {
     | Gm 2
     | Color [brightgreen, kellygreen, forestgreen]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "7.46 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.50 * exp(-Time * 4.0))"; Sa 0; Vm 0.44; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 8.2) * 1.19; green = green + exp(0.0 - time * 8.2) * 0.78; blue = blue + exp(0.0 - time * 8.2) * 0.46; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
+    | wgsl { Sm "7.46 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.44; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 13.1) * 1.61; green = green + exp(0.0 - time * 13.1) * 1.05; blue = blue + exp(0.0 - time * 13.1) * 0.62; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
     | coil
     | FitX 0 0
     | FitY -0.40 0.40
@@ -536,7 +536,7 @@ bass_synth = {
     | Gm 2
     | Color [royalblue, ultramarine, darkblue]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "4.29 * (1.0 - exp(-Time * 3.2))"; Sa 0; Vm 0.50; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 3.0) * 0.77; green = green + exp(0.0 - time * 3.0) * 0.51; blue = blue + exp(0.0 - time * 3.0) * 0.29; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
+    | wgsl { Sm "4.29 * (1.0 - exp(-Time * 3.2)) * (1.0 + 0.55 * exp(-Time * 9.0))"; Sa 0; Vm 0.50; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 4.8) * 1.04; green = green + exp(0.0 - time * 4.8) * 0.69; blue = blue + exp(0.0 - time * 4.8) * 0.39; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
     | tunnel
     | FitX 0 0
     | FitY -0.40 0.40
@@ -549,7 +549,7 @@ arps = {
     | Gm 2
     | Color [brightyellow, yellow, gold]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "10.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.75 * exp(-Time * 15.0))"; Sa 0; Vm 0.48; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 11.0) * 1.36; green = green + exp(0.0 - time * 11.0) * 0.90; blue = blue + exp(0.0 - time * 11.0) * 0.51; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
+    | wgsl { Sm "10.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.48; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 17.6) * 1.84; green = green + exp(0.0 - time * 17.6) * 1.22; blue = blue + exp(0.0 - time * 17.6) * 0.69; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
     | cylinder
     | FitX 0 0
     | FitY -0.40 0.40
@@ -562,7 +562,7 @@ clarinet = {
     | Gm 2
     | Color [tangerine, orange, pumpkin]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "7.77 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.50 * exp(-Time * 4.0))"; Sa 0; Vm 0.42; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 7.2) * 1.19; green = green + exp(0.0 - time * 7.2) * 0.78; blue = blue + exp(0.0 - time * 7.2) * 0.46; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
+    | wgsl { Sm "7.77 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.42; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.61; green = green + exp(0.0 - time * 11.5) * 1.05; blue = blue + exp(0.0 - time * 11.5) * 0.62; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
     | cone
     | FitX 0 0
     | FitY -0.40 0.40
@@ -575,7 +575,7 @@ perc2 = {
     | Gm 2
     | Color [cyan, turquoise, darkturquoise]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "14.1 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.75 * exp(-Time * 15.0))"; Sa 0; Vm 0.38; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 12.1) * 1.44; green = green + exp(0.0 - time * 12.1) * 0.95; blue = blue + exp(0.0 - time * 12.1) * 0.54; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
+    | wgsl { Sm "14.1 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.38; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 1.94; green = green + exp(0.0 - time * 19.4) * 1.28; blue = blue + exp(0.0 - time * 19.4) * 0.73; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
     | plane
     | FitX 0 0
     | FitY -0.40 0.40
@@ -590,7 +590,7 @@ kicks = {
     | Gm 2
     | Color [scarlet, vermillion, darkred]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "13.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.75 * exp(-Time * 15.0))"; Sa 0; Vm 0.45; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 12.1) * 1.61; green = green + exp(0.0 - time * 12.1) * 1.07; blue = blue + exp(0.0 - time * 12.1) * 0.61; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
+    | wgsl { Sm "13.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.45; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 2.17; green = green + exp(0.0 - time * 19.4) * 1.44; blue = blue + exp(0.0 - time * 19.4) * 0.82; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
     | cube
     | FitX 0 0
     | FitY -0.40 0.40
@@ -603,7 +603,7 @@ sax = {
     | Gm 2
     | Color [neonpink, magenta, darkmagenta]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "7.41 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.50 * exp(-Time * 4.0))"; Sa 0; Vm 0.40; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 7.2) * 1.27; green = green + exp(0.0 - time * 7.2) * 0.83; blue = blue + exp(0.0 - time * 7.2) * 0.49; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
+    | wgsl { Sm "7.41 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.40; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.71; green = green + exp(0.0 - time * 11.5) * 1.12; blue = blue + exp(0.0 - time * 11.5) * 0.66; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
     | ribbon
     | FitX 0 0
     | FitY -0.40 0.40
@@ -616,7 +616,7 @@ melody = {
     | Gm 2
     | Color [chartreuse, lime, olivegreen]
     | Gradient(0, 1, 0)
-    | wgsl { Sm "8.22 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.50 * exp(-Time * 4.0))"; Sa 0; Vm 0.35; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 7.2) * 1.27; green = green + exp(0.0 - time * 7.2) * 0.83; blue = blue + exp(0.0 - time * 7.2) * 0.49; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
+    | wgsl { Sm "8.22 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.35; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.71; green = green + exp(0.0 - time * 11.5) * 1.12; blue = blue + exp(0.0 - time * 11.5) * 0.66; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
     | slab
     | FitX 0 0
     | FitY -0.40 0.40
