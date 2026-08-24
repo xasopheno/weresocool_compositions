@@ -187,9 +187,9 @@ draw cube = {
         | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)))
-        | Xa(cube_x2 / cube_d * 0.64 + 0.03)
-        | Ya(cube_x1 / cube_d * 0.26)
-        | Za(cube_x3 / cube_d * 0.62)
+        | Xa(cube_x2 / cube_d * 0.71 + 0.02)
+        | Ya(cube_x1 / cube_d * 0.19)
+        | Za(cube_x3 / cube_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -220,9 +220,9 @@ draw grid = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)))
-        | Xa(grid_x2 / grid_d * 0.64 + 0.03)
-        | Ya(grid_x1 / grid_d * 0.26)
-        | Za(grid_x3 / grid_d * 0.62)
+        | Xa(grid_x2 / grid_d * 0.71 + 0.02)
+        | Ya(grid_x1 / grid_d * 0.19)
+        | Za(grid_x3 / grid_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -254,9 +254,9 @@ draw plane = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)))
-        | Xa(plane_x2 / plane_d * 0.64 + 0.03)
-        | Ya(plane_x1 / plane_d * 0.26)
-        | Za(plane_x3 / plane_d * 0.62)
+        | Xa(plane_x2 / plane_d * 0.71 + 0.02)
+        | Ya(plane_x1 / plane_d * 0.19)
+        | Za(plane_x3 / plane_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -289,9 +289,9 @@ draw tunnel = {
         | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)))
-        | Xa(tunnel_x2 / tunnel_d * 0.64 + 0.03)
-        | Ya(tunnel_x1 / tunnel_d * 0.26)
-        | Za(tunnel_x3 / tunnel_d * 0.62)
+        | Xa(tunnel_x2 / tunnel_d * 0.71 + 0.02)
+        | Ya(tunnel_x1 / tunnel_d * 0.19)
+        | Za(tunnel_x3 / tunnel_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -322,9 +322,9 @@ draw torus = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)))
-        | Xa(torus_x2 / torus_d * 0.64 + 0.03)
-        | Ya(torus_x1 / torus_d * 0.26)
-        | Za(torus_x3 / torus_d * 0.62)
+        | Xa(torus_x2 / torus_d * 0.71 + 0.02)
+        | Ya(torus_x1 / torus_d * 0.19)
+        | Za(torus_x3 / torus_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -354,9 +354,9 @@ draw coil = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)))
-        | Xa(coil_x2 / coil_d * 0.64 + 0.03)
-        | Ya(coil_x1 / coil_d * 0.26)
-        | Za(coil_x3 / coil_d * 0.62)
+        | Xa(coil_x2 / coil_d * 0.71 + 0.02)
+        | Ya(coil_x1 / coil_d * 0.19)
+        | Za(coil_x3 / coil_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -387,9 +387,9 @@ draw cylinder = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)))
-        | Xa(cylinder_x2 / cylinder_d * 0.64 + 0.03)
-        | Ya(cylinder_x1 / cylinder_d * 0.26)
-        | Za(cylinder_x3 / cylinder_d * 0.62)
+        | Xa(cylinder_x2 / cylinder_d * 0.71 + 0.02)
+        | Ya(cylinder_x1 / cylinder_d * 0.19)
+        | Za(cylinder_x3 / cylinder_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -425,9 +425,9 @@ draw cone = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)))
-        | Xa(cone_x2 / cone_d * 0.64 + 0.03)
-        | Ya(cone_x1 / cone_d * 0.26)
-        | Za(cone_x3 / cone_d * 0.62)
+        | Xa(cone_x2 / cone_d * 0.71 + 0.02)
+        | Ya(cone_x1 / cone_d * 0.19)
+        | Za(cone_x3 / cone_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -458,9 +458,9 @@ draw slab = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)))
-        | Xa(slab_x2 / slab_d * 0.64 + 0.03)
-        | Ya(slab_x1 / slab_d * 0.26)
-        | Za(slab_x3 / slab_d * 0.62)
+        | Xa(slab_x2 / slab_d * 0.71 + 0.02)
+        | Ya(slab_x1 / slab_d * 0.19)
+        | Za(slab_x3 / slab_d * 0.52)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(Note.t * 0.028)
         | Za(-2.10))
@@ -468,32 +468,24 @@ draw slab = {
 
 -- SAX — a twisting ribbon on the circle that closes the field.
 draw ribbon = {
-    let ribbon_psi = Note.t * 0.624 + 7.5398
-    let ribbon_s   = sin(1.2267 / 2)
-    let ribbon_c   = cos(1.2267 / 2)
-    let ribbon_x0  = cos((ribbon_psi + 1.8334) / 2) * ribbon_s
-    let ribbon_x1  = sin((ribbon_psi + 1.8334) / 2) * ribbon_s
-    let ribbon_x2  = cos((ribbon_psi - 1.8334) / 2) * ribbon_c
-    let ribbon_x3  = sin((ribbon_psi - 1.8334) / 2) * ribbon_c
-    let ribbon_d   = 1.0 - ribbon_x0
+    -- Where in the phrase this note falls, 0 at the downbeat, 1 at the end.
+    -- Four bars at 143 BPM. The sax phrase repeats; so does this.
+    let sax_ph = Wrap(Note.t, 6.7133) / 6.7133
     Point
     | Ya(-40)
     | Every(8,
         Ya(40)
-        | Lerp { to: Direction(0, 0.22, 0), n: 12 }
-        | Spawn { n: 14, by: Xa(0.0423) | Rz(1/48) | Za(-0.0229) }
-        | Xa(-0.3)
-        | Ry(Note.t * 0.062)
-        | Rz(Note.t * 0.025)
+        | Lerp { to: Direction(0, 0.30, 0), n: 16 }
+        | Spawn { n: 14, by: Xa(0.0180) | Rz(1/64) | Za(-0.0229) }
+        | Xa(-0.13)
+        | Rz(Note.t * 0.021)
         | Overlay [ Sm 1, Sm 0.07 ]
-        | Sm(0.728 - Note.y * 0.474 + clamp(Note.z, 0.0, 0.3) * 1.06)
+        | Sm(0.60 - Note.y * 0.34 + clamp(Note.z, 0.0, 0.3) * 0.92)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
-        | Tint((0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)), (0.55 + 0.45 * (0.5 - ribbon_x3 / ribbon_d * 0.26)))
-        | Xa(ribbon_x2 / ribbon_d * 0.64 + 0.03)
-        | Ya(ribbon_x1 / ribbon_d * 0.26)
-        | Za(ribbon_x3 / ribbon_d * 0.62)
-        | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
-        | Ry(Note.t * 0.028)
+        | Overlay [
+            Xa(-1.14) | Ya(-0.32 + 0.64 * sax_ph),
+            Xa(1.14)  | Ya(0.32 - 0.64 * sax_ph)
+          ]
         | Za(-2.10))
 }
 
@@ -636,7 +628,7 @@ sax = {
     | wgsl { Sm "7.41 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.40; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.71; green = green + exp(0.0 - time * 11.5) * 1.12; blue = blue + exp(0.0 - time * 11.5) * 0.66; Seq [ Direction(-0.06, 0.03, -0.18) | Lm 4; ]; }
     | ribbon
     | FitX 0 0
-    | FitY -0.40 0.40
+    | FitY -0.11 0.11
     | FitZ 0 0
     | #sax
 }
