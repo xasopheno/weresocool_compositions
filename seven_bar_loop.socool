@@ -1,0 +1,183 @@
+{ f: 110, l: 3/25, g: 13/10, p: 0 }
+
+-- House, but the loop is WRONG on purpose — and that's the piece.
+-- 125 bpm, one 16th per Lm 1, four-on-the-floor holding the ground.
+--
+-- The engine: the chord stab lives in a SEVEN-step loop over the
+-- 16-step bar. Every bar it lands somewhere new — drifting backward
+-- through the offbeats like a loop pedal nobody trimmed — and only
+-- every SEVEN bars does it come home to the downbeat. So the phrases
+-- are 7 bars long, and the realignment is the payoff: pads bloom and
+-- the crash marks it. Second half adds a FIVE-step stab in another
+-- voicing — two wrong gears turning against the same floor.
+-- Underneath: a 3-step conga cell rolled by dice (Choose), so the
+-- percolation never repeats. Hats shuffle at 9/16-7/16 — real swing,
+-- not triplets. Everything in A, just intonation, 7-limit color.
+--
+-- Play: weresocool play seven_bar_loop.socool
+
+x = { Silence 1 }
+
+-- ── kit, tuned to A ─────────────────────────────────────────────────
+bd = {
+    Overlay [
+        { 1/2, 0, 1, 0 },
+        { 1/2, -4, 1/2, 0 },
+        { 1/1, 0, 1/5, 0 }
+    ]
+    | Kick wsc { body: 0.85, amp_decay: 0.22, pitch_decay: 0.025, click_amount: 0.3, saturation: 0.55 }
+    | Gm 0.9
+}
+cp = { Clap wsc { tone: 0.45, spread: 0.5, length: 0.45 } | Fm 3/2 | Gm 0.5 }
+hh = { HiHat 808 { length: 0.2 } | Fm 9/8 | Gm 0.2 | Pa 1/4 }
+oh = { OpenHat 808 { length: 0.5 } | Fm 9/8 | Gm 0.3 | Pa -1/4 }
+crash = { Crash acoustic { length: 0.6 } | Fm 5/4 | Gm 0.35 }
+
+-- congas: the percolator voices
+kg = { Tom conga | Fm 2 | Gm 0.4 | Pa 1/3 }
+kglo = { Tom conga | Fm 3/2 | Gm 0.45 | Pa -1/3 }
+kslp = { Tom conga { attack: 0.9, length: 0.15 } | Fm 9/4 | Gm 0.35 | Pa 1/2 }
+
+-- ── the floor ───────────────────────────────────────────────────────
+kick_bar = { Seq [bd, x, x, x] | Repeat 4 }
+clap_bar = { Seq [x | Lm 4, cp, x | Lm 7, cp, x | Lm 3] }
+
+-- offbeat 8ths, shuffled: closed rides the beat, open falls late
+hats8 = { Seq [hh | Lm 9/8, oh | Lm 7/8] | Repeat 8 }
+-- full 16th shuffle for the back half
+hats16 = { Seq [hh | Lm 9/16, hh | Lm 7/16, oh | Lm 9/16, hh | Lm 7/16] | Repeat 8 }
+
+-- ── the wrong gears ─────────────────────────────────────────────────
+-- Am9 with the 7/4 glow — the stab voicing
+st7 = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 6/5, 2, 1, 1/3 }, { 6/5, -2, 1, -1/3 },
+        { 3/2, 3, 1, -1/4 },
+        { 7/4, -3, 1, 1/4 },
+        { 9/4, 2, 1/2, 0 }
+    ] | Gm 0.14
+}
+-- seven steps: a long hit, a short answer, and air
+gear7 = { Seq [st7 | Lm 2, x | Lm 1, st7 | Gm 0.6 | Lm 1, x | Lm 3] }
+
+-- Dm9 shape a fourth up — the five-step gear
+st5 = {
+    Overlay [
+        { 4/3, 0, 1, 0 },
+        { 8/5, 2, 1, -1/3 }, { 8/5, -2, 1, 1/3 },
+        { 2/1, 3, 1, 1/4 },
+        { 7/3, -3, 1, -1/4 }
+    ] | Gm 0.11
+}
+gear5 = { Seq [x | Lm 2, st5 | Lm 1, x | Lm 2] }
+
+-- ── the percolator: 3-step cell, dice inside ────────────────────────
+perc3 = {
+    Seq [
+        Choose [kg, kg | Gm 0.5, x, x],
+        Choose [kglo, kslp, x],
+        Choose [x, x, x, kslp | Gm 0.7]
+    ]
+}
+
+-- ── bass: off the kick, in the gaps ─────────────────────────────────
+bv = {
+    Overlay [
+        { 1/2, 0, 1, 0 },
+        { 1/1, 2, 1/6, 0 }
+    ]
+    | Tanh(2, 0.8)
+    | Gm 0.5
+}
+bass_bar = {
+    bv | Seq [
+        Fm 0 | Lm 3, Fm 1 | Lm 1,
+        Fm 0 | Lm 2, Fm 1 | Lm 1, Fm 3/2 | Lm 1,
+        Fm 0 | Lm 3, Fm 4/3 | Lm 1,
+        Fm 0 | Lm 2, Fm 7/4 | Lm 1, Fm 3/2 | Lm 1
+    ]
+}
+-- variation: walks down to the b7 to push into the next bar
+bass_var = {
+    bv | Seq [
+        Fm 0 | Lm 3, Fm 1 | Lm 1,
+        Fm 0 | Lm 2, Fm 1 | Lm 1, Fm 6/5 | Lm 1,
+        Fm 0 | Lm 3, Fm 4/3 | Lm 1,
+        Fm 9/10 | Lm 2, Fm 4/5 | Lm 1, Fm 1 | Lm 1
+    ]
+}
+
+-- ── the bloom: pads that open when the gear comes home ──────────────
+am9pad = {
+    Overlay [
+        { 2/1, 2, 1, 1/2 }, { 2/1, -2, 1, -1/2 },
+        { 12/5, 3, 1, -1/3 }, { 3/1, -3, 1, 1/3 },
+        { 7/2, 2, 1/2, 1/5 }, { 9/2, -2, 1/3, -1/5 }
+    ] | Gm 0.07
+}
+
+-- ── seven-bar phrases (112 steps: gear7 fits exactly 16 times) ──────
+floor7 = {
+    Overlay [
+        Seq [kick_bar] | Repeat 7,
+        Seq [clap_bar] | Repeat 7,
+        Seq [hats8] | Repeat 7
+    ]
+}
+
+-- phrase A: the floor, the 7-gear, bass entering bar 2, dice bar 4
+phrase_a = {
+    Overlay [
+        floor7,
+        Seq [gear7] | Repeat 16,
+        Seq [x | Lm 16, bass_bar, bass_bar, bass_bar, bass_var, bass_bar, bass_var]
+            | FitLength floor7,
+        Seq [x | Lm 48, Seq [perc3] | Repeat 21, x | Lm 1] | FitLength floor7,
+        Seq [crash, x | Lm 111] | FitLength floor7
+    ]
+}
+
+-- phrase B: home again — pads bloom, the 5-gear joins, full shuffle
+phrase_b = {
+    Overlay [
+        Seq [kick_bar] | Repeat 7,
+        Seq [clap_bar] | Repeat 7,
+        Seq [hats16] | Repeat 7,
+        Seq [gear7] | Repeat 16,
+        Seq [gear5] | Repeat 22 | Fm 1 | FitLength floor7,
+        Seq [bass_var, bass_bar, bass_var, bass_bar, bass_var, bass_bar, bass_var]
+            | FitLength floor7,
+        Seq [perc3] | Repeat 37 | FitLength floor7,
+        Seq [am9pad | Lm 32, x | Lm 80] | FitLength floor7,
+        Seq [Overlay [crash | Gm 1.3, x], x | Lm 111] | FitLength floor7
+    ]
+}
+
+-- ── intro and outro: the wrong gear, naked ──────────────────────────
+intro = {
+    Overlay [
+        Seq [gear7] | Repeat 4,
+        Seq [hats8, hats8] | Gm 0.6 | FitLength Seq [gear7 | Repeat 4],
+        Seq [x | Lm 16, Seq [bd, x, x, x] | Repeat 4] | FitLength Seq [gear7 | Repeat 4]
+    ]
+}
+
+outro = {
+    Overlay [
+        Seq [gear7] | Repeat 4,
+        Seq [am9pad | Lm 28] | FitLength Seq [gear7 | Repeat 4],
+        Seq [bd, x | Lm 15, bd, x | Lm 11] | FitLength Seq [gear7 | Repeat 4],
+        Seq [x | Lm 27, crash | Gm 0.8] | FitLength Seq [gear7 | Repeat 4]
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+main = {
+    Seq [
+        intro,
+        phrase_a,
+        phrase_b,
+        outro
+    ]
+}

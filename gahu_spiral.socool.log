@@ -1,0 +1,98 @@
+   0.018360958s  INFO kintaro::processor: [draw] 8 def(s): ["trunk", "bloom", "reed", "crozier", "mushroom", "pad", "firefly", "drift"]
+   0.018890208s  INFO kintaro::processor: [draw] routing (brush-index → draw): {"8": "drift", "0": "firefly", "1": "firefly", "3": "pad", "4": "reed", "5": "crozier", "6": "bloom", "2": "mushroom", "7": "trunk"}
+   0.020626208s  INFO kintaro::processor: [layer] 1 backdrop def(s): ["__bg"], 0 attachment(s)
+   0.042342500s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 19.218167ms
+   0.043990750s  INFO kintaro::processor: [length-env] 40 named lengths available
+   0.044820500s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.044824750s  INFO kintaro::color: [notan] firefly        L 0.23..0.99  span 0.76  mean 0.74  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044827583s  INFO kintaro::color: [notan] firefly        L 0.20..0.99  span 0.79  mean 0.70  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044828792s  INFO kintaro::color: [notan] mushroom       L 0.22..0.97  span 0.75  mean 0.65  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044829792s  INFO kintaro::color: [notan] pad            L 0.22..0.99  span 0.77  mean 0.64  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044830875s  INFO kintaro::color: [notan] reed           L 0.26..0.99  span 0.73  mean 0.70  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044831833s  INFO kintaro::color: [notan] crozier        L 0.24..0.97  span 0.73  mean 0.67  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044832750s  INFO kintaro::color: [notan] bloom          L 0.31..1.00  span 0.69  mean 0.77  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.044834792s  INFO kintaro::color: [notan] trunk          L 0.12..0.76  span 0.64  mean 0.34  (6 stops)  lit end LIGHT (light→dark)
+   0.044835667s  INFO kintaro::color: [notan] drift          L 0.23..0.95  span 0.72  mean 0.62  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.046687917s  INFO kintaro::warp: [promote] desync at source pos 15975 (source 0.62, AST 0.34); tweak slots disabled for this warp
+   0.046832542s  INFO kintaro::processor: [promote] 17 tweakable slot(s) discovered
+   0.046867917s  INFO kintaro::processor: [warp] 8 def(s): ["thicket", "blooms", "boles", "glow", "bank", "sand", "shallows", "__bg"]
+   0.046869833s  INFO kintaro::processor: [warp] routing (brush-index → chain): {"8": ["sand"], "5": ["thicket"], "6": ["blooms"], "3": ["shallows"], "7": ["boles"], "0": ["glow"], "4": ["bank"], "2": ["shallows"], "1": ["glow"]}
+   0.048509333s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 961.375µs
+   0.048634000s  INFO kintaro::brush: [pool] marks live 24.00 l-units (largest Die) — retire window follows
+   0.048708625s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=18     y 0.256..0.256  x +0.00..+0.00  gain 0.30..0.30  l 0.150..0.150
+  brush 1        n=72     y 0.344..0.344  x +0.00..+0.00  gain 0.24..0.24  l 0.150..0.150
+  brush 2        n=75     y 0.344..0.344  x +0.25..+0.25  gain 0.21..0.21  l 0.150..0.150
+  brush 3        n=165    y 0.344..0.344  x +0.25..+0.25  gain 0.09..0.09  l 0.150..0.150
+  brush 4        n=120    y 0.466..0.466  x -0.33..-0.33  gain 0.19..0.19  l 0.150..0.150
+  brush 5        n=80     y 0.392..0.392  x +0.17..+0.17  gain 0.18..0.35  l 0.150..0.150
+  brush 6        n=32     y 0.304..0.304  x -0.17..-0.17  gain 0.24..0.40  l 0.150..0.150
+  brush 7        n=32     y 0.256..0.256  x +0.00..+0.00  gain 0.30..0.50  l 0.150..0.150
+  brush 8        n=1230   y 0.183..1.031  x -1.00..+1.00  gain 0.03..0.30  l 0.150..0.600
+   0.122153583s  INFO kintaro::draw: [draw] what one note emits (notes synthesised across each brush's measured range):
+   0.122155667s  INFO kintaro::draw:   brush 0      emits 120..120 (avg 120)  spans 0.541 x 3.466 world  gap 0.0000  stamp/Sm 0.1200  solid at Sm >= 0.00
+   0.122156208s  INFO kintaro::draw:   brush 1      emits 120..120 (avg 120)  spans 0.538 x 3.462 world  gap 0.0000  stamp/Sm 0.0960  solid at Sm >= 0.00
+   0.122156708s  INFO kintaro::draw:   brush 2      emits 1110..1110 (avg 1110)  spans 0.403 x 0.628 world  gap 0.0000  stamp/Sm 0.0849  solid at Sm >= 0.00
+   0.122157167s  INFO kintaro::draw:   brush 3      emits 582..582 (avg 582)  spans 0.448 x 0.544 world  gap 0.0000  stamp/Sm 0.0364  solid at Sm >= 0.00
+   0.122157583s  INFO kintaro::draw:   brush 4      emits 352..352 (avg 352)  spans 0.404 x 1.304 world  gap 0.0000  stamp/Sm 0.0767  solid at Sm >= 0.00
+   0.122158042s  INFO kintaro::draw:   brush 5      emits 464..464 (avg 464)  spans 0.608 x 2.063 world  gap 0.0000  stamp/Sm 0.1405  solid at Sm >= 0.00
+   0.122158458s  INFO kintaro::draw:   brush 6      emits 1440..1440 (avg 1440)  spans 1.117 x 3.639 world  gap 0.0000  stamp/Sm 0.1585  solid at Sm >= 0.00
+   0.122158917s  INFO kintaro::draw:   brush 7      emits 516..516 (avg 516)  spans 0.563 x 1.654 world  gap 0.0000  stamp/Sm 0.2000  solid at Sm >= 0.00
+   0.122159375s  INFO kintaro::draw:   brush 8      emits 10..10 (avg 10)  spans 3.774 x 1.230 world  gap 0.0000  stamp/Sm 0.1199  solid at Sm >= 0.00
+   0.122160667s  INFO kintaro::color: [light] moon       from (0.42, 0.92, 0.34)  #cfe2ff  gain 1.45
+   0.122161750s  INFO kintaro::color: [light] canopy     ambient  #16402c  gain 0.72
+   0.122162583s  INFO kintaro::color: [light] floor      from (0.00, -1.00, 0.55)  #ffddab  gain 0.30
+   0.122227292s  INFO kintaro::processor: [space] frame 1.60 x 0.90 — placement band x ±0.80, y ±0.22 (draw_y_scale 0.50 halves y; `Xf` is world, `Yf` is note-space)
+   0.122342375s  WARN kintaro::processor: [check] draw `trunk`: a mark can reach x = 6.59 (placed to 0.00, and the figure itself reaches 6.59 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122345250s  WARN kintaro::processor: [check] draw `trunk`: a mark can reach y = 2.78 (placed to 0.00, figure 2.78), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122349708s  WARN kintaro::processor: [check] draw `bloom`: a mark can reach x = 2.41 (placed to 0.00, and the figure itself reaches 2.41 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122351458s  WARN kintaro::processor: [check] draw `bloom`: a mark can reach y = 3.19 (placed to 0.00, figure 3.19), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122357375s  WARN kintaro::processor: [check] draw `reed`: a mark can reach x = 2.84 (placed to 0.00, and the figure itself reaches 2.84 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122360500s  WARN kintaro::processor: [check] draw `reed`: a mark can reach y = 25.05 (placed to 0.00, figure 25.05), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122364417s  WARN kintaro::processor: [check] draw `crozier`: a mark can reach x = 5.40 (placed to 0.00, and the figure itself reaches 5.40 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122366000s  WARN kintaro::processor: [check] draw `crozier`: a mark can reach y = 4.67 (placed to 0.00, figure 4.67), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122373125s  WARN kintaro::processor: [check] draw `mushroom`: a mark can reach x = 7.92 (placed to 0.00, and the figure itself reaches 7.92 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122375792s  WARN kintaro::processor: [check] draw `mushroom`: a mark can reach y = 12.68 (placed to 0.00, figure 12.68), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122380667s  WARN kintaro::processor: [check] draw `pad`: a mark can reach x = 2.00 (placed to 0.00, and the figure itself reaches 2.00 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122382292s  WARN kintaro::processor: [check] draw `pad`: a mark can reach y = 1.17 (placed to 0.00, figure 1.17), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122384958s  WARN kintaro::processor: [check] draw `firefly`: a mark can reach x = 1.98 (placed to 0.00, and the figure itself reaches 1.98 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122386500s  WARN kintaro::processor: [check] draw `firefly`: a mark can reach y = 3.78 (placed to 0.00, figure 3.78), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122388833s  WARN kintaro::processor: [check] draw `drift`: a mark can reach x = 1.67 (placed to 0.00, and the figure itself reaches 1.67 further), outside the usable half-width 0.73 (w/2 less the mark's own 0.07). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.122390625s  WARN kintaro::processor: [check] draw `drift`: a mark can reach y = 0.52 (placed to 0.00, figure 0.52), outside the usable half-height 0.38 (h/2 less the mark's own 0.07).
+   0.122903375s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 454.125µs
+   0.125071500s  INFO kintaro::color: [light] 2 light(s) baked into the mark shader: moon, floor — marks are shaded
+   0.125616833s  INFO kintaro::color: [light] 5 brush(es) aim at one light: moon, moon, moon, moon, moon
+   0.130913958s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 8.008042ms
+   0.130933792s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: flat warp=glow draw=firefly surface=-
+  brush 1: flat warp=glow draw=firefly surface=-
+  brush 2: flat warp=shallows draw=mushroom surface=-
+  brush 3: flat warp=shallows draw=pad surface=-
+  brush 4: flat warp=bank draw=reed surface=-
+  brush 5: flat warp=thicket draw=crozier surface=-
+  brush 6: flat warp=blooms draw=bloom surface=-
+  brush 7: flat warp=boles draw=trunk surface=-
+  brush 8: flat warp=sand draw=drift surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.130943792s  INFO kintaro::processor: [SoCoolProcessor] Total: 127.282708ms
+   0.302239917s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.302846208s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.303428792s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.415013458s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (42256 bytes)
+   0.433034417s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.453703292s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/gahu_spiral.socool (0v0)
+   0.481288500s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 1140x693
+   0.486027500s  INFO system{name="kintaro::feedback::rebuild_warp_chains_on_change"}: kintaro::warp: [warp] rebuilding chains: 8 → 7 unique chains
+   0.486135708s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "default" → chain 0 (layer 1)
+   0.486141250s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "0" → chain 0 (layer 1)
+   0.486142167s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "1" → chain 0 (layer 1)
+   0.486143083s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "2" → chain 1 (layer 2)
+   0.486143625s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "3" → chain 1 (layer 2)
+   0.486144500s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "4" → chain 2 (layer 3)
+   0.486145000s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "5" → chain 3 (layer 4)
+   0.486145542s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "6" → chain 4 (layer 5)
+   0.486146042s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "7" → chain 5 (layer 6)
+   0.486146750s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "8" → chain 6 (layer 7)
+   0.735623292s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 140 note(s) the playhead had already passed (the render path was still warming up)
+   1.604107500s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)

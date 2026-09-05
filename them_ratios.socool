@@ -1,0 +1,277 @@
+{ f: 55, l: 1/8, g: 7/5, p: 0 }
+
+-- Thundercat, second try — the uptempo side (Oh Sheit It's X /
+-- Dragonball Durag energy), not the half-time ballad.
+--
+-- What changed: the bass has MEAT now — five partials with rolloff
+-- and a light overdrive, so it plucks instead of humming — and it
+-- NEVER STOPS MOVING: perpetual 16ths with disco octave pops,
+-- dead-note thumps between real notes, chromatic 16/15 pushes into
+-- the changes. Four-on-the-floor disco-funk kit, snappy, ghost
+-- snares, swung open hats. Keys are short offbeat m9 stabs; the
+-- chorus walks the shape up 4/3 → 3/2 with a string octave line and
+-- a warmer, lower falsetto. Ends on the out-of-nowhere maj7#11.
+--
+-- 125 bpm, one 16th per Lm 1 (l: 1/8). Key of A, just intonation.
+--
+-- Play: weresocool play them_ratios.socool
+
+x = { Silence 1 }
+
+-- ── kit, tuned to A — punchy, not dusty ─────────────────────────────
+bd = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, -4, 1/2, 0 },
+        { 2/1, 0, 1/5, 0 }
+    ]
+    | Kick wsc { body: 0.8, amp_decay: 0.2, pitch_decay: 0.02, click_amount: 0.35, saturation: 0.6 }
+    | Gm 0.9
+}
+sn = {
+    Overlay [
+        Snare wsc { attack: 0.6, wires: 0.65, tone: 0.55, length: 0.3 } | Fm 3/2 | Gm 0.6,
+        Clap wsc { tone: 0.5, spread: 0.4 } | Fm 3/2 | Gm 0.3
+    ] | Pa 1/8
+}
+gh = { sn | Gm 0.16 | Pa -1/4 }
+hh = { HiHat wsc { length: 0.25 } | Fm 9/8 | Gm 0.2 | Pa 1/4 }
+oh = { OpenHat wsc { length: 0.5 } | Fm 9/8 | Gm 0.3 | Pa -1/4 }
+crash = { Crash acoustic { length: 0.6 } | Fm 5/4 | Gm 0.35 }
+shk = { Shaker wsc | Fm 3/2 | Gm 0.14 | Pa -1/3 }
+shka = { Shaker wsc | Fm 3/2 | Gm 0.24 | Pa -1/3 }
+
+-- disco-funk floor: four on the floor, snare 2 and 4, ghosts leaning in
+kick_bar = { Seq [bd, x, x, x] | Repeat 4 }
+snare_bar = { Seq [x | Lm 4, sn, x | Lm 2, gh, x | Lm 4, sn, x | Lm 2, gh, x] }
+hat_bar = {
+    Seq [
+        hh | Lm 9/8, hh | Lm 7/8, oh | Lm 9/8, hh | Lm 7/8,
+        hh | Lm 9/8, hh | Lm 7/8, oh | Lm 9/8, hh | Lm 7/8
+    ]
+}
+shaker_bar = {
+    Seq [
+        shka | Lm 9/16, shk | Lm 7/16, shk | Lm 9/16, shk | Lm 7/16,
+        shka | Lm 9/16, shk | Lm 7/16, shk | Lm 9/16, shk | Lm 7/16
+    ] | Repeat 2
+}
+pocket = {
+    Overlay [
+        kick_bar,
+        snare_bar | FitLength kick_bar,
+        hat_bar | FitLength kick_bar,
+        shaker_bar | FitLength kick_bar
+    ]
+}
+
+-- ── the bass: 808 sub — pure tuned boom with a real envelope ────────
+-- no Karplus-Strong (twang), no sine stack (clicks): the 808 tom is
+-- an enveloped sine boom. Soft attack, a whisper of pitch bend,
+-- decays on its own.
+bass = {
+    Tom 808 {
+        attack: 0.4,
+        body: 0.7,
+        tone: 0.4,
+        length: 0.3,
+        ks_mix: 0,
+        pitch_range: 1.03,
+        amp_decay: 0.28
+    }
+    | Gm 0.65
+}
+n(p) = { bass | p | Lm 1 }
+-- octave pop: same string, snapped harder
+pp(p) = { bass | p | Gm 1.2 | Lm 1 }
+-- run note: half slot
+rn(p) = { bass | p | Lm 1/2 }
+-- dead-note thump: choked string
+dn = { Tom 808 { attack: 0.3, body: 0.6, length: 0.05, ks_mix: 0, amp_decay: 0.05 } | Fm 1 | Gm 0.35 | Lm 1 }
+
+-- THE HOOK: perpetual 16ths, octave pops, never sits still (2 bars)
+hook = {
+    Seq [
+        n(Fm 1), dn, pp(Fm 2), n(Fm 1),
+        dn, pp(Fm 2), n(Fm 9/5), n(Fm 6/5),
+        n(Fm 4/3), dn, pp(Fm 8/3), n(Fm 4/3),
+        n(Fm 3/2), n(Fm 16/15), n(Fm 1), dn,
+        n(Fm 1), dn, pp(Fm 2), n(Fm 1),
+        dn, pp(Fm 2), n(Fm 9/5), n(Fm 6/5),
+        n(Fm 4/3), n(Fm 3/2), n(Fm 8/5), n(Fm 9/5),
+        pp(Fm 2), n(Fm 9/5), n(Fm 3/2), n(Fm 6/5)
+    ]
+}
+-- the fill bar: up two octaves in a burst and tumble home
+fill = {
+    Seq [
+        rn(Fm 1), rn(Fm 6/5), rn(Fm 4/3), rn(Fm 3/2),
+        rn(Fm 9/5), rn(Fm 2), rn(Fm 12/5), rn(Fm 8/3),
+        rn(Fm 3), rn(Fm 18/5), n(Fm 4), rn(Fm 18/5),
+        rn(Fm 3), rn(Fm 8/3), rn(Fm 12/5),
+        n(Fm 2), n(Fm 16/15), bass | Fm 1 | Lm 3/2, x | Lm 1/2,
+        dn, dn, n(Fm 9/5), pp(Fm 2)
+    ]
+}
+-- chorus bass: chases the chord roots up, still popping octaves
+chorus_bass = {
+    Seq [
+        n(Fm 4/3), dn, pp(Fm 8/3), n(Fm 4/3),
+        dn, pp(Fm 8/3), n(Fm 12/5), n(Fm 8/5),
+        n(Fm 3/2), dn, pp(Fm 3), n(Fm 3/2),
+        dn, pp(Fm 3), n(Fm 27/10), n(Fm 9/5),
+        n(Fm 8/5), dn, pp(Fm 16/5), n(Fm 8/5),
+        dn, pp(Fm 16/5), n(Fm 3), pp(Fm 2),
+        n(Fm 9/5), pp(Fm 2), n(Fm 16/15), n(Fm 1),
+        n(Fm 1), dn, pp(Fm 2), n(Fm 1)
+    ]
+}
+
+-- ── keys: short m9 stabs on the pushes ──────────────────────────────
+am9 = {
+    Overlay [
+        { 2/1, 0, 1, 0 },
+        { 12/5, 2, 1, 1/3 }, { 12/5, -2, 1, -1/3 },
+        { 3/1, 3, 1, -1/4 },
+        { 18/5, -3, 1, 1/4 },
+        { 9/2, 2, 1/2, 0 }
+    ]
+    -- tine shimmer: the chord doubled an octave up, quiet
+    | Overlay [ { 1/1, 0, 1, 0 }, { 2/1, 0, 1/6, 0 } ]
+
+    | Gm 0.1
+}
+stab_bar = { Seq [x | Lm 3, am9 | Lm 2, x | Lm 6, am9 | Gm 0.7 | Lm 2, x | Lm 3] }
+
+-- chorus: the same shape walking up 4/3 → 3/2 → 8/5 → home
+shape(r) = {
+    Overlay [
+        { 2/1, 0, 1, 0 },
+        { 12/5, 2, 1, 1/3 }, { 12/5, -2, 1, -1/3 },
+        { 3/1, 3, 1, -1/4 },
+        { 18/5, -3, 1, 1/4 }
+    ]
+    | Overlay [ { 1/1, 0, 1, 0 }, { 2/1, 0, 1/6, 0 } ]
+
+    | r | Gm 0.1
+}
+walkup = {
+    Seq [
+        shape(Fm 4/3) | Lm 16,
+        shape(Fm 3/2) | Lm 16,
+        shape(Fm 8/5) | Lm 16,
+        shape(Fm 1) | Lm 8, shape(Fm 9/8) | Lm 8
+    ]
+}
+
+-- strings: octave line riding the chorus
+strings = {
+    Overlay [
+        { 6/1, 2, 1, 1/4 }, { 6/1, -2, 1, -1/4 },
+        { 12/1, 3, 1/2, 1/6 }, { 12/1, -3, 1/2, -1/6 },
+        { 18/1, 0, 1/4, 0 },
+        { 24/1, 0, 1/8, 0 }
+    ] | Gm 0.045
+    | Seq [
+        Fm 8/9 | Lm 8, Fm 1 | Lm 8,
+        Fm 1 | Lm 8, Fm 9/10 | Lm 8,
+        Fm 16/15 | Lm 8, Fm 1 | Lm 8,
+        Fm 6/5 | Lm 8, Fm 9/8 | Lm 8
+    ]
+}
+
+-- falsetto: warmer register, second harmonic in the voice
+voice = {
+    Overlay [
+        { 4/1, 3, 1, 1/4 },
+        { 4/1, -3, 1, -1/4 },
+        { 8/1, 4, 1/3, 1/6 }, { 8/1, -4, 1/3, -1/6 },
+        { 12/1, 0, 1/7, 0 },
+        { 16/1, 0, 1/16, 0 }
+    ] | Gm 0.08
+}
+falsetto = {
+    voice | Seq [
+        Fm 0 | Lm 6, Fm 3/2 | Lm 2, Fm 9/5 | Lm 6, Fm 2 | Lm 2,
+        Fm 9/5 | Lm 4, Fm 3/2 | Lm 6, Fm 6/5 | Lm 6
+    ]
+}
+falsetto_hi = {
+    voice | Seq [
+        Fm 2 | Lm 6, Fm 12/5 | Lm 8, Fm 2 | Lm 2,
+        Fm 9/5 | Lm 8, Fm 2 | Lm 4, Fm 27/10 | Lm 4
+    ]
+}
+
+-- ── the lift: maj7#11 from nowhere ──────────────────────────────────
+lift = {
+    Overlay [
+        { 8/5, 0, 1, 0 },
+        { 2/1, 2, 1, 1/3 }, { 2/1, -2, 1, -1/3 },
+        { 12/5, 3, 1, -1/4 },
+        { 3/1, -3, 1, 1/4 },
+        { 45/16, 2, 1/2, 1/5 },
+        { 45/8, -2, 1/4, -1/5 }
+    ]
+    | Overlay [ { 1/1, 0, 1, 0 }, { 2/1, 0, 1/6, 0 } ]
+
+    | Gm 0.11
+}
+
+-- ── sections ────────────────────────────────────────────────────────
+two = { Seq [pocket, pocket] }
+
+verse = {
+    Overlay [
+        two,
+        hook | FitLength two,
+        Seq [stab_bar, stab_bar] | FitLength two
+    ]
+}
+verse_sing = {
+    Overlay [
+        two,
+        hook | FitLength two,
+        Seq [stab_bar, stab_bar] | FitLength two,
+        falsetto | FitLength two,
+        Seq [crash, x | Lm 31] | FitLength two
+    ]
+}
+fillbar = {
+    Overlay [
+        Seq [kick_bar] ,
+        fill | FitLength Seq [kick_bar],
+        Seq [x | Lm 12, gh | Lm 1/2 | Repeat 2, gh | Lm 1/3 | Repeat 3, sn, x | Lm 2]
+            | FitLength Seq [kick_bar]
+    ]
+}
+chorus = {
+    Overlay [
+        Seq [pocket, pocket, pocket, pocket],
+        walkup,
+        chorus_bass | FitLength walkup,
+        strings | FitLength walkup,
+        falsetto_hi | FitLength walkup,
+        Seq [crash, x | Lm 63] | FitLength walkup
+    ]
+}
+outro = {
+    Overlay [
+        lift | Lm 20,
+        Seq [n(Fm 4/5) | Lm 4, pp(Fm 8/5) | Lm 2, bass | Fm 1 | Lm 10, x | Lm 4] | FitLength Seq [x | Lm 20],
+        voice | Seq [Fm 2 | Lm 6, Fm 9/4 | Lm 14] | FitLength Seq [x | Lm 20],
+        Seq [Overlay [crash, bd], x | Lm 11, bd | Gm 0.6, x | Lm 7] | FitLength Seq [x | Lm 20]
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+main = {
+    Seq [
+        verse,
+        verse_sing,
+        fillbar,
+        chorus,
+        verse_sing,
+        outro
+    ]
+}

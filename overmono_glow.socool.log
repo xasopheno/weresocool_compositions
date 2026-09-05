@@ -1,0 +1,24 @@
+   0.001840625s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.001862167s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.006558000s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 4.528166ms
+   0.007365500s  INFO kintaro::processor: [length-env] 27 named lengths available
+   0.007474667s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.007477292s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.008343333s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 655.5µs
+   0.008407750s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.009070250s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 564.791µs
+   0.009156167s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.010060458s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 983.792µs
+   0.010071083s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush default: flat warp=- draw=- surface=-
+
+   0.010072042s  INFO kintaro::processor: [SoCoolProcessor] Total: 9.89975ms
+   0.133017042s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.133152167s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.133199375s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.201517125s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (10632 bytes)
+   0.212337292s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.230123500s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/overmono_glow.socool (0v0)
+   0.258010042s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   0.363696417s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 90 note(s) the playhead had already passed (the render path was still warming up)
+   0.705614000s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)

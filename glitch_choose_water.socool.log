@@ -1,0 +1,104 @@
+   0.003652792s  INFO kintaro::processor: [draw] 5 def(s): ["pip", "orbital", "coil", "shard", "fleck"]
+   0.003674708s  INFO kintaro::processor: [draw] routing (brush-index → draw): {"4": "shard", "6": "fleck", "0": "pip", "5": "orbital", "2": "fleck", "1": "coil", "3": "fleck"}
+   0.016071500s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 11.1895ms
+   0.017353333s  INFO kintaro::processor: [length-env] 20 named lengths available
+   0.017417250s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.017420667s  INFO kintaro::color: [notan] pip            L 0.00..0.95  span 0.95  mean 0.50  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.017423333s  INFO kintaro::color: [notan] coil           L 0.26..0.97  span 0.70  mean 0.64  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.017424708s  INFO kintaro::color: [notan] fleck          L 0.41..0.99  span 0.58  mean 0.79  (6 stops)  lit end LIGHT (light→dark)
+   0.017425833s  INFO kintaro::color: [notan] fleck          L 0.41..0.99  span 0.58  mean 0.79  (6 stops)  lit end LIGHT (light→dark)
+   0.017426750s  INFO kintaro::color: [notan] shard          L 0.40..0.99  span 0.60  mean 0.78  (6 stops)  lit end LIGHT (light→dark)
+   0.017427958s  INFO kintaro::color: [notan] orbital        L 0.26..0.98  span 0.73  mean 0.64  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.017429083s  INFO kintaro::color: [notan] fleck          L 0.26..0.97  span 0.70  mean 0.64  (6 stops)  lit end LIGHT (light→dark)  ← very wide: reads as separate colours, not one family
+   0.018084833s  INFO kintaro::processor: [promote] 4 canvas knob(s) on sliders
+   0.018088292s  INFO kintaro::processor: [promote] 25 tweakable slot(s) discovered
+   0.018100333s  INFO kintaro::processor: [warp] 3 def(s): ["wet", "canvas", "field"]
+   0.018101583s  INFO kintaro::processor: [warp] routing (brush-index → chain): {"6": ["wet", "canvas", "field"], "2": ["wet", "canvas", "field"], "4": ["wet", "canvas", "field"], "0": ["wet", "canvas", "field"], "5": ["wet", "canvas", "field"], "1": ["wet", "canvas", "field"], "3": ["wet", "canvas", "field"]}
+   0.018125708s  INFO kintaro::processor: [field] warp `wet`: Sxyz · state · w1 r0 · k_state_guard — rail ±64, NaN killed
+   0.018127500s  INFO kintaro::processor: [field] warp `wet`: Sw · state · w1 r0 · k_state_guard — rail ±64, NaN killed
+   0.018132583s  INFO kintaro::processor: [field] warp `canvas`: Sw · state · w0 r1 · k_state_guard — rail ±64, NaN killed · read by Raking (visible)
+   0.019967167s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 1.598416ms
+   0.020058917s  INFO kintaro::brush: [pool] marks live 0.84 l-units (largest Die) — retire window follows
+   0.020162875s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=960    y 0.242..0.727  x -0.75..+0.75  gain 0.03..0.53  l 0.100..0.100
+  brush 1        n=524    y 0.256..0.335  x +0.00..+0.00  gain 0.14..0.21  l 0.025..0.100
+  brush 2        n=698    y 0.256..0.377  x +0.25..+0.25  gain 0.05..0.13  l 0.025..0.100
+  brush 3        n=67     y 0.256..0.377  x +0.25..+0.25  gain 0.12..0.12  l 0.100..0.100
+  brush 4        n=48     y 0.256..0.377  x +0.00..+0.00  gain 0.30..0.30  l 0.100..0.100
+  brush 5        n=390    y 0.189..0.358  x -0.50..+0.50  gain 0.19..0.21  l 0.100..0.100
+  brush 6        n=45     y 0.256..0.296  x -0.33..-0.33  gain 0.18..0.18  l 0.100..0.100
+   0.024901667s  INFO kintaro::draw: [draw] what one note emits (notes synthesised across each brush's measured range):
+   0.024903792s  INFO kintaro::draw:   brush 0      emits 1242..1242 (avg 1242)  spans 1.888 x 2.518 world  gap 0.0000  stamp/Sm 0.2101  solid at Sm >= 0.00
+   0.024904417s  INFO kintaro::draw:   brush 1      emits 1860..1860 (avg 1860)  spans 0.335 x 1.370 world  gap 0.0000  stamp/Sm 0.0840  solid at Sm >= 0.00
+   0.024904958s  INFO kintaro::draw:   brush 2      emits 330..330 (avg 330)  spans 0.064 x 0.347 world  gap 0.0000  stamp/Sm 0.0508  solid at Sm >= 0.00
+   0.024905500s  INFO kintaro::draw:   brush 3      emits 330..330 (avg 330)  spans 0.065 x 0.350 world  gap 0.0000  stamp/Sm 0.0498  solid at Sm >= 0.00
+   0.024906000s  INFO kintaro::draw:   brush 4      emits 1560..1560 (avg 1560)  spans 0.618 x 2.757 world  gap 0.0000  stamp/Sm 0.1200  solid at Sm >= 0.00
+   0.024906542s  INFO kintaro::draw:   brush 5      emits 1710..1710 (avg 1710)  spans 1.981 x 2.769 world  gap 0.0000  stamp/Sm 0.0831  solid at Sm >= 0.00
+   0.024907083s  INFO kintaro::draw:   brush 6      emits 330..330 (avg 330)  spans 0.066 x 0.191 world  gap 0.0000  stamp/Sm 0.0706  solid at Sm >= 0.00
+   0.024908625s  INFO kintaro::color: [light] key        from (-1.20, 1.10, 0.60)  #ffd9a0  gain 1.30
+   0.024909958s  INFO kintaro::color: [light] rim        from (0.90, -0.30, -1.50)  #8fb8ff  gain 0.90
+   0.024911083s  INFO kintaro::color: [light] air        ambient  #2a3358  gain 0.85
+   0.025021292s  WARN kintaro::processor: [check] line 328: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025025542s  WARN kintaro::processor: [check] line 359: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025029292s  WARN kintaro::processor: [check] line 389: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025032458s  WARN kintaro::processor: [check] line 415: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025036417s  WARN kintaro::processor: [check] line 443: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025039083s  WARN kintaro::processor: [check] line 475: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025041583s  WARN kintaro::processor: [check] line 504: `Clock * 0.01` is unbounded — it reaches 9.6 by 960 units (two passes of this piece). Nothing folds or clamps it, so whatever it scales keeps growing as the piece repeats. Wrap it in `min`/`max` at the limit it implies, or fold it with `sin`/`Cycle` if it should cycle. (If this is a PHASE handed to a trig call further down, it is already bounded and this line is noise — the check reads one line at a time.)
+   0.025043208s  INFO kintaro::processor: [space] frame 1.60 x 0.90 — placement band x ±0.80, y ±0.22 (draw_y_scale 0.50 halves y; `Xf` is world, `Yf` is note-space)
+   0.025114875s  WARN kintaro::processor: [check] draw `pip`: a mark can reach x = 2.24 (placed to 2.00, and the figure itself reaches 0.22 further), outside the usable half-width 0.50 (w/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.025117583s  WARN kintaro::processor: [check] draw `pip`: a mark can reach y = 0.58 (placed to 0.00, figure 0.45), outside the usable half-height 0.15 (h/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset).
+   0.025123167s  WARN kintaro::processor: [check] draw `orbital`: a mark can reach x = 2.69 (placed to 2.00, and the figure itself reaches 0.64 further), outside the usable half-width 0.50 (w/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.025125667s  WARN kintaro::processor: [check] draw `orbital`: a mark can reach y = 1.19 (placed to 0.00, figure 1.03), outside the usable half-height 0.15 (h/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset).
+   0.025129708s  WARN kintaro::processor: [check] draw `coil`: a mark can reach x = 2.17 (placed to 1.90, and the figure itself reaches 0.24 further), outside the usable half-width 0.50 (w/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.025131875s  WARN kintaro::processor: [check] draw `coil`: a mark can reach y = 0.62 (placed to 0.00, figure 0.49), outside the usable half-height 0.15 (h/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset).
+   0.025135375s  WARN kintaro::processor: [check] draw `shard`: a mark can reach x = 898.16 (placed to 1.65, and the figure itself reaches 0.30 further), outside the usable half-width 0.50 (w/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.025138667s  WARN kintaro::processor: [check] draw `shard`: a mark can reach y = 14245.14 (placed to 0.00, figure 14273.19), outside the usable half-height 0.15 (h/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset).
+   0.025141833s  WARN kintaro::processor: [check] draw `fleck`: a mark can reach x = 2.31 (placed to 2.26, and the figure itself reaches 0.05 further), outside the usable half-width 0.50 (w/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.025143875s  WARN kintaro::processor: [check] draw `fleck`: a mark can reach y = 0.18 (placed to 0.00, figure 0.03), outside the usable half-height 0.15 (h/2 less the mark's own 0.30) (a wgsl rotation of 0.01 turns orbits the mark about the origin, so its reach is its RADIUS, not its offset).
+   0.025473500s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 263.916µs
+   0.025598542s  INFO kintaro::color: [light] 2 light(s) baked into the mark shader: key, rim — marks are shaded
+   0.025715000s  INFO kintaro::color: [light] 2 brush(es) aim at one light: rim, key
+   0.027758583s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 2.282209ms
+   0.027772500s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: flat warp=wet>canvas>field draw=pip surface=-
+  brush 1: flat warp=wet>canvas>field draw=coil surface=-
+  brush 2: flat warp=wet>canvas>field draw=fleck surface=-
+  brush 3: flat warp=wet>canvas>field draw=fleck surface=-
+  brush 4: flat warp=wet>canvas>field draw=shard surface=-
+  brush 5: flat warp=wet>canvas>field draw=orbital surface=-
+  brush 6: flat warp=wet>canvas>field draw=fleck surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.027774833s  INFO kintaro::processor: [SoCoolProcessor] Total: 27.598084ms
+   0.149183625s  INFO kintaro::app: [frame] visual basis from the header: w 1.6, h 0.9, d 0.9 — camera framed to fit; draw units are frame units
+   0.149484542s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.149620583s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.149674292s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.222255833s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (39217 bytes)
+   0.235026000s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.251550583s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/glitch_choose_water.socool (0v0)
+   0.279737292s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 1140x693
+   0.281813125s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "0" → chain 0 (layer 1)
+   0.281816875s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "1" → chain 0 (layer 1)
+   0.281817708s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "2" → chain 0 (layer 1)
+   0.281818458s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "3" → chain 0 (layer 1)
+   0.281819042s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "4" → chain 0 (layer 1)
+   0.281819667s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "5" → chain 0 (layer 1)
+   0.281820208s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "6" → chain 0 (layer 1)
+   0.281820792s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "default" → chain 0 (layer 1)
+   0.515084958s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 35 note(s) the playhead had already passed (the render path was still warming up)
+   0.882885458s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 18 note(s) the playhead had already passed (the render path was still warming up)
+   1.882964375s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 27 note(s) the playhead had already passed (the render path was still warming up)
+   2.882850000s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 2 note(s) the playhead had already passed (the render path was still warming up)
+   3.882989042s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 27 note(s) the playhead had already passed (the render path was still warming up)
+   4.882705167s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 22 note(s) the playhead had already passed (the render path was still warming up)
+   5.226982125s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 113 fps (8.9 ms avg, worst 195.2) — 629.0k marks/s, ~842.8k live (1.3 u life)
+   5.883124000s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 9 note(s) the playhead had already passed (the render path was still warming up)
+   6.882743500s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   7.924740125s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   8.882666250s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   9.882779125s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 9 note(s) the playhead had already passed (the render path was still warming up)
+  10.233922375s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 120 fps (8.3 ms avg, worst 9.7) — 725.7k marks/s, ~972.5k live (1.3 u life)
+  10.883094292s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+  11.882998750s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 27 note(s) the playhead had already passed (the render path was still warming up)

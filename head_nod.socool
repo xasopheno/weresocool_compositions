@@ -1,0 +1,162 @@
+{ f: 55, l: 1/6, g: 7/5, p: 0 }
+
+-- Head-nod. ~90, dusty, lazy. Six elements, nothing else:
+-- kick, late snare, swung hats, fat bass on the kick, two chords
+-- swaying, one sparse melody. Space is the seventh element.
+--
+-- Play: weresocool play head_nod.socool
+
+x = { Silence 1 }
+
+-- ── kit ─────────────────────────────────────────────────────────────
+bd = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, -4, 1/2, 0 },
+        { 2/1, 0, 1/5, 0 }
+    ]
+    | Kick dust { body: 0.9, amp_decay: 0.28, saturation: 0.6 }
+    | Gm 0.9
+}
+sn = { Snare dust { wires: 0.55, tone: 0.4, length: 0.45 } | Fm 3/2 | Gm 0.7 | Pa 1/10 }
+hh = { HiHat dust { length: 0.3 } | Fm 9/8 | Gm 0.22 | Pa 1/4 }
+ho = { HiHat dust { length: 0.5, metal: 0.5 } | Fm 9/8 | Gm 0.3 | Pa 1/4 }
+
+-- ── two bars of drums (16 steps each), heavy lazy swing ─────────────
+-- kick: boom on one, push before the and-of-two's ghost world
+kicks_a = { Seq [bd, x | Lm 6, bd | Gm 0.8, x | Lm 2, bd | Gm 0.85, x | Lm 5] }
+kicks_b = { Seq [bd, x | Lm 5, bd | Gm 0.7, x | Lm 3, bd | Gm 0.85, x | Lm 4, bd | Gm 0.6, x | Lm 1] }
+
+-- snare 2 and 4, the whole layer dragging late
+snares = { Seq [x | Lm 33/8, sn, x | Lm 7, sn, x | Lm 31/8] }
+
+-- hats: swung 8ths, one open lean per bar, one 16th skip
+hats_a = {
+    Seq [
+        hh | Lm 5/4, hh | Lm 3/4, hh | Lm 5/4, hh | Lm 3/4,
+        ho | Lm 5/4, hh | Lm 3/4, hh | Lm 5/4, hh | Lm 3/8, hh | Gm 0.6 | Lm 3/8
+    ]
+}
+hats_b = {
+    Seq [
+        hh | Lm 5/4, hh | Lm 3/4, ho | Lm 5/4, hh | Lm 3/4,
+        hh | Lm 5/4, hh | Lm 3/4, ho | Lm 5/4, hh | Lm 3/4
+    ]
+}
+
+drums2 = {
+    Overlay [
+        Seq [kicks_a, kicks_b],
+        Seq [snares, snares] | FitLength Seq [kicks_a, kicks_b],
+        Seq [hats_a, hats_b] | FitLength Seq [kicks_a, kicks_b]
+    ]
+}
+
+-- ── bass: sits ON the kick, few notes, fat and warm ─────────────────
+bv = {
+    Tom 808 {
+        attack: 0.35,
+        body: 0.8,
+        tone: 0.35,
+        length: 0.45,
+        ks_mix: 0,
+        pitch_range: 1.02,
+        amp_decay: 0.4
+    }
+    | Gm 0.7
+}
+bass2 = {
+    Seq [
+        bv | Fm 1 | Lm 7, bv | Fm 1 | Lm 3, bv | Fm 6/5 | Lm 6,
+        bv | Fm 1 | Lm 6, bv | Fm 4/5 | Lm 3, bv | Fm 9/10 | Lm 3, bv | Fm 3/4 | Lm 2, bv | Fm 9/10 | Lm 2
+    ]
+}
+
+-- ── two chords swaying: i9 and the bVI maj7 under it ────────────────
+chord_i = {
+    Overlay [
+        { 1/1, 0, 1/2, 0 },
+        { 2/1, 2, 1, 1/3 }, { 2/1, -2, 1, -1/3 },
+        { 12/5, 3, 1, -1/4 },
+        { 3/1, -3, 1, 1/4 },
+        { 18/5, 2, 1/2, 0 }
+    ] | Gm 0.08
+}
+chord_vi = {
+    Overlay [
+        { 4/5, 0, 1/2, 0 },
+        { 8/5, 2, 1, 1/3 }, { 8/5, -2, 1, -1/3 },
+        { 2/1, 3, 1, -1/4 },
+        { 12/5, -3, 1, 1/4 },
+        { 3/1, 2, 1/2, 0 }
+    ] | Gm 0.08
+}
+sway = { Seq [chord_i | Lm 16, chord_vi | Lm 16] }
+
+-- ── the melody: five notes, glass, answers every other bar ──────────
+mel = {
+    Tom glass { length: 0.6 } | Fm 4 | Gm 0.16 | Pa -1/5
+}
+line_a = {
+    Seq [
+        x | Lm 16,
+        x | Lm 2, mel | Fm 3/2 | Lm 3, mel | Fm 9/5 | Lm 3, mel | Fm 2 | Lm 5, mel | Fm 9/5 | Lm 3
+    ]
+}
+line_b = {
+    Seq [
+        x | Lm 16,
+        x | Lm 2, mel | Fm 2 | Lm 3, mel | Fm 9/5 | Lm 3, mel | Fm 3/2 | Lm 4, mel | Fm 6/5 | Lm 4
+    ]
+}
+
+-- ── sections ────────────────────────────────────────────────────────
+plain = {
+    Overlay [
+        drums2,
+        bass2 | FitLength drums2
+    ]
+}
+warm = {
+    Overlay [
+        drums2,
+        bass2 | FitLength drums2,
+        sway | FitLength drums2
+    ]
+}
+sing_a = {
+    Overlay [
+        drums2,
+        bass2 | FitLength drums2,
+        sway | FitLength drums2,
+        line_a | FitLength drums2
+    ]
+}
+sing_b = {
+    Overlay [
+        drums2,
+        bass2 | FitLength drums2,
+        sway | FitLength drums2,
+        line_b | FitLength drums2
+    ]
+}
+tail = {
+    Overlay [
+        Seq [bv | Fm 1 | Lm 10, bv | Fm 4/5 | Lm 6],
+        chord_i | Lm 16,
+        Seq [x | Lm 2, mel | Fm 3/2 | Lm 3, mel | Fm 2 | Lm 11],
+        Seq [bd, x | Lm 15]
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+main = {
+    Seq [
+        plain,
+        warm,
+        sing_a,
+        sing_b,
+        warm,
+        tail
+    ]
+}

@@ -1,0 +1,29 @@
+   0.010474708s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.011140208s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.048442958s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 36.477792ms
+   0.049537625s  INFO kintaro::processor: [length-env] 34 named lengths available
+   0.050368541s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.050373333s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.052648333s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 755.167µs
+   0.052723125s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.053724166s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 642.917µs
+   0.055102166s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.059683250s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 5.953625ms
+   0.059710791s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush default: flat warp=- draw=- surface=-
+
+   0.059712625s  INFO kintaro::processor: [SoCoolProcessor] Total: 56.674708ms
+   0.237127708s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.237792166s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.238320375s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.351446500s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (10632 bytes)
+   0.370313208s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.390328666s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/them_ratios.socool (0v0)
+   0.419258708s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   0.530386000s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 234 note(s) the playhead had already passed (the render path was still warming up)
+   1.454031083s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   2.453935625s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   3.454269333s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   4.453982916s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   5.362765333s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 117 fps (8.6 ms avg, worst 65.8) — 1.5k marks/s, ~18.4k live (12.0 u life)
+   5.455385166s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 10 note(s) the playhead had already passed (the render path was still warming up)

@@ -1,0 +1,136 @@
+   0.000063125s  INFO kintaro::print: log → /Users/danny/code/weresocool_compositions/blip_sync_test.socool.log
+   0.001782459s  INFO kintaro::processor: [draw] 1 def(s): ["flash"]
+   0.001788459s  INFO kintaro::processor: [draw] routing (brush-index → draw): {"0": "flash"}
+   0.003776084s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 1.808625ms
+   0.003829084s  INFO kintaro::processor: [length-env] 5 named lengths available
+   0.003858084s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.003859584s  INFO kintaro::color: [notan] flash          L 0.40..0.98  span 0.58  mean 0.71  (3 stops)  lit end LIGHT (light→dark)
+   0.003894917s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.003895917s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.004163959s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 44.083µs
+   0.004212000s  INFO kintaro::brush: [pool] marks live 0.90 l-units (largest Die) — retire window follows
+   0.004225084s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=38     y 0.406..0.495  x +0.00..+0.00  gain 0.40..0.40  l 0.500..0.500
+   0.004290750s  INFO kintaro::draw: [draw] what one note emits (notes synthesised across each brush's measured range):
+   0.004292417s  INFO kintaro::draw:   brush 0      emits 120..120 (avg 120)  spans 0.440 x 1.936 world  gap 0.0012  stamp/Sm 0.1600  solid at Sm >= 0.01
+   0.004296084s  INFO kintaro::color: [light] key        from (-1.20, 1.10, 0.60)  #ffd9a0  gain 1.30
+   0.004297375s  INFO kintaro::color: [light] (sky)      ambient  #b2ccff  gain 1.00  (default fill — a shadow is a colour, not a darkness)
+   0.004367834s  INFO kintaro::processor: [space] frame 1.60 x 0.90 — placement band x ±0.80, y ±0.22 (draw_y_scale 0.50 halves y; `Xf` is world, `Yf` is note-space)
+   0.004415209s  WARN kintaro::processor: [check] draw `flash`: a mark can reach x = 2.38 (placed to 2.16, and the figure itself reaches 0.22 further), outside the usable half-width 0.63 (w/2 less the mark's own 0.17). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.004418084s  WARN kintaro::processor: [check] draw `flash`: a mark can reach y = 0.44 (placed to 0.00, figure 0.44), outside the usable half-height 0.27 (h/2 less the mark's own 0.17).
+   0.004448667s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 28.666µs
+   0.004540042s  INFO kintaro::color: [light] 1 light(s) baked into the mark shader: key — marks are shaded
+   0.005466959s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.016208ms
+   0.005477417s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: flat warp=- draw=flash surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.005478125s  INFO kintaro::processor: [SoCoolProcessor] Total: 5.324791ms
+   0.005556334s  INFO kintaro::print: [frame] visual basis from the header: w 1.6, h 0.9, d 0.9 — camera framed to fit; draw units are frame units
+   0.161367125s  INFO kintaro::print: Number Frames: 1720
+   0.163007459s  INFO kintaro::print: Audio file written: /Users/danny/code/weresocool_compositions/blip_sync_test.socool.wav
+   0.166775500s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.286698209s  INFO kintaro::print: Generated shader content length: 28281 bytes
+   0.313511542s  INFO bevy_app: bevy_winit::system: Creating new window Off-Screen Render (0v0)
+   0.325492125s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 2534x1425
+  14.041801875s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1621: No audio buffers processed (target: 1191435, processed: 1190784)
+  14.049777542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1622: No audio buffers processed (target: 1192170, processed: 1190784)
+  14.058266209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1623: No audio buffers processed (target: 1192905, processed: 1190784)
+  14.067236292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1624: No audio buffers processed (target: 1193640, processed: 1190784)
+  14.077605125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1625: No audio buffers processed (target: 1194375, processed: 1190784)
+  14.090461750s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1626: No audio buffers processed (target: 1195110, processed: 1190784)
+  14.102067375s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1627: No audio buffers processed (target: 1195845, processed: 1190784)
+  14.115775875s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1628: No audio buffers processed (target: 1196580, processed: 1190784)
+  14.125804250s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1629: No audio buffers processed (target: 1197315, processed: 1190784)
+  14.134190917s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1630: No audio buffers processed (target: 1198050, processed: 1190784)
+  14.146841167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1631: No audio buffers processed (target: 1198785, processed: 1190784)
+  14.157052584s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1632: No audio buffers processed (target: 1199520, processed: 1190784)
+  14.166884459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1633: No audio buffers processed (target: 1200255, processed: 1190784)
+  14.177918334s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1634: No audio buffers processed (target: 1200990, processed: 1190784)
+  14.184702750s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1635: No audio buffers processed (target: 1201725, processed: 1190784)
+  14.213010792s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1636: No audio buffers processed (target: 1202460, processed: 1190784)
+  14.233659459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1637: No audio buffers processed (target: 1203195, processed: 1190784)
+  14.246380125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1638: No audio buffers processed (target: 1203930, processed: 1190784)
+  14.255622667s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1639: No audio buffers processed (target: 1204665, processed: 1190784)
+  14.263303917s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1640: No audio buffers processed (target: 1205400, processed: 1190784)
+  14.270567125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1641: No audio buffers processed (target: 1206135, processed: 1190784)
+  14.278077167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1642: No audio buffers processed (target: 1206870, processed: 1190784)
+  14.285290417s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1643: No audio buffers processed (target: 1207605, processed: 1190784)
+  14.292620125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1644: No audio buffers processed (target: 1208340, processed: 1190784)
+  14.300419459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1645: No audio buffers processed (target: 1209075, processed: 1190784)
+  14.307488209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1646: No audio buffers processed (target: 1209810, processed: 1190784)
+  14.317754917s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1647: No audio buffers processed (target: 1210545, processed: 1190784)
+  14.321864750s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1648: No audio buffers processed (target: 1211280, processed: 1190784)
+  14.334298542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1649: No audio buffers processed (target: 1212015, processed: 1190784)
+  14.336334959s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1650: No audio buffers processed (target: 1212750, processed: 1190784)
+  14.351139625s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1651: No audio buffers processed (target: 1213485, processed: 1190784)
+  14.352167667s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1652: No audio buffers processed (target: 1214220, processed: 1190784)
+  14.367832625s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1653: No audio buffers processed (target: 1214955, processed: 1190784)
+  14.368869375s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1654: No audio buffers processed (target: 1215690, processed: 1190784)
+  14.383920667s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1655: No audio buffers processed (target: 1216425, processed: 1190784)
+  14.384885959s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1656: No audio buffers processed (target: 1217160, processed: 1190784)
+  14.400337875s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1657: No audio buffers processed (target: 1217895, processed: 1190784)
+  14.401364209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1658: No audio buffers processed (target: 1218630, processed: 1190784)
+  14.416936167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1659: No audio buffers processed (target: 1219365, processed: 1190784)
+  14.417970042s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1660: No audio buffers processed (target: 1220100, processed: 1190784)
+  14.433792000s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1661: No audio buffers processed (target: 1220835, processed: 1190784)
+  14.434870334s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1662: No audio buffers processed (target: 1221570, processed: 1190784)
+  14.450821042s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1663: No audio buffers processed (target: 1222305, processed: 1190784)
+  14.451923042s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1664: No audio buffers processed (target: 1223040, processed: 1190784)
+  14.467003209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1665: No audio buffers processed (target: 1223775, processed: 1190784)
+  14.468092125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1666: No audio buffers processed (target: 1224510, processed: 1190784)
+  14.483576417s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1667: No audio buffers processed (target: 1225245, processed: 1190784)
+  14.484647709s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1668: No audio buffers processed (target: 1225980, processed: 1190784)
+  14.500397167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1669: No audio buffers processed (target: 1226715, processed: 1190784)
+  14.501273709s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1670: No audio buffers processed (target: 1227450, processed: 1190784)
+  14.517657917s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1671: No audio buffers processed (target: 1228185, processed: 1190784)
+  14.518545459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1672: No audio buffers processed (target: 1228920, processed: 1190784)
+  14.534185292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1673: No audio buffers processed (target: 1229655, processed: 1190784)
+  14.535289792s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1674: No audio buffers processed (target: 1230390, processed: 1190784)
+  14.551095334s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1675: No audio buffers processed (target: 1231125, processed: 1190784)
+  14.552133709s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1676: No audio buffers processed (target: 1231860, processed: 1190784)
+  14.567862959s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1677: No audio buffers processed (target: 1232595, processed: 1190784)
+  14.568901375s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1678: No audio buffers processed (target: 1233330, processed: 1190784)
+  14.584199334s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1679: No audio buffers processed (target: 1234065, processed: 1190784)
+  14.585329084s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1680: No audio buffers processed (target: 1234800, processed: 1190784)
+  14.600420542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1681: No audio buffers processed (target: 1235535, processed: 1190784)
+  14.601360542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1682: No audio buffers processed (target: 1236270, processed: 1190784)
+  14.616892417s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1683: No audio buffers processed (target: 1237005, processed: 1190784)
+  14.617803209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1684: No audio buffers processed (target: 1237740, processed: 1190784)
+  14.634553542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1685: No audio buffers processed (target: 1238475, processed: 1190784)
+  14.635545959s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1686: No audio buffers processed (target: 1239210, processed: 1190784)
+  14.650809167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1687: No audio buffers processed (target: 1239945, processed: 1190784)
+  14.651891125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1688: No audio buffers processed (target: 1240680, processed: 1190784)
+  14.667799209s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1689: No audio buffers processed (target: 1241415, processed: 1190784)
+  14.668878459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1690: No audio buffers processed (target: 1242150, processed: 1190784)
+  14.684470417s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1691: No audio buffers processed (target: 1242885, processed: 1190784)
+  14.685545542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1692: No audio buffers processed (target: 1243620, processed: 1190784)
+  14.701651667s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1693: No audio buffers processed (target: 1244355, processed: 1190784)
+  14.707808459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1694: No audio buffers processed (target: 1245090, processed: 1190784)
+  14.718061334s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1695: No audio buffers processed (target: 1245825, processed: 1190784)
+  14.722421500s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1696: No audio buffers processed (target: 1246560, processed: 1190784)
+  14.734535250s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1697: No audio buffers processed (target: 1247295, processed: 1190784)
+  14.738902125s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1698: No audio buffers processed (target: 1248030, processed: 1190784)
+  14.750308584s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1699: No audio buffers processed (target: 1248765, processed: 1190784)
+  14.755900625s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1700: No audio buffers processed (target: 1249500, processed: 1190784)
+  14.767934042s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1701: No audio buffers processed (target: 1250235, processed: 1190784)
+  14.771990834s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1702: No audio buffers processed (target: 1250970, processed: 1190784)
+  14.784263584s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1703: No audio buffers processed (target: 1251705, processed: 1190784)
+  14.788585250s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1704: No audio buffers processed (target: 1252440, processed: 1190784)
+  14.801201042s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1705: No audio buffers processed (target: 1253175, processed: 1190784)
+  14.805580292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1706: No audio buffers processed (target: 1253910, processed: 1190784)
+  14.817539459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1707: No audio buffers processed (target: 1254645, processed: 1190784)
+  14.822885709s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1708: No audio buffers processed (target: 1255380, processed: 1190784)
+  14.833912292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1709: No audio buffers processed (target: 1256115, processed: 1190784)
+  14.846529875s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1710: No audio buffers processed (target: 1256850, processed: 1190784)
+  14.954744750s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1711: No audio buffers processed (target: 1257585, processed: 1190784)
+  14.967736834s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1712: No audio buffers processed (target: 1258320, processed: 1190784)
+  14.978435292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1713: No audio buffers processed (target: 1259055, processed: 1190784)
+  14.986852167s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1714: No audio buffers processed (target: 1259790, processed: 1190784)
+  14.994382542s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1715: No audio buffers processed (target: 1260525, processed: 1190784)
+  15.001537417s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1716: No audio buffers processed (target: 1261260, processed: 1190784)
+  15.009144459s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1717: No audio buffers processed (target: 1261995, processed: 1190784)
+  15.016943375s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1718: No audio buffers processed (target: 1262730, processed: 1190784)
+  15.023553292s  WARN system{name="kintaro::print::manual_audio_processing_system"}: kintaro::print: Frame 1719: No audio buffers processed (target: 1263465, processed: 1190784)
+  15.023659375s  INFO system{name="kintaro::print::track_frames"}: kintaro::print: Complete: 1720 frames
+  18.118782375s  INFO kintaro::print: Video successfully created: /Users/danny/code/weresocool_compositions/blip_sync_test.socool.mp4

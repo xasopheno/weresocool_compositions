@@ -1,0 +1,88 @@
+   0.000056417s  INFO kintaro::print: log → ./jimbocho_held.socool.log
+   0.005974917s  INFO kintaro::processor: [draw] 10 def(s): ["cube", "grid", "plane", "tunnel", "torus", "coil", "cylinder", "cone", "slab", "ribbon"]
+   0.005982583s  INFO kintaro::processor: [draw] routing (brush-index → draw): {"4": "cylinder", "5": "cone", "0": "torus", "3": "tunnel", "8": "ribbon", "9": "slab", "6": "plane", "2": "coil", "7": "cube", "1": "grid"}
+   0.193255750s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 185.320667ms
+   0.259314333s  INFO kintaro::processor: [length-env] 13 named lengths available
+   0.259443833s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.259446250s  INFO kintaro::color: [notan] torus          L 0.25..0.61  span 0.36  mean 0.47  (3 stops)  lit end LIGHT (light→dark)
+   0.259449542s  INFO kintaro::color: [notan] grid           L 0.83..1.00  span 0.17  mean 0.91  (3 stops)  lit end LIGHT (light→dark)
+   0.259451042s  INFO kintaro::color: [notan] coil           L 0.35..0.87  span 0.52  mean 0.62  (3 stops)  lit end LIGHT (light→dark)
+   0.259452125s  INFO kintaro::color: [notan] tunnel         L 0.22..0.35  span 0.14  mean 0.30  (3 stops)  lit end LIGHT (light→dark)
+   0.259453083s  INFO kintaro::color: [notan] cylinder       L 0.78..0.97  span 0.19  mean 0.90  (3 stops)  lit end LIGHT (light→dark)
+   0.259453958s  INFO kintaro::color: [notan] cone           L 0.68..0.76  span 0.09  mean 0.71  (3 stops)  lit end LIGHT (light→dark)  ← span under 0.10: this palette cannot show a ramp
+   0.259455292s  INFO kintaro::color: [notan] plane          L 0.43..0.91  span 0.48  mean 0.69  (3 stops)  lit end LIGHT (light→dark)
+   0.259456208s  INFO kintaro::color: [notan] cube           L 0.39..0.63  span 0.24  mean 0.51  (3 stops)  lit end LIGHT (light→dark)
+   0.259457125s  INFO kintaro::color: [notan] ribbon         L 0.44..0.65  span 0.21  mean 0.54  (3 stops)  lit end LIGHT (light→dark)
+   0.259458125s  INFO kintaro::color: [notan] slab           L 0.54..0.91  span 0.37  mean 0.79  (3 stops)  lit end LIGHT (light→dark)
+   0.260144167s  INFO kintaro::processor: [promote] 4 canvas knob(s) on sliders
+   0.260146375s  INFO kintaro::processor: [promote] 14 tweakable slot(s) discovered
+   0.260155833s  INFO kintaro::processor: [warp] 2 def(s): ["wet", "canvas"]
+   0.260157083s  INFO kintaro::processor: [warp] routing (brush-index → chain): {"2": ["wet", "canvas"], "8": ["wet", "canvas"], "3": ["wet", "canvas"], "4": ["wet", "canvas"], "5": ["wet", "canvas"], "7": ["wet", "canvas"], "1": ["wet", "canvas"], "9": ["wet", "canvas"], "6": ["wet", "canvas"], "0": ["wet", "canvas"]}
+   0.260182625s  INFO kintaro::processor: [field] warp `wet`: Sxyz · state · w1 r0 · k_state_guard — rail ±64, NaN killed
+   0.260183750s  INFO kintaro::processor: [field] warp `wet`: Sw · state · w1 r0 · k_state_guard — rail ±64, NaN killed
+   0.260185750s  INFO kintaro::processor: [field] warp `canvas`: Sw · state · w0 r1 · k_state_guard — rail ±64, NaN killed · read by Raking (visible)
+   0.307882625s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 47.497ms
+   0.308315375s  INFO kintaro::brush: [pool] marks live 5.00 l-units (largest Die) — retire window follows
+   0.316235625s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=11612  y 0.344..0.888  x +0.00..+0.00  gain 0.00..0.12  l 0.011..0.021
+  brush 1        n=10368  y 0.989..1.169  x +0.00..+0.00  gain 0.00..0.08  l 0.011..0.021
+  brush 2        n=6641   y 0.133..0.606  x +0.00..+0.00  gain 0.00..0.06  l 0.011..0.021
+  brush 3        n=11625  y 0.000..0.593  x +0.00..+0.00  gain 0.00..0.04  l 0.011..0.021
+  brush 4        n=7943   y 0.144..0.646  x +0.00..+0.00  gain 0.00..0.10  l 0.011..0.021
+  brush 5        n=15131  y 0.382..0.851  x +0.00..+0.00  gain 0.00..0.07  l 0.011..0.021
+  brush 6        n=11411  y 0.069..1.104  x +0.00..+0.00  gain 0.00..0.04  l 0.011..0.021
+  brush 7        n=4085   y 0.001..0.617  x +0.00..+0.00  gain 0.00..0.07  l 0.011..0.021
+  brush 8        n=9689   y 0.261..1.452  x +0.00..+0.00  gain 0.00..0.10  l 0.011..0.021
+  brush 9        n=9009   y 0.390..0.949  x +0.00..+0.00  gain 0.00..0.12  l 0.011..0.021
+   0.318309875s  INFO kintaro::draw: [draw] what one note emits (notes synthesised across each brush's measured range):
+   0.318312250s  INFO kintaro::draw:   brush 0      emits 1..404 (avg 81)  spans 0.536 x 79.932 world  gap 0.0000  stamp/Sm 0.0474  solid at Sm >= 0.00
+   0.318312958s  INFO kintaro::draw:   brush 1      emits 1..736 (avg 295)  spans 1.560 x 80.222 world  gap 0.0000  stamp/Sm 0.0229  solid at Sm >= 0.00
+   0.318313500s  INFO kintaro::draw:   brush 2      emits 1..232 (avg 47)  spans 1.301 x 79.993 world  gap 0.0000  stamp/Sm 0.0255  solid at Sm >= 0.00
+   0.318313958s  INFO kintaro::draw:   brush 3      emits 1..924 (avg 185)  spans 1.485 x 79.933 world  gap 0.0000  stamp/Sm 0.0168  solid at Sm >= 0.00
+   0.318314417s  INFO kintaro::draw:   brush 4      emits 1..360 (avg 72)  spans 1.110 x 79.752 world  gap 0.0001  stamp/Sm 0.0416  solid at Sm >= 0.00
+   0.318314875s  INFO kintaro::draw:   brush 5      emits 1..592 (avg 119)  spans 0.625 x 79.715 world  gap 0.0000  stamp/Sm 0.0278  solid at Sm >= 0.00
+   0.318315292s  INFO kintaro::draw:   brush 6      emits 1..672 (avg 269)  spans 2.202 x 81.982 world  gap 0.0000  stamp/Sm 0.0116  solid at Sm >= 0.00
+   0.318315750s  INFO kintaro::draw:   brush 7      emits 1..732 (avg 293)  spans 1.894 x 80.987 world  gap 0.0000  stamp/Sm 0.0202  solid at Sm >= 0.00
+   0.318316167s  INFO kintaro::draw:   brush 8      emits 1..1152 (avg 231)  spans 4.045 x 80.266 world  gap 0.0000  stamp/Sm 0.0412  solid at Sm >= 0.00
+   0.318316625s  INFO kintaro::draw:   brush 9      emits 1..600 (avg 120)  spans 0.959 x 80.172 world  gap 0.0000  stamp/Sm 0.0489  solid at Sm >= 0.00
+   0.318318083s  INFO kintaro::color: [light] key        from (-1.20, 1.10, 0.60)  #ffd9a0  gain 1.30
+   0.318319542s  INFO kintaro::color: [light] rim        from (0.90, -0.30, -1.50)  #8fb8ff  gain 0.90
+   0.318320708s  INFO kintaro::color: [light] air        ambient  #1e2740  gain 0.22
+   0.329472208s  INFO kintaro::processor: [fit] 10 brush(es) carry spatial Fit bands
+   0.331138708s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 1.661625ms
+   0.331304750s  INFO kintaro::color: [light] 2 light(s) baked into the mark shader: key, rim — marks are shaded
+   0.333647750s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 2.504583ms
+   0.333660083s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: grad warp=wet>canvas draw=torus surface=-
+  brush 1: grad warp=wet>canvas draw=grid surface=-
+  brush 2: grad warp=wet>canvas draw=coil surface=-
+  brush 3: grad warp=wet>canvas draw=tunnel surface=-
+  brush 4: grad warp=wet>canvas draw=cylinder surface=-
+  brush 5: grad warp=wet>canvas draw=cone surface=-
+  brush 6: grad warp=wet>canvas draw=plane surface=-
+  brush 7: grad warp=wet>canvas draw=cube surface=-
+  brush 8: grad warp=wet>canvas draw=ribbon surface=-
+  brush 9: grad warp=wet>canvas draw=slab surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.333663083s  INFO kintaro::processor: [SoCoolProcessor] Total: 333.401834ms
+   0.396452042s  INFO kintaro::print: [camera] `main` directing
+   1.211276458s  INFO kintaro::print: Number Frames: 1102
+   1.211784750s  INFO kintaro::print: Audio file written: jimbocho_held.socool.wav
+   1.214894583s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   1.352889500s  INFO kintaro::print: Generated shader content length: 70405 bytes
+   1.381350208s  INFO bevy_app: bevy_winit::system: Creating new window Off-Screen Render (0v0)
+   1.393527333s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 2534x1425
+   1.394849875s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "0" → chain 0 (layer 1)
+   1.394853500s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "1" → chain 0 (layer 1)
+   1.394854375s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "2" → chain 0 (layer 1)
+   1.394855083s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "3" → chain 0 (layer 1)
+   1.394855667s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "4" → chain 0 (layer 1)
+   1.394856333s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "5" → chain 0 (layer 1)
+   1.394856792s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "6" → chain 0 (layer 1)
+   1.394857250s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "7" → chain 0 (layer 1)
+   1.394857667s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "8" → chain 0 (layer 1)
+   1.394858250s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "9" → chain 0 (layer 1)
+   1.394858792s  INFO system{name="kintaro::feedback::assign_brush_layers"}: kintaro::warp: [warp] route brush color "default" → chain 0 (layer 1)
+  69.690195500s  INFO system{name="kintaro::print::track_frames"}: kintaro::print: Complete: 1102 frames
+  70.559074667s  INFO kintaro::print: Snapshots kept: [200, 500, 800, 1100]

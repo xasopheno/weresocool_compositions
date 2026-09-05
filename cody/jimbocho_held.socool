@@ -1,5 +1,19 @@
 { f: 311.127, l: 1, g: 1/8, p: 0, rand_seed: 42, background_color: #05060c }
 
+-- THE FRAME IS PART OF THE PIECE.
+--
+-- Until this block existed the viewpoint came from `jimbocho_held.socool.json`,
+-- saved by flying around in watch. The cut and the full song each had their own
+-- json and they had drifted apart — one at y 0.399, one at y 0.0 — so the file
+-- being tuned and the file being rendered were not framed alike, and both were
+-- saved in a 1728x1051 window then printed at 16:9, showing more width than
+-- either was ever framed for. Declaring it here outranks both, and print,
+-- watch and every future render agree.
+--
+-- `look` is the content's own plane, z -2.10, not the origin: the whole bundle
+-- sits back there and aiming at 0 aims in front of it.
+camera main = { from: (0, 0, 0.62), look: (0, 0, -2.10), fov: 60 }
+
 -- JIMBOCHO / HELD — the multitrack as a deep space.
 --
 -- Same ten stems, same twelve bars (see make_stems.sh), same FromSound
@@ -187,8 +201,8 @@ draw cube = {
         | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)), (0.55 + 0.45 * (0.5 - cube_x3 / cube_d * 0.26)))
-        | Xa(cube_x2 / cube_d * 1.10 + 0.02)
-        | Ya(cube_x1 / cube_d * 0.152)
+        | Xa(cube_x2 / cube_d * 0.90 + 0.02)
+        | Ya(cube_x1 / cube_d * 0.178)
         | Za(cube_x3 / cube_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -220,8 +234,8 @@ draw grid = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)), (0.55 + 0.45 * (0.5 - grid_x3 / grid_d * 0.26)))
-        | Xa(grid_x2 / grid_d * 1.10 + 0.02)
-        | Ya(grid_x1 / grid_d * 0.152)
+        | Xa(grid_x2 / grid_d * 0.90 + 0.02)
+        | Ya(grid_x1 / grid_d * 0.178)
         | Za(grid_x3 / grid_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -254,8 +268,8 @@ draw plane = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)), (0.55 + 0.45 * (0.5 - plane_x3 / plane_d * 0.26)))
-        | Xa(plane_x2 / plane_d * 1.10 + 0.02)
-        | Ya(plane_x1 / plane_d * 0.152)
+        | Xa(plane_x2 / plane_d * 0.90 + 0.02)
+        | Ya(plane_x1 / plane_d * 0.178)
         | Za(plane_x3 / plane_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -289,8 +303,8 @@ draw tunnel = {
         | Sm(0.224 - Note.y * 0.146 + clamp(Note.z, 0.0, 0.3) * 0.326)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)), (0.55 + 0.45 * (0.5 - tunnel_x3 / tunnel_d * 0.26)))
-        | Xa(tunnel_x2 / tunnel_d * 1.10 + 0.02)
-        | Ya(tunnel_x1 / tunnel_d * 0.152)
+        | Xa(tunnel_x2 / tunnel_d * 0.90 + 0.02)
+        | Ya(tunnel_x1 / tunnel_d * 0.178)
         | Za(tunnel_x3 / tunnel_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -322,8 +336,8 @@ draw torus = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)), (0.55 + 0.45 * (0.5 - torus_x3 / torus_d * 0.26)))
-        | Xa(torus_x2 / torus_d * 1.10 + 0.02)
-        | Ya(torus_x1 / torus_d * 0.152)
+        | Xa(torus_x2 / torus_d * 0.90 + 0.02)
+        | Ya(torus_x1 / torus_d * 0.178)
         | Za(torus_x3 / torus_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -354,8 +368,8 @@ draw coil = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)), (0.55 + 0.45 * (0.5 - coil_x3 / coil_d * 0.26)))
-        | Xa(coil_x2 / coil_d * 1.10 + 0.02)
-        | Ya(coil_x1 / coil_d * 0.152)
+        | Xa(coil_x2 / coil_d * 0.90 + 0.02)
+        | Ya(coil_x1 / coil_d * 0.178)
         | Za(coil_x3 / coil_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -387,8 +401,8 @@ draw cylinder = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)), (0.55 + 0.45 * (0.5 - cylinder_x3 / cylinder_d * 0.26)))
-        | Xa(cylinder_x2 / cylinder_d * 1.10 + 0.02)
-        | Ya(cylinder_x1 / cylinder_d * 0.152)
+        | Xa(cylinder_x2 / cylinder_d * 0.90 + 0.02)
+        | Ya(cylinder_x1 / cylinder_d * 0.178)
         | Za(cylinder_x3 / cylinder_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -425,8 +439,8 @@ draw cone = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)), (0.55 + 0.45 * (0.5 - cone_x3 / cone_d * 0.26)))
-        | Xa(cone_x2 / cone_d * 1.10 + 0.02)
-        | Ya(cone_x1 / cone_d * 0.152)
+        | Xa(cone_x2 / cone_d * 0.90 + 0.02)
+        | Ya(cone_x1 / cone_d * 0.178)
         | Za(cone_x3 / cone_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -458,8 +472,8 @@ draw slab = {
         | Sm(0.31 - Note.y * 0.202 + clamp(Note.z, 0.0, 0.3) * 0.45)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Tint((0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)), (0.55 + 0.45 * (0.5 - slab_x3 / slab_d * 0.26)))
-        | Xa(slab_x2 / slab_d * 1.10 + 0.02)
-        | Ya(slab_x1 / slab_d * 0.152)
+        | Xa(slab_x2 / slab_d * 0.90 + 0.02)
+        | Ya(slab_x1 / slab_d * 0.178)
         | Za(slab_x3 / slab_d * 0.60)
         | Overlay [ Sm 1, Ry(0.26) | Rz(0.02) ]
         | Ry(sin(Note.t * 0.33) * 0.055)
@@ -477,15 +491,15 @@ draw ribbon = {
     | Every(8,
         Ya(40)
         | Lerp { to: Direction(0, 0.30, 0), n: 16 }
-        | Spawn { n: 14, by: Xa(0.0180) | Rz(1/64) | Za(-0.0229) }
+        | Spawn { n: 18, by: Xa(0.0400) | Rz(1/80) | Za(-0.0180) }
         | Xa(-0.13)
         | Rz(Note.t * 0.021)
         | Overlay [ Sm 1, Sm 0.07 ]
         | Sm(0.60 - Note.y * 0.34 + clamp(Note.z, 0.0, 0.3) * 0.92)
         | Tint(0.92 + Note.y * 0.20, 0.92 + Note.y * 0.10, 1.04 - Note.y * 0.16)
         | Overlay [
-            Xa(-1.14) | Ya(-0.32 + 0.64 * sax_ph),
-            Xa(1.14)  | Ya(0.32 - 0.64 * sax_ph)
+            Xa(-1.90) | Ya(-0.40 + 0.80 * sax_ph),
+            Xa(1.90)  | Ya(0.40 - 0.80 * sax_ph)
           ]
         | Za(-2.10))
 }
@@ -521,7 +535,7 @@ pads = {
     | wgsl { Sm "3.7 * (1.0 - exp(-Time * 3.2)) * (1.0 + 0.55 * exp(-Time * 9.0))"; Sa 0; Vm 0.55; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 4.5) * 0.92; green = green + exp(0.0 - time * 4.5) * 0.59; blue = blue + exp(0.0 - time * 4.5) * 0.35; Seq [ Direction(0.02, 0.01, -0.30) | Lm 4; ]; }
     | torus
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #pads
 }
@@ -534,7 +548,7 @@ perc1 = {
     | wgsl { Sm "9.66 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.36; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 1.94; green = green + exp(0.0 - time * 19.4) * 1.28; blue = blue + exp(0.0 - time * 19.4) * 0.73; Seq [ Direction(-0.03, 0.05, -0.19) | Lm 4; ]; }
     | grid
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #perc1
 }
@@ -547,7 +561,7 @@ bass_arps = {
     | wgsl { Sm "7.46 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.44; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 13.1) * 1.61; green = green + exp(0.0 - time * 13.1) * 1.05; blue = blue + exp(0.0 - time * 13.1) * 0.62; Seq [ Direction(0.05, -0.05, -0.21) | Lm 4; ]; }
     | coil
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #bass_arps
 }
@@ -562,7 +576,7 @@ bass_synth = {
     | wgsl { Sm "4.29 * (1.0 - exp(-Time * 3.2)) * (1.0 + 0.55 * exp(-Time * 9.0))"; Sa 0; Vm 0.50; Bm "(1.0 - exp(-Time * 3.2)) * (0.82 + 0.18 * exp(-Time * 1.2))"; Die 5/2; red = red + exp(0.0 - time * 4.8) * 1.04; green = green + exp(0.0 - time * 4.8) * 0.69; blue = blue + exp(0.0 - time * 4.8) * 0.39; Seq [ Direction(0.04, -0.03, -0.25) | Lm 4; ]; }
     | tunnel
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #bass_synth
 }
@@ -575,7 +589,7 @@ arps = {
     | wgsl { Sm "10.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.48; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 17.6) * 1.84; green = green + exp(0.0 - time * 17.6) * 1.22; blue = blue + exp(0.0 - time * 17.6) * 0.69; Seq [ Direction(0.06, 0.03, -0.24) | Lm 4; ]; }
     | cylinder
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #arps
 }
@@ -588,7 +602,7 @@ clarinet = {
     | wgsl { Sm "7.77 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.42; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.61; green = green + exp(0.0 - time * 11.5) * 1.05; blue = blue + exp(0.0 - time * 11.5) * 0.62; Seq [ Direction(-0.05, 0.02, -0.20) | Lm 4; ]; }
     | cone
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #clarinet
 }
@@ -601,7 +615,7 @@ perc2 = {
     | wgsl { Sm "14.1 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.38; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 1.94; green = green + exp(0.0 - time * 19.4) * 1.28; blue = blue + exp(0.0 - time * 19.4) * 0.73; Seq [ Direction(-0.04, -0.04, -0.16) | Lm 4; ]; }
     | plane
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #perc2
 }
@@ -616,7 +630,7 @@ kicks = {
     | wgsl { Sm "13.3 * (1.0 - exp(-Time * 70.0)) * (0.25 + 0.95 * exp(-Time * 15.0))"; Sa 0; Vm 0.45; Bm "(1.0 - exp(-Time * 70.0)) * (0.14 + 0.86 * exp(-Time * 17.0))"; Die 1/5; red = red + exp(0.0 - time * 19.4) * 2.17; green = green + exp(0.0 - time * 19.4) * 1.44; blue = blue + exp(0.0 - time * 19.4) * 0.82; Seq [ Direction(0.05, -0.02, -0.22) | Lm 4; ]; }
     | cube
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #kicks
 }
@@ -642,7 +656,7 @@ melody = {
     | wgsl { Sm "8.22 * (1.0 - exp(-Time * 18.0)) * (0.50 + 0.85 * exp(-Time * 4.0))"; Sa 0; Vm 0.35; Bm "(1.0 - exp(-Time * 18.0)) * (0.38 + 0.62 * exp(-Time * 5.0))"; Die 1; red = red + exp(0.0 - time * 11.5) * 1.71; green = green + exp(0.0 - time * 11.5) * 1.12; blue = blue + exp(0.0 - time * 11.5) * 0.66; Seq [ Direction(0.03, 0.04, -0.15) | Lm 4; ]; }
     | slab
     | FitX 0 0
-    | FitY -0.335 0.335
+    | FitY -0.395 0.395
     | FitZ 0 0
     | #melody
 }

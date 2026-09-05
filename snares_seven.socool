@@ -1,0 +1,227 @@
+{ f: 82, l: 1/12, g: 1, p: 0 }
+
+-- Venetian Snares in seven. 7/8 bars on a sixteenth grid (14 pulses),
+-- ~180bpm. Mournful just-minor strings underneath (Rossz Csillag
+-- lineage); on top, melodized snare rolls — every drum is TUNED, and
+-- the rolls step through Fm 1 -> 9/8 -> 6/5 -> 4/3 -> 3/2 like a
+-- phrase, not a fill. Ratcheting kick clusters, Choose-dice frenzy,
+-- a breakdown where the strings stand alone, then the last blast a
+-- minor third up.
+--
+-- Play: weresocool play snares_seven.socool
+
+x = { Silence 1 }
+
+-- ── tuned kit ───────────────────────────────────────────────────────
+-- kick: partial stack around the fundamental, then a fully-dialed
+-- kick — tuned to f, sub pair wide, shell knock above
+bd = {
+    Overlay [
+        { 5/1, 0, 1/6, -1/8 },
+        { 5/1, -9, 1/6, 1/8 },
+        { 2/1, 0, 1/2, -3/4 },
+        { 2/1, 2, 1/2, 3/4 },
+        { 1/1, 0, 1, 1/2 },
+        { 1/1, -4, 1, -1/2 },
+    ]
+    | Kick {
+        body: 0.9,
+        pitch_decay: 0.02,
+        pitch_range: 0.35,
+        amp_decay: 0.32,
+        click_amount: 0.35,
+        saturation: 0.8,
+        hump: 4.2,
+        shell: 0.3,
+        ks_mix: 0.2
+    }
+    | Gm 0.95
+}
+
+-- snare tuned a fifth over the fundamental; rolls re-tune it by ratio
+sn = { Snare 909 | Fm 3/2 | Gm 0.6 }
+-- hats tuned to the 15th partial region — leading-tone shimmer
+hh = { HiHat 909 | Fm 15/8 | Gm 0.2 | Pa 1/4 }
+oh = { OpenHat 909 | Fm 15/8 | Gm 0.3 | Pa -1/4 }
+-- toms carry pitch in the breakdown — glass tom on just ratios
+tm = { Tom glass | Fm 6/5 | Tanh(2, 0.75) | Gm 0.5 }
+
+-- crushed variants for the frenzy
+snx = { sn | Bitcrusher(4, 1, 0.7) }
+sno = { sn | Overdrive(5, 0.4) }
+
+-- ── the strings: just-minor triad, low and mournful ─────────────────
+-- 10:12:15 minor with an added ninth hair; slow beating from cents
+strings = {
+    Overlay [
+        { 3/1, 4, 1/10, 1/3 },
+        { 12/5, 0, 1/8, -1/3 },
+        { 2/1, -4, 1/8, 1/4 },
+        { 6/5, 0, 1/6, -1/4 },
+        { 1/1, 0, 1/4, 0 },
+        { 1/2, 0, 1/5, 0 },
+    ]
+    | Gm 0.5
+}
+
+-- one progression = four bars of 7: i, VI-shape below, iv-shape,
+-- leading-tone drag home
+grief = {
+    strings
+    | Seq [
+        Fm 1 | Lm 14,
+        Fm 4/5 | Lm 14,
+        Fm 2/3 | Lm 14,
+        Seq [Fm 3/4 | Lm 8, Fm 15/16 | Lm 6]
+    ]
+}
+
+-- ── melodized rolls: the snare plays the tune ───────────────────────
+roll_up = {
+    Seq [
+        sn | Lm 1/2 | Repeat 2 | Gm 0.5,
+        sn | Fm 9/8 | Lm 1/2 | Repeat 2 | Gm 0.55,
+        sn | Fm 6/5 | Lm 1/3 | Repeat 3 | Gm 0.6,
+        sn | Fm 4/3 | Lm 1/4 | Repeat 4 | Gm 0.65
+    ]
+}
+
+roll_down = {
+    Seq [
+        sn | Fm 3/2 | Lm 1/3 | Repeat 3 | Gm 0.6,
+        sn | Fm 4/3 | Lm 1/3 | Repeat 3 | Gm 0.55,
+        sn | Fm 6/5 | Lm 1/2 | Repeat 2 | Gm 0.5,
+        sn | Fm 9/8 | Gm 0.5
+    ]
+}
+
+-- ratcheting kick cluster
+ratchet = { bd | Lm 1/3 | Repeat 3 | Gm 0.8 }
+
+-- ── bars of 14 (2+2+3 in eighths) ───────────────────────────────────
+groove_a = {
+    Seq [
+        bd, x, hh, x,   sn, x, bd, hh,   x, x, bd | Gm 0.6, x,   sn, hh
+    ]
+}
+
+groove_b = {
+    Seq [
+        bd, x, hh, x,   sn, x, ratchet, x,   bd, x, hh, sn | Fm 9/8 | Gm 0.45,   sn | Lm 1/2 | Repeat 2, hh
+    ]
+}
+
+-- groove with the melodized roll taking the tail of the bar
+groove_roll = {
+    Seq [
+        bd, x, hh, x,   sn, x, bd, x,   bd | Gm 0.6, x,
+        roll_up | FitLength Seq [x, x, x, x]
+    ]
+}
+
+-- frenzy dice: retriggers, reversals, crush — controlled chaos
+frenzy_sn = {
+    Choose [
+        x,
+        sn | Gm 0.4,
+        sn | Fm 9/8 | Lm 1/2 | Repeat 2 | Gm 0.5,
+        sn | Fm 6/5 | Lm 1/3 | Repeat 3 | Gm 0.55,
+        sn | Fm 4/3 | Lm 1/4 | Repeat 4 | Gm 0.6,
+        snx | Fm 3/2 | Lm 1/6 | Repeat 6 | Gm 0.5,
+        sno | Lm 1/2 | Repeat 2 | Gm 0.5,
+        roll_down | FitLength x
+    ] | Repeat 14
+}
+
+frenzy_bd = {
+    Choose [
+        bd,
+        bd | Gm 0.6,
+        ratchet,
+        bd | Lm 1/2 | Repeat 2 | Gm 0.7,
+        x,
+        x
+    ] | Repeat 14
+}
+
+frenzy_hh = {
+    Choose [
+        hh,
+        hh | Lm 1/2 | Repeat 2 | Gm 0.6,
+        oh | Gm 0.6,
+        x
+    ] | Repeat 14
+}
+
+frenzy = { Overlay [frenzy_bd, frenzy_sn, frenzy_hh] }
+
+-- breakdown: strings exposed, glass toms tolling the minor scale
+toll = {
+    Seq [
+        tm, x, x, x,   tm | Fm 5/6, x, x,   x, x, tm | Fm 2/3, x,   x, tm | Fm 3/4, x
+    ]
+}
+
+toll_b = {
+    Seq [
+        tm | Fm 1/2 | Lm 7,
+        roll_up | FitLength Seq [x, x, x, x],
+        ratchet, x, bd
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+intro = {
+    Seq [
+        Overlay [Seq [bd, x | Lm 13], grief | FitLength Seq [x | Lm 14]],
+        Overlay [groove_a, grief | FitLength groove_a]
+    ]
+}
+
+verse = {
+    Overlay [
+        Seq [groove_a, groove_b, groove_a, groove_roll],
+        grief
+    ]
+}
+
+storm = {
+    Overlay [
+        Seq [frenzy, frenzy, frenzy, frenzy],
+        grief,
+        Seq [x | Lm 42, roll_up | FitLength Seq [x | Lm 14]]
+    ]
+}
+
+breakdown = {
+    Overlay [
+        Seq [toll, toll, toll_b],
+        grief | FitLength Seq [x | Lm 42]
+    ]
+}
+
+blast = {
+    Overlay [
+        Seq [groove_b, frenzy, groove_roll, frenzy],
+        grief
+    ] | Fm 6/5
+}
+
+ending = {
+    Seq [
+        Overlay [bd, sn | Fm 6/5, oh] | Lm 2,
+        Overlay [bd | Lm 12, strings | Fm 6/5 | Lm 12 | Gm 0.8]
+    ]
+}
+
+main = {
+    Seq [
+        intro,
+        verse,
+        storm,
+        breakdown,
+        verse | Fm 6/5,
+        blast,
+        ending
+    ]
+}

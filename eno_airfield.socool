@@ -1,0 +1,97 @@
+{ f: 110, l: 1, g: 1/3, p: 0 }
+
+x = { Silence 1 }
+
+voice = {
+    Overlay [
+        { 1/1, 2, 1, 2/3 },
+        { 1/1, -2, 1, -2/3 },
+        { 1/2, 0, 1/3, 0 },
+    ]
+}
+
+hi = {
+    Overlay [
+        { 2/1, 3, 1, 1/2 },
+        { 2/1, 0, 1, -1/2 },
+    ]
+}
+
+drone = {
+    Overlay [
+        { 1/2, 1, 1, 1/4 },
+        { 1/2, 0, 1, -1/4 },
+        { 1/1, 2, 1/3, 1/2 },
+        { 5/4, 0, 1/5, -1/2 },
+    ]
+}
+
+bell = { Tom glass | Gm 0.3 }
+
+loopA = {
+    voice
+    | Seq [
+        Fm 1 | Lm 2, Fm 0 | Lm 1,
+        Fm 5/4 | Lm 2, Fm 0 | Lm 1,
+        Fm 3/2 | Lm 1
+    ]
+    | Gm 1/4
+}
+
+loopB = {
+    voice
+    | Seq [
+        Fm 0 | Lm 1, Fm 5/3 | Lm 2, Fm 0 | Lm 1, Fm 15/8 | Lm 1
+    ]
+    | Gm 1/5
+}
+
+loopC = {
+    hi
+    | Seq [
+        Fm 0 | Lm 1, Fm 9/8 | Lm 1, Fm 0 | Lm 1
+    ]
+    | Gm 1/7
+}
+
+bells = {
+    Seq [
+        bell | Fm 3 | Lm 1, x | Lm 1,
+        bell | Fm 5/2 | Lm 1, bell | Fm 4 | Gm 0.6 | Lm 1
+    ]
+    | Pa 1/3
+}
+
+sec1 = {
+    Overlay [
+        drone | Lm 14 | Gm 1/5,
+        loopA | Repeat 2,
+        loopB | Repeat 3 | Lm 14/15,
+        loopC | Repeat 5 | Lm 14/15
+    ]
+}
+
+sec2 = {
+    Overlay [
+        drone | Lm 12 | Gm 1/5,
+        loopA | Repeat 2 | Lm 6/7,
+        loopB | Repeat 2 | Lm 6/5,
+        loopC | Repeat 4,
+        bells | Repeat 3 | Gm 3/4
+    ]
+    | Fm 4/3
+}
+
+coda = {
+    Overlay [
+        drone | Lm 5 | Gm 1/5,
+        hi | Seq [Fm 5/4 | Lm 3, Fm 1 | Lm 2 ] | Gm 1/8,
+        Seq [x | Lm 2, bell | Fm 5/2 | Lm 3 ]
+    ]
+}
+
+main = {
+    Seq [sec1, sec2, coda ]
+    | SoftClip(0.8, 2, 0.9)
+    | Fm 2
+}

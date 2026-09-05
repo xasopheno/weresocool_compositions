@@ -1,0 +1,189 @@
+{ f: 55, l: 1/8, g: 7/5, p: 0 }
+
+x = { Silence 1 }
+
+bd = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, -4, 1/2, 0 },
+        { 2/1, 0, 1/5, 0 }
+    ]
+    | Kick wsc { body: 0.85, amp_decay: 0.22, pitch_decay: 0.025, click_amount: 0.3, saturation: 0.55 }
+    | Gm 0.9
+}
+
+cpsn = {
+    Overlay [
+        Snare wsc { attack: 0.5, wires: 0.6, tone: 0.5, length: 0.3 } | Fm 3/2 | Gm 0.45,
+        Clap wsc { tone: 0.45, spread: 0.5, length: 0.5 } | Fm 3/2 | Gm 0.4
+    ] | Pa 1/8
+}
+
+hh = { HiHat wsc { length: 0.2 } | Fm 9/8 | Gm 0.16 | Pa 1/4 }
+
+ha = { HiHat wsc { length: 0.3, metal: 0.6 } | Fm 9/8 | Gm 0.26 | Pa 1/4 }
+
+oh = { OpenHat wsc { length: 0.55 } | Fm 9/8 | Gm 0.32 | Pa -1/6 }
+
+shk = { Shaker wsc | Fm 3/2 | Gm 0.13 | Pa -1/3 }
+
+shka = { Shaker wsc | Fm 3/2 | Gm 0.22 | Pa -1/3 }
+
+crash = { Crash acoustic { length: 0.6 } | Fm 5/4 | Gm 0.32 }
+
+kick_bar = { Seq [bd, x, x, x] | Repeat 4 }
+
+backbeat = { Seq [x | Lm 4, cpsn, x | Lm 7, cpsn, x | Lm 3, cpsn | Gm 0.25] }
+
+pump = { Seq [x | Lm 9/8, oh | Lm 7/8, x | Lm 9/8, oh | Lm 7/8] | Repeat 4 }
+
+tick_bar = {
+    Seq [
+        hh | Lm 9/16, hh | Lm 7/16, ha | Lm 9/16, hh | Lm 7/16,
+        hh | Lm 9/16, hh | Lm 7/16, ha | Lm 9/16, hh | Lm 7/16
+    ] | Repeat 2
+}
+
+shaker_bar = {
+    Seq [
+        shka | Lm 9/16, shk | Lm 7/16, shk | Lm 9/16, shk | Lm 7/16,
+        shka | Lm 9/16, shk | Lm 7/16, shk | Lm 9/16, shk | Lm 7/16
+    ] | Repeat 2
+}
+
+bv = {
+    Tom 808 {
+        attack: 0.4,
+        body: 0.75,
+        tone: 0.4,
+        length: 0.3,
+        ks_mix: 0,
+        pitch_range: 1.03,
+        amp_decay: 0.26
+    }
+    | Gm 0.68
+}
+
+bass_a = {
+    Seq [
+        x | Lm 2, bv | Fm 1 | Lm 2,
+        x, bv | Fm 1 | Lm 9/16, bv | Fm 2 | Gm 0.8 | Lm 7/16, bv | Fm 1 | Lm 2,
+        x, bv | Fm 6/5 | Lm 2, x,
+        bv | Fm 4/5 | Lm 2, bv | Fm 15/16 | Gm 0.7 | Lm 1
+    ]
+}
+
+bass_b = {
+    Seq [
+        x | Lm 2, bv | Fm 1 | Lm 2,
+        x, bv | Fm 1 | Lm 9/16, bv | Fm 2 | Gm 0.8 | Lm 7/16, bv | Fm 9/10 | Lm 2,
+        x, bv | Fm 4/5 | Lm 2, x,
+        bv | Fm 3/4 | Lm 2, bv | Fm 9/10 | Lm 1
+    ]
+}
+
+i9 = {
+    Overlay [
+        { 2/1, 0, 1, 0 },
+        { 12/5, 2, 1, 1/3 }, { 12/5, -2, 1, -1/3 },
+        { 3/1, 3, 1, -1/4 },
+        { 18/5, -3, 1, 1/4 },
+        { 9/2, 0, 1/3, 0 }
+    ]
+    | Overlay [{ 1/1, 0, 1, 0 }, { 2/1, 0, 1/7, 0 } ]
+    | Gm 0.1
+}
+
+iv9 = {
+    Overlay [
+        { 8/3, 0, 1, 0 },
+        { 16/5, 2, 1, -1/3 }, { 16/5, -2, 1, 1/3 },
+        { 4/1, 3, 1, 1/4 },
+        { 24/5, -3, 1, -1/4 }
+    ]
+    | Overlay [{ 1/1, 0, 1, 0 }, { 2/1, 0, 1/7, 0 } ]
+    | Gm 0.09
+}
+
+stab_bar = { Seq [x | Lm 3, i9 | Lm 2, x | Lm 6, iv9 | Lm 2, x | Lm 3] }
+
+stab_bar2 = { Seq [x | Lm 3, iv9 | Lm 2, x | Lm 4, i9 | Lm 1, x | Lm 1, i9 | Gm 0.6 | Lm 2, x | Lm 3] }
+
+coo = {
+    Tom glass | Fm 5 | Gm 0.12 | Pa -1/4
+    | Seq [
+        Fm 0 | Lm 11, Fm 6/5 | Lm 2, Fm 1 | Lm 3,
+        Fm 0 | Lm 16
+    ]
+}
+
+groove = {
+    Overlay [
+        kick_bar,
+        backbeat | FitLength kick_bar,
+        pump | FitLength kick_bar,
+        shaker_bar | FitLength kick_bar
+    ]
+}
+
+groove_full = {
+    Overlay [
+        groove,
+        tick_bar | FitLength groove
+    ]
+}
+
+two_a = {
+    Overlay [
+        Seq [groove_full, groove_full],
+        Seq [bass_a, bass_b] | FitLength Seq [groove_full, groove_full]
+    ]
+}
+
+two_b = {
+    Overlay [
+        Seq [groove_full, groove_full],
+        Seq [bass_a, bass_b] | FitLength Seq [groove_full, groove_full],
+        Seq [stab_bar, stab_bar2] | FitLength Seq [groove_full, groove_full]
+    ]
+}
+
+two_c = {
+    Overlay [
+        Seq [groove_full, groove_full],
+        Seq [bass_a, bass_b] | FitLength Seq [groove_full, groove_full],
+        Seq [stab_bar, stab_bar2] | FitLength Seq [groove_full, groove_full],
+        Seq [coo, coo] | FitLength Seq [groove_full, groove_full],
+        Seq [crash, x | Lm 31] | FitLength Seq [groove_full, groove_full]
+    ]
+}
+
+breath = {
+    Overlay [
+        Seq [bass_a] ,
+        shaker_bar | FitLength Seq [bass_a],
+        pump | Gm 0.6 | FitLength Seq [bass_a],
+        i9 | Lm 16 | Gm 1.4 | FitLength Seq [bass_a]
+    ]
+}
+
+outro = {
+    Overlay [
+        Seq [groove, groove],
+        Seq [bass_a, bass_b] | FitLength Seq [groove, groove],
+        Seq [x | Lm 16, Overlay [crash, i9 | Lm 12], x | Lm 4] | FitLength Seq [groove, groove]
+    ]
+}
+
+main = {
+    Seq [
+        two_a,
+        two_b,
+        two_c,
+        two_b,
+        breath,
+        two_c,
+        outro
+    ]
+    | Lm 3/2
+}

@@ -1,0 +1,185 @@
+{ f: 110, l: 1/8, g: 1, p: 0 }
+
+-- Overmono glow: UK post-club in ~26 seconds.
+-- 120bpm sixteenths, swung in pairs (7/6 + 5/6). A 2-step kick
+-- (never four-on-floor), claps on the backbeat, and the signature
+-- move: one detuned minor7 stab voicing, hit like a sample and
+-- re-pitched to different roots across the bar. Sub sits in the
+-- kick gaps; a glass blip hook chatters on top. Every drum is
+-- tuned to A: the kick's partial stack is built on 1/2 and 1,
+-- clap sits on the fifth, hats on 9/8, toms on 6/5.
+--
+-- Play: weresocool play overmono_glow.socool
+
+x = { Silence 1 }
+
+-- ── tuned drums ─────────────────────────────────────────────────────
+-- kick: partial stack on the A fundamental (sub pair at 1/2, shell
+-- pair at 1, knock partials above), then a dialed kick — not a preset
+bd = {
+    Overlay [
+        { 5/2, 0, 1/5, -1/8 },
+        { 5/2, -11, 1/5, 1/8 },
+        { 1, 1, 1/2, -3/4 },
+        { 1, 0, 1/2, 3/4 },
+        { 3/2, 0, 1/8, -1/4 },
+        { 3/2, -3, 1/8, 1/4 },
+        { 1/2, 0, 1, 3/4 },
+        { 1/2, -4, 1, -3/4 }
+    ]
+    | Kick {
+        body: 0.85,
+        pitch_decay: 0.03,
+        pitch_range: 0.35,
+        amp_decay: 0.5,
+        click_amount: 0.15,
+        saturation: 0.8,
+        hump: 4.2,
+        shell: 0.35,
+        ks_mix: 0.2
+    }
+    | SoftClip(0.6, 2, 0.8)
+    | Gm 1
+}
+
+cp = { Clap 909 | Fm 3/2 | Gm 0.55 }
+hh = { HiHat trap | Fm 9/8 | Gm 0.16 | Pa 1/4 }
+ha = { HiHat trap | Fm 3/2 | Gm 0.34 | Pa -1/4 }
+oh = { OpenHat 909 | Fm 9/8 | Gm 0.22 | Pa 1/3 }
+
+-- ── the stab: detuned m7 voicing + glass sheen ──────────────────────
+-- four chord tones, each a ± few-cent pair panned wide; a touch of
+-- overdrive so it reads as a sample, not a sine organ
+st = {
+    Overlay [
+        { 2, 4, 1/7, -3/4 },
+        { 2, -4, 1/7, 3/4 },
+        { 12/5, 3, 1/8, -1/2 },
+        { 12/5, -5, 1/8, 1/2 },
+        { 3, 5, 1/9, -1/4 },
+        { 3, -3, 1/9, 1/4 },
+        { 18/5, 4, 1/10, -3/5 },
+        { 18/5, -4, 1/10, 3/5 },
+        { 1, 0, 1/6, 0 }
+    ]
+    | Overdrive(2, 0.3)
+    | Gm 0.55
+}
+
+gl = { Tom glass | Fm 3 | Bitcrusher(6, 1, 0.85) | Gm 0.28 }
+
+hit = { Overlay [st, gl] }
+
+-- pitched vocal-ish blip hook
+bl = { Tom glass | Bitcrusher(5, 1, 0.8) | Gm 0.32 | Pa -1/4 }
+
+-- ── drum bars (16 swung sixteenths) ─────────────────────────────────
+kicks_a = {
+    Seq [
+        bd, x, x, x,   x, x, x, bd | Gm 0.85,
+        x, x, bd, x,   x, x, x, x
+    ]
+}
+
+kicks_b = {
+    Seq [
+        bd, x, x, x,   x, x, x, bd | Gm 0.85,
+        x, x, bd, x,   x, x, bd | Gm 0.6, x
+    ]
+}
+
+claps = { Seq [x | Lm 4, cp | Lm 8, cp | Lm 4] }
+
+hpair = { Seq [ha | Lm 7/6, hh | Lm 5/6] }
+
+hats = {
+    Seq [
+        hpair | Repeat 7,
+        Seq [hh | Lm 1/2 | Repeat 2, ha | Lm 1]
+    ]
+}
+
+drums2 = {
+    Overlay [
+        Seq [kicks_a, kicks_b],
+        claps | Repeat 2,
+        hats | Repeat 2
+    ]
+}
+
+ohs = { Seq [x, x, oh, x] | Repeat 8 }
+
+-- ── stab pattern: one shape, walked across roots (2 bars) ───────────
+stabs2 = {
+    Seq [
+        x, x, x, hit | Lm 2,
+        x, hit | Lm 2,
+        x, x, x, hit | Fm 6/5 | Lm 2,
+        x, hit | Fm 9/10 | Lm 2,
+
+        x, x, x, hit | Fm 4/5 | Lm 2,
+        x, hit | Fm 4/5 | Lm 2,
+        x, x, x, hit | Fm 6/5 | Lm 2,
+        x, hit | Fm 3/4 | Lm 2
+    ]
+}
+
+-- ── sub: long tones in the kick gaps (2 bars) ───────────────────────
+sub = {
+    Overlay [
+        { 1/2, 0, 1, 0 },
+        { 1, 0, 1/6, 0 },
+        { 1, 3, 1/8, 0 }
+    ]
+    | Seq [
+        Fm 1 | Lm 10, Fm 6/5 | Lm 6,
+        Fm 4/5 | Lm 10, Fm 3/4 | Lm 6
+    ]
+    | Gm 0.4
+}
+
+-- ── blip hook (1 bar) ───────────────────────────────────────────────
+hook = {
+    Seq [
+        x, x, bl | Fm 3, x,   x, bl | Fm 12/5, x, x,
+        x, x, bl | Fm 9/4, x,   x, x, bl | Fm 3, x
+    ]
+}
+
+-- ── blocks (each 2 bars ≈ 4s) ───────────────────────────────────────
+groove = { Overlay [drums2, sub] }
+
+lift = { Overlay [drums2, sub, stabs2] }
+
+full = { Overlay [drums2, sub, stabs2, hook | Repeat 2] }
+
+break = {
+    Overlay [
+        sub,
+        stabs2,
+        Seq [hook, hook | Fm 4/3],
+        hats | Repeat 2 | Gm 0.35
+    ]
+}
+
+full_b = {
+    Overlay [
+        drums2, sub, stabs2,
+        Seq [hook, hook | Fm 4/3],
+        ohs
+    ]
+}
+
+tail = { Overlay [bd | Lm 16, hit | Lm 16 | Gm 0.8] }
+
+main = {
+    Seq [
+        groove,
+        lift,
+        full,
+        break,
+        full,
+        full_b,
+        tail
+    ]
+}

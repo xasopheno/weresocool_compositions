@@ -1,0 +1,308 @@
+{ f: 82, l: 3/34, g: 13/10, p: 0 }
+
+-- The 93 version. Same break DNA as _92, meaningfully deeper:
+--
+--   * REAL harmonic motion: a four-chord liquid cycle, one chord a
+--     bar — i9 → VImaj9 → III6/9 → VII — voice-led, so the sky
+--     actually goes somewhere instead of rocking on two chords.
+--   * the break DEVELOPS: pitch-chopped retriggers (the sampler
+--     chipmunk chop — snare re-fired at 4/3 and 3/2), a bar where
+--     tuned toms make the break talk a melody, ghosts panned
+--     alternately left/right like a real chop would scatter them.
+--   * THE SUB DROP: one bar where everything cuts and the Reese
+--     tape-slides down an octave in 16th steps under a rising roll.
+--   * THE SWITCH: after the drop the bass flips from floating
+--     half-time to a LOCKED 2-step figure interlocking with the
+--     kicks — detune widened, darker — then the sky lifts back in.
+--
+-- 170, kit tuned to E, one 16th per Lm 1.
+--
+-- Play: weresocool play hold_your_colour_93.socool
+
+x = { Silence 1 }
+
+-- ── kit, tuned to E ─────────────────────────────────────────────────
+bd = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, -4, 1/2, 0 },
+        { 2/1, 0, 1/5, 0 }
+    ]
+    | Kick wsc { body: 0.7, amp_decay: 0.16, pitch_decay: 0.02, click_amount: 0.4, saturation: 0.6 }
+    | Gm 0.85
+}
+
+sn = { Snare wsc { attack: 0.7, wires: 0.6, tone: 0.65, length: 0.3 } | Fm 9/4 | Pa 1/8 }
+s = { sn | Gm 0.7 }
+-- ghosts scatter: one leans left, one leans right
+gl = { sn | Gm 0.14 | Pa -1/3 }
+gr = { sn | Gm 0.14 | Pa 1/3 }
+
+hh = { HiHat dust { length: 0.25 } | Fm 9/8 | Gm 0.16 | Pa 1/4 }
+ha = { HiHat dust { length: 0.4, metal: 0.6 } | Fm 9/8 | Gm 0.3 | Pa 1/4 }
+oh = { OpenHat dust | Fm 9/8 | Gm 0.22 | Pa -1/4 }
+rdj = { Ride acoustic { attack: 0.7, length: 0.5 } | Fm 5/2 | Gm 0.26 | Pa 1/3 }
+
+tom = { Tom acoustic { tone: 0.55 } | Pa -1/6 }
+crash = { Crash acoustic { length: 0.7 } | Fm 5/4 | Gm 0.4 }
+
+-- ── the break ───────────────────────────────────────────────────────
+amen_a = {
+    Seq [
+        bd, x, gl, x,   s, x, bd, gr,
+        x, gl, bd, x,   s, x, x, gr
+    ]
+}
+amen_b = {
+    Seq [
+        bd, x, gr, x,   s, x, bd, gl,
+        x, bd, gr, s,   gl, x, s, x
+    ]
+}
+-- the sampler chop: snare re-fired up the tape — 1, 4/3, 3/2 —
+-- then the roll answers back down
+chop_pitch = {
+    Seq [
+        bd, x, gl, x,
+        s | Lm 1/2 | Repeat 2, s | Fm 4/3 | Lm 1/2 | Repeat 2,
+        bd, s | Fm 3/2,
+        x, gr, bd, x,
+        s | Fm 4/3, s | Fm 6/5 | Lm 1/2 | Repeat 2,
+        gl | Lm 1/3 | Repeat 3, gr | Lm 1/4 | Repeat 4
+    ]
+}
+-- the break talks: tuned toms walk a line through the skeleton
+chop_talk = {
+    Seq [
+        bd, x, tom | Fm 5/3 | Gm 0.5, x,
+        s, x, bd, tom | Fm 3/2 | Gm 0.5,
+        tom | Fm 4/3 | Gm 0.55, gl, bd, tom | Fm 6/5 | Gm 0.55,
+        s, tom | Fm 9/8 | Gm 0.6, tom | Fm 1 | Gm 0.65, gr
+    ]
+}
+-- folded chop with the roll-up (kept from _92 — it earned its seat)
+chop_b = {
+    Seq [
+        bd, bd, x, s,   x, gl, bd, x,
+        s | Lm 1/2 | Repeat 2, x, gr, bd,
+        gl | Lm 1/4 | Repeat 4, gr | Lm 1/3 | Repeat 3, s, s | Lm 1/2 | Repeat 2
+    ]
+}
+rollbar = {
+    Seq [
+        bd, x, gl, x,   s, x, bd, gr,
+        s | Lm 1/2 | Repeat 2, gl | Lm 1/2 | Repeat 2,
+        gr | Lm 1/3 | Repeat 3, gl | Lm 1/3 | Repeat 3,
+        s | Lm 1/4 | Repeat 4, s | Fm 4/3 | Lm 1/4 | Repeat 4,
+        gr | Lm 1/4 | Repeat 4, s | Fm 3/2
+    ]
+}
+
+-- ghost-and-hat tease for the intro: the break with no kick or crack
+tease = {
+    Seq [
+        x, x, gl, x,   gr | Gm 2, x, x, gr,
+        x, gl, x, x,   gr | Gm 2, x, x, gl
+    ]
+}
+
+hats = {
+    Seq [
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, oh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16
+    ]
+}
+-- final-section top: the ride takes over the offbeats
+hats_ride = {
+    Seq [
+        ha | Lm 17/16, hh | Lm 15/16, rdj | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, rdj | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, rdj | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, rdj | Lm 17/16, oh | Lm 15/16
+    ]
+}
+
+-- ── bass ────────────────────────────────────────────────────────────
+reese = {
+    Overlay [
+        { 1/2, 5, 1, 1/5 },
+        { 1/2, -5, 1, -1/5 },
+        { 1/1, 3, 1/4, 0 }
+    ]
+    | Tanh(2.5, 0.75)
+    | Gm 0.5
+}
+-- the dark reese: detune torn wider, more drive
+reese_w = {
+    Overlay [
+        { 1/2, 9, 1, 1/5 },
+        { 1/2, -9, 1, -1/5 },
+        { 1/1, 5, 1/3, 0 },
+        { 3/2, 4, 1/8, 0 }
+    ]
+    | Tanh(3.5, 0.7)
+    | Gm 0.5
+}
+
+-- theme A: floating half-time, following the chord roots 1 → 4/5 →
+-- 6/5 → 9/10 with a push note into each turn
+bass_float = {
+    reese | Seq [
+        Fm 1 | Lm 12, Fm 9/10 | Lm 4,
+        Fm 4/5 | Lm 12, Fm 5/6 | Lm 4,
+        Fm 6/5 | Lm 8, Fm 1 | Lm 8,
+        Fm 9/10 | Lm 8, Fm 3/4 | Lm 4, Fm 9/10 | Lm 4
+    ]
+}
+-- theme B: LOCKED — 2-step stabs interlocking with the kick seats
+-- (0, 6, 10), the b2 rub (16/15) snarling in the turn
+bass_lock = {
+    reese_w | Seq [
+        Fm 1 | Lm 4, Fm 0 | Lm 2, Fm 1 | Lm 2, Fm 0 | Lm 2, Fm 6/5 | Lm 2, Fm 1 | Lm 4,
+        Fm 4/5 | Lm 4, Fm 0 | Lm 2, Fm 4/5 | Lm 2, Fm 0 | Lm 2, Fm 16/15 | Lm 2, Fm 1 | Lm 4,
+        Fm 6/5 | Lm 4, Fm 0 | Lm 2, Fm 6/5 | Lm 2, Fm 0 | Lm 2, Fm 3/2 | Lm 2, Fm 6/5 | Lm 4,
+        Fm 9/10 | Lm 4, Fm 0 | Lm 2, Fm 9/10 | Lm 2, Fm 16/15 | Lm 2, Fm 1 | Lm 2, Fm 9/10 | Lm 4
+    ]
+}
+-- the sub drop: tape-slide down an octave in 16th steps
+bass_slide = {
+    reese | Gm 1.3 | Seq [
+        Fm 1 | Lm 2, Fm 15/16 | Lm 2, Fm 7/8 | Lm 2, Fm 4/5 | Lm 2,
+        Fm 3/4 | Lm 2, Fm 2/3 | Lm 2, Fm 5/8 | Lm 2, Fm 1/2 | Lm 2
+    ]
+}
+
+-- ── the sky: four chords, voice-led, one bar each ───────────────────
+em9 = {
+    Overlay [
+        { 2/1, 2, 1, 1/2 }, { 2/1, -2, 1, -1/2 },
+        { 12/5, 3, 1, -1/3 }, { 3/1, -3, 1, 1/3 },
+        { 18/5, 2, 1/2, 1/5 }, { 9/2, -2, 1/3, -1/5 }
+    ] | Gm 0.085
+}
+cmaj9 = {
+    Overlay [
+        { 8/5, 2, 1, 1/2 }, { 8/5, -2, 1, -1/2 },
+        { 2/1, 3, 1, -1/3 }, { 12/5, -3, 1, 1/3 },
+        { 3/1, 2, 1/2, 1/5 }, { 18/5, -2, 1/3, -1/5 }
+    ] | Gm 0.085
+}
+g69 = {
+    Overlay [
+        { 12/5, 2, 1, 1/2 }, { 12/5, -2, 1, -1/2 },
+        { 3/1, 3, 1, -1/3 }, { 18/5, -3, 1, 1/3 },
+        { 4/1, 2, 1/2, 1/5 }, { 27/5, -2, 1/4, -1/5 }
+    ] | Gm 0.085
+}
+dsus = {
+    Overlay [
+        { 9/5, 2, 1, 1/2 }, { 9/5, -2, 1, -1/2 },
+        { 12/5, 3, 1, -1/3 }, { 27/10, -3, 1, 1/3 },
+        { 18/5, 2, 1/2, 1/5 }, { 24/5, -2, 1/3, -1/5 }
+    ] | Gm 0.085
+}
+cycle4 = { Seq [em9 | Lm 16, cmaj9 | Lm 16, g69 | Lm 16, dsus | Lm 16] }
+
+-- ── the music box: answers the chords now, two registers ────────────
+sparkle = {
+    Tom glass | Fm 6 | Gm 0.14 | Pa -1/3
+    | Seq [
+        Fm 1 | Lm 3, Fm 9/10 | Lm 3, Fm 3/4 | Lm 2,
+        Fm 5/6 | Lm 4, Fm 0 | Lm 4,
+        Fm 2/3 | Lm 3, Fm 3/4 | Lm 3, Fm 9/10 | Lm 2,
+        Fm 1 | Lm 4, Fm 0 | Lm 4,
+        Fm 6/5 | Lm 3, Fm 1 | Lm 3, Fm 9/10 | Lm 2,
+        Fm 3/4 | Lm 8,
+        Fm 0 | Lm 16
+    ]
+}
+
+-- ── sections ────────────────────────────────────────────────────────
+bar2 = { Seq [amen_a, amen_a] }
+bar4 = { Seq [amen_a, amen_b, amen_a, amen_b] }
+
+intro = {
+    Overlay [
+        Seq [tease, tease],
+        Seq [hats, hats] | Gm 0.55 | FitLength Seq [tease, tease],
+        Seq [em9 | Lm 16, cmaj9 | Lm 16] | FitLength Seq [tease, tease],
+        bass_float | FitLength Seq [tease, tease],
+        sparkle | Gm 0.8 | FitLength Seq [tease, tease]
+    ]
+}
+
+drop = {
+    Overlay [
+        bar4,
+        Seq [hats, hats, hats, hats] | FitLength bar4,
+        bass_float | FitLength bar4,
+        cycle4 | FitLength bar4,
+        Seq [crash, x | Lm 63] | FitLength bar4
+    ]
+}
+
+develop = {
+    Overlay [
+        Seq [amen_a, chop_pitch, chop_talk, chop_b],
+        Seq [hats, hats, hats, hats] | FitLength bar4,
+        bass_float | FitLength bar4,
+        cycle4 | FitLength bar4,
+        sparkle | FitLength bar4
+    ]
+}
+
+subdrop = {
+    Overlay [
+        bass_slide,
+        Seq [
+            x | Lm 8,
+            gl | Lm 1/2 | Repeat 2, gr | Lm 1/2 | Repeat 2,
+            gl | Lm 1/3 | Repeat 3, gr | Lm 1/3 | Repeat 3,
+            s | Lm 1/4 | Repeat 4, s | Fm 4/3 | Lm 1/4 | Repeat 4,
+            s | Fm 3/2 | Lm 1/4 | Repeat 4, s | Fm 2 | Lm 1/4 | Repeat 4
+        ] | FitLength bass_slide
+    ]
+}
+
+switch = {
+    Overlay [
+        Seq [amen_a, chop_b, amen_b, chop_pitch],
+        Seq [hats_ride, hats_ride, hats_ride, hats_ride] | FitLength bar4,
+        bass_lock | FitLength bar4,
+        Seq [crash, x | Lm 63] | FitLength bar4
+    ]
+}
+
+lift = {
+    Overlay [
+        Seq [amen_a, amen_b, chop_talk, rollbar],
+        Seq [hats_ride, hats_ride, hats_ride, hats_ride] | FitLength bar4,
+        bass_float | FitLength bar4,
+        cycle4 | FitLength bar4,
+        sparkle | Gm 1.3 | FitLength bar4,
+        Seq [crash, x | Lm 63] | FitLength bar4
+    ]
+}
+
+outro = {
+    Overlay [
+        Seq [chop_b, Overlay [crash | Lm 16, bd | Lm 16]],
+        Seq [reese | Fm 1 | Lm 16, reese | Fm 1/2 | Gm 0.8 | Lm 16] | FitLength bar2,
+        Seq [em9 | Lm 32] | Gm 0.8 | FitLength bar2
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+main = {
+    Seq [
+        intro,
+        drop,
+        develop,
+        subdrop,
+        switch,
+        lift,
+        outro
+    ]
+}

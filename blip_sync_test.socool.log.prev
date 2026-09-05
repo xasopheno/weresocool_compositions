@@ -1,0 +1,43 @@
+   0.001830875s  INFO kintaro::processor: [draw] 1 def(s): ["flash"]
+   0.001852167s  INFO kintaro::processor: [draw] routing (brush-index → draw): {"0": "flash"}
+   0.003803625s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 1.772667ms
+   0.003853834s  INFO kintaro::processor: [length-env] 5 named lengths available
+   0.003878667s  INFO kintaro::color: [notan] value structure — OKLab lightness per voice:
+   0.003881084s  INFO kintaro::color: [notan] flash          L 0.40..0.98  span 0.58  mean 0.71  (3 stops)  lit end LIGHT (light→dark)
+   0.003916459s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.003918125s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.004147792s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 24.75µs
+   0.004190459s  INFO kintaro::brush: [pool] marks live 0.90 l-units (largest Die) — retire window follows
+   0.004195709s  INFO kintaro::draw: [notes] where each brush's marks land (y is the note [0,1] space a draw `Ya` moves in):
+  brush 0        n=38     y 0.406..0.495  x +0.00..+0.00  gain 0.40..0.40  l 0.500..0.500
+   0.004256042s  INFO kintaro::draw: [draw] what one note emits (notes synthesised across each brush's measured range):
+   0.004257042s  INFO kintaro::draw:   brush 0      emits 120..120 (avg 120)  spans 0.440 x 1.936 world  gap 0.0012  stamp/Sm 0.1600  solid at Sm >= 0.01
+   0.004260875s  INFO kintaro::color: [light] key        from (-1.20, 1.10, 0.60)  #ffd9a0  gain 1.30
+   0.004262250s  INFO kintaro::color: [light] (sky)      ambient  #b2ccff  gain 1.00  (default fill — a shadow is a colour, not a darkness)
+   0.004329792s  INFO kintaro::processor: [space] frame 1.60 x 0.90 — placement band x ±0.80, y ±0.22 (draw_y_scale 0.50 halves y; `Xf` is world, `Yf` is note-space)
+   0.004373250s  WARN kintaro::processor: [check] draw `flash`: a mark can reach x = 2.38 (placed to 2.16, and the figure itself reaches 0.22 further), outside the usable half-width 0.63 (w/2 less the mark's own 0.17). Leaving the canvas is fine; being born off it means the mark is never seen.
+   0.004376292s  WARN kintaro::processor: [check] draw `flash`: a mark can reach y = 0.44 (placed to 0.00, figure 0.44), outside the usable half-height 0.27 (h/2 less the mark's own 0.17).
+   0.004395084s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 16.958µs
+   0.004483667s  INFO kintaro::color: [light] 1 light(s) baked into the mark shader: key — marks are shaded
+   0.005419167s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.022666ms
+   0.005425917s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush 0: flat warp=- draw=flash surface=-
+  brush default: flat warp=- draw=- surface=-
+
+   0.005426542s  INFO kintaro::processor: [SoCoolProcessor] Total: 5.276792ms
+   0.125419875s  INFO kintaro::app: [frame] visual basis from the header: w 1.6, h 0.9, d 0.9 — camera framed to fit; draw units are frame units
+   0.125719084s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.125837209s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.125876834s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.201137917s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (13073 bytes)
+   0.213586792s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.230280667s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/blip_sync_test.socool (0v0)
+   0.256147125s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   0.442218417s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 62 note(s) the playhead had already passed (the render path was still warming up)
+   1.164993792s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 4 note(s) the playhead had already passed (the render path was still warming up)
+   2.161999250s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   3.162425834s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   4.162318667s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   5.162251917s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)
+   5.212373959s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 115 fps (8.7 ms avg, worst 152.0) — 10.6k marks/s, ~14.9k live (1.4 u life)
+   6.162151000s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 3 note(s) the playhead had already passed (the render path was still warming up)

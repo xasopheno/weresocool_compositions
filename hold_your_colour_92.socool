@@ -1,0 +1,194 @@
+{ f: 82, l: 3/34, g: 13/10, p: 0 }
+
+-- 90s drum and bass, the well-loved kind — Bukem/Good Looking liquid
+-- jungle. 170 bpm, one 16th per Lm 1 (l: 3/34).
+--
+-- The mechanism: a CHOPPED BREAK, not a drum machine pattern. The
+-- 2-bar break skeleton (boom — KAK, b-boom — KAK) is thick with
+-- ghost snares on the offbeat 16ths — the ghosts ARE the break —
+-- and the second bar stumbles: the backbeat displaced to 11 and 14.
+-- Chop bars retrigger the snare and roll the last beat. Under it,
+-- HALF-TIME: a detuned Reese sub moving root → b6 → b7 → 5, so the
+-- drums fly and the music floats. Airy minor-9 pads and a little
+-- music-box blip on top. Kit tuned to E.
+--
+-- Play: weresocool play hold_your_colour_92.socool
+
+x = { Silence 1 }
+
+-- ── kit, tuned to E ─────────────────────────────────────────────────
+bd = {
+    Overlay [
+        { 1/1, 0, 1, 0 },
+        { 1/1, -4, 1/2, 0 },
+        { 2/1, 0, 1/5, 0 }
+    ]
+    | Kick wsc { body: 0.7, amp_decay: 0.16, pitch_decay: 0.02, click_amount: 0.4, saturation: 0.6 }
+    | Gm 0.85
+}
+
+-- jungle snare: tight, cracked, pitched up near two octaves
+sn = { Snare wsc { attack: 0.7, wires: 0.6, tone: 0.65, length: 0.3 } | Fm 9/4 | Pa 1/8 }
+s = { sn | Gm 0.7 }
+g = { sn | Gm 0.14 }
+
+hh = { HiHat dust { length: 0.25 } | Fm 9/8 | Gm 0.16 | Pa 1/4 }
+ha = { HiHat dust { length: 0.4, metal: 0.6 } | Fm 9/8 | Gm 0.3 | Pa 1/4 }
+oh = { OpenHat dust | Fm 9/8 | Gm 0.22 | Pa -1/4 }
+
+crash = { Crash acoustic { length: 0.7 } | Fm 5/4 | Gm 0.4 }
+
+-- ── the break (2 bars, 16 steps each) ───────────────────────────────
+-- bar one: the skeleton, ghosts in the cracks
+amen_a = {
+    Seq [
+        bd, x, g, x,   s, x, bd, g,
+        x, g, bd, x,   s, x, x, g
+    ]
+}
+-- bar two: the stumble — backbeat displaced to 11 and 14
+amen_b = {
+    Seq [
+        bd, x, g, x,   s, x, bd, g,
+        x, bd, g, s,   g, x, s, x
+    ]
+}
+-- chop one: snare retriggered on the backbeat, last beat rolls
+chop_a = {
+    Seq [
+        bd, x, g, x,   s | Lm 1/2 | Repeat 2, x, bd, g,
+        x, g, bd, x,   s, x, g | Lm 1/2 | Repeat 2, g | Lm 1/4 | Repeat 4
+    ]
+}
+-- chop two: the break folded — kick pair dragged, snare thrown early,
+-- reverse-feel roll into the downbeat
+chop_b = {
+    Seq [
+        bd, bd, x, s,   x, g, bd, x,
+        s | Lm 1/2 | Repeat 2, x, g, bd,
+        g | Lm 1/4 | Repeat 4, g | Lm 1/3 | Repeat 3, s, s | Lm 1/2 | Repeat 2
+    ]
+}
+-- the big roll bar: triple-time gather into the next downbeat
+rollbar = {
+    Seq [
+        bd, x, g, x,   s, x, bd, g,
+        s | Lm 1/2 | Repeat 2, g | Lm 1/2 | Repeat 2,
+        g | Lm 1/3 | Repeat 3, g | Lm 1/3 | Repeat 3,
+        s | Lm 1/4 | Repeat 4, s | Lm 1/4 | Repeat 4,
+        g | Lm 1/4 | Repeat 4, s
+    ]
+}
+
+-- ── hats: 16ths with a light shuffle lean ───────────────────────────
+hats = {
+    Seq [
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, oh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16,
+        ha | Lm 17/16, hh | Lm 15/16, hh | Lm 17/16, hh | Lm 15/16
+    ]
+}
+
+-- ── the sub: detuned Reese, half-time, root → b6 → b7 → 5 ───────────
+reese = {
+    Overlay [
+        { 1/2, 5, 1, 1/5 },
+        { 1/2, -5, 1, -1/5 },
+        { 1/1, 3, 1/4, 0 }
+    ]
+    | Tanh(2.5, 0.75)
+    | Gm 0.5
+}
+
+-- one 4-bar phrase (64 steps): long floats, a push note at each turn
+bass4 = {
+    reese | Seq [
+        Fm 1 | Lm 12, Fm 6/5 | Lm 4,
+        Fm 1 | Lm 8, Fm 9/10 | Lm 8,
+        Fm 4/5 | Lm 12, Fm 5/6 | Lm 4,
+        Fm 9/10 | Lm 8, Fm 3/4 | Lm 4, Fm 9/10 | Lm 4
+    ]
+}
+
+-- ── pads: Em9 breathing to the b6 major — the liquid sky ────────────
+em9 = {
+    Overlay [
+        { 2/1, 2, 1, 1/2 }, { 2/1, -2, 1, -1/2 },
+        { 12/5, 3, 1, -1/3 }, { 3/1, -3, 1, 1/3 },
+        { 18/5, 2, 1/2, 1/5 }, { 9/2, -2, 1/3, -1/5 }
+    ] | Gm 0.075
+}
+cmaj7 = {
+    Overlay [
+        { 8/5, 2, 1, 1/2 }, { 8/5, -2, 1, -1/2 },
+        { 2/1, 3, 1, -1/3 }, { 12/5, -3, 1, 1/3 },
+        { 3/1, 2, 1/2, 1/5 }, { 18/5, -2, 1/3, -1/5 }
+    ] | Gm 0.075
+}
+pads4 = { Seq [em9 | Lm 32, cmaj7 | Lm 32] }
+
+-- ── the music box: a five-note tinkle, high and far away ────────────
+sparkle = {
+    Tom glass | Fm 6 | Gm 0.14 | Pa -1/3
+    | Seq [
+        Fm 1 | Lm 3, Fm 9/10 | Lm 3, Fm 3/4 | Lm 2,
+        Fm 5/6 | Lm 4, Fm 0 | Lm 4,
+        Fm 9/10 | Lm 3, Fm 3/4 | Lm 3, Fm 3/5 | Lm 2,
+        Fm 2/3 | Lm 4, Fm 0 | Lm 4,
+        Fm 0 | Lm 32
+    ]
+}
+
+-- ── sections ────────────────────────────────────────────────────────
+break4 = { Seq [amen_a, amen_b, amen_a, amen_b] }
+chops4 = { Seq [amen_a, chop_a, amen_b, chop_b] }
+last4 = { Seq [amen_a, amen_b, chop_a, rollbar] }
+
+intro = {
+    Overlay [
+        Seq [pads4] | FitLength Seq [amen_a, amen_a],
+        bass4 | FitLength Seq [amen_a, amen_a],
+        Seq [hats, hats] | Gm 0.5 | FitLength Seq [amen_a, amen_a],
+        sparkle | FitLength Seq [amen_a, amen_a]
+    ]
+}
+
+full(dr) = {
+    Overlay [
+        dr,
+        Seq [hats, hats, hats, hats] | FitLength dr,
+        bass4 | FitLength dr,
+        pads4 | FitLength dr,
+        Seq [crash, x | Lm 63] | FitLength dr
+    ]
+}
+
+breakdown = {
+    Overlay [
+        pads4 | Gm 1.2 | FitLength Seq [amen_a, amen_a],
+        bass4 | FitLength Seq [amen_a, amen_a],
+        sparkle | Gm 1.4 | FitLength Seq [amen_a, amen_a],
+        Seq [hats, hats] | Gm 0.35 | FitLength Seq [amen_a, amen_a]
+    ]
+}
+
+outro = {
+    Overlay [
+        Seq [chop_b, Overlay [crash | Lm 16, bd | Lm 16]],
+        bass4 | FitLength Seq [amen_a, amen_a],
+        pads4 | Gm 0.8 | FitLength Seq [amen_a, amen_a]
+    ]
+}
+
+-- ── form ────────────────────────────────────────────────────────────
+main = {
+    Seq [
+        intro,
+        full(break4),
+        full(chops4),
+        breakdown,
+        full(last4),
+        outro
+    ]
+}

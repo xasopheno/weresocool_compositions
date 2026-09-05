@@ -1,0 +1,60 @@
+   0.002267375s  INFO kintaro::processor: [draw] 0 def(s): []
+   0.002307542s  INFO kintaro::processor: [draw] routing (brush-index → draw): {}
+   0.004189584s  INFO kintaro::processor: [SoCoolProcessor] Parse & normalize: 1.691042ms
+   0.004299750s  INFO kintaro::processor: [length-env] 13 named lengths available
+   0.004419125s  INFO kintaro::processor: [warp] 1 def(s): ["passthrough"]
+   0.004422250s  INFO kintaro::processor: [warp] routing (brush-index → chain): {}
+   0.004896959s  INFO kintaro::processor: [SoCoolProcessor] nf_to_vec_renderable: 82.708µs
+   0.004965584s  INFO kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+   0.005453000s  INFO kintaro::processor: [SoCoolProcessor] renderables_to_render_voices: 390.375µs
+   0.005529834s  INFO kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+   0.006667792s  INFO kintaro::processor: [SoCoolProcessor] Shader generation: 1.211791ms
+   0.006680042s  INFO kintaro::processor: [SoCoolProcessor] brush specs:
+  brush default: flat warp=- draw=- surface=-
+
+   0.006681500s  INFO kintaro::processor: [SoCoolProcessor] Total: 6.46325ms
+   0.148965834s  INFO plugin build{plugin="bevy_diagnostic::DiagnosticsPlugin"}: bevy_diagnostic::system_information_diagnostics_plugin::internal: SystemInfo { os: "macOS 15.7.4 Sequoia", kernel: "24.6.0", cpu: "Apple M4 Max", core_count: "16", memory: "128.0 GiB" }
+   0.149102459s  INFO plugin build{plugin="bevy_app::terminal_ctrl_c_handler::TerminalCtrlCHandlerPlugin"}: bevy_app::terminal_ctrl_c_handler: Skipping installing `Ctrl+C` handler as one was already installed. Please call `TerminalCtrlCHandlerPlugin::gracefully_exit` in your own `Ctrl+C` handler if you want Bevy to gracefully exit on `Ctrl+C`.
+   0.149153542s  WARN plugin build{plugin="bevy_asset::AssetPlugin"}: bevy_asset::io::source: AssetSourceId::Default does not have an AssetWatcher configured. Consider enabling the `file_watcher` feature.
+   0.213609709s  INFO kintaro::app: [pool] inserting templated compute shader at POOL_SHADER_HANDLE (10632 bytes)
+   0.224212542s  WARN bevy_app:plugin finish:plugin finish{plugin="bevy_egui::EguiPlugin"}: bevy_egui::render: Bindless textures are not yet supported on metal. Disabling bindless mode. See https://github.com/bevyengine/bevy/issues/18149 for more information
+   0.239855917s  INFO bevy_app: bevy_winit::system: Creating new window Kintaro | /Users/danny/code/weresocool_compositions/eno_airfield.socool (0v0)
+   0.264613209s  INFO system{name="kintaro::feedback::setup_feedback"}: kintaro::warp: [warp] resolution scale = 0.33 → texture size 844x475
+   5.221182000s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 89 fps (11.3 ms avg, worst 250.0) — 3.0k marks/s, ~36.3k live (12.0 u life)
+  10.224630667s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 59 fps (16.8 ms avg, worst 250.0) — 2.8k marks/s, ~33.6k live (12.0 u life)
+  14.540742292s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  15.240737375s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 20.5) — 3.0k marks/s, ~35.6k live (12.0 u life)
+  16.540778334s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  17.540070209s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 7 note(s) the playhead had already passed (the render path was still warming up)
+  18.540995959s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 5 note(s) the playhead had already passed (the render path was still warming up)
+  20.241678959s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.3) — 3.1k marks/s, ~37.6k live (12.0 u life)
+  20.541084959s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  21.540937292s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  22.541119792s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 5 note(s) the playhead had already passed (the render path was still warming up)
+  24.025189500s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::processor: [draw] 0 def(s): []
+  24.025195875s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::processor: [draw] routing (brush-index → draw): {}
+  24.026238750s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::processor: [warp] 1 def(s): ["passthrough"]
+  24.026241375s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::processor: [warp] routing (brush-index → chain): {}
+  24.026479292s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::color: [light] none declared — marks are unshaded (add `light sun = { from: (-1, 1, 0) }` or a `light:` header)
+  24.026823917s  INFO system{name="kintaro::watcher::watched_file_updated_system"}: kintaro::color: [light] no directional light — marks are unshaded (add `light sun = { from: (-1, 1, 0) }`)
+  25.258128625s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 19.8) — 3.0k marks/s, ~35.8k live (12.0 u life)
+  30.274765875s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.0) — 2.9k marks/s, ~34.6k live (12.0 u life)
+  35.291211084s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.0) — 3.1k marks/s, ~37.4k live (12.0 u life)
+  38.406738625s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 7 note(s) the playhead had already passed (the render path was still warming up)
+  40.291272125s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 19.1) — 3.0k marks/s, ~36.1k live (12.0 u life)
+  40.406781084s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 7 note(s) the playhead had already passed (the render path was still warming up)
+  41.407095917s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  42.407590125s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  44.407696542s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  45.307465917s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 38.4) — 2.9k marks/s, ~35.2k live (12.0 u life)
+  45.406781792s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  46.406939709s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  48.407755042s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 5 note(s) the playhead had already passed (the render path was still warming up)
+  49.406780125s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  50.308268250s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.5) — 3.1k marks/s, ~37.2k live (12.0 u life)
+  52.407771334s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 5 note(s) the playhead had already passed (the render path was still warming up)
+  53.324173875s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  54.323695459s  INFO system{name="kintaro::brush::systems::process_op4d_events"}: kintaro::brush: [brush] skipped 6 note(s) the playhead had already passed (the render path was still warming up)
+  55.324203792s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 17.9) — 2.1k marks/s, ~25.2k live (12.0 u life)
+  60.324783625s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.4) — 3.0k marks/s, ~36.1k live (12.0 u life)
+  65.341577250s  INFO system{name="kintaro::profiling::report_frame_cost"}: kintaro::perf: [frame] 60 fps (16.7 ms avg, worst 18.0) — 2.9k marks/s, ~34.4k live (12.0 u life)
